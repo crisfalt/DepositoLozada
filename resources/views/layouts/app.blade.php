@@ -21,7 +21,7 @@
 
 <body class="">
     <div class="wrapper ">
-        <div class="sidebar" data-color="red">
+        <div class="sidebar" data-color="orange">
             <!--
         Tip 1: You can change the color of the sidebar using: data-color="blue | green | orange | red | yellow"
     -->
@@ -35,52 +35,53 @@
             </div>
             <div class="sidebar-wrapper">
                 <ul class="nav">
+                    <!-- <li class="active"> para que quede como activo -->
                     <li>
                         <a href="../examples/dashboard.html">
                             <i class="now-ui-icons design_app"></i>
                             <p>Dashboard</p>
                         </a>
                     </li>
-                    <li class="active">
+                    <li>
                         <a href="../examples/icons.html">
                             <i class="now-ui-icons education_atom"></i>
-                            <p>Icons</p>
+                            <p>Ventas</p>
                         </a>
                     </li>
                     <li>
                         <a href="../examples/map.html">
                             <i class="now-ui-icons location_map-big"></i>
-                            <p>Maps</p>
+                            <p>Compras</p>
                         </a>
                     </li>
                     <li>
                         <a href="../examples/notifications.html">
                             <i class="now-ui-icons ui-1_bell-53"></i>
-                            <p>Notifications</p>
+                            <p>Clientes</p>
                         </a>
                     </li>
                     <li>
                         <a href="../examples/user.html">
                             <i class="now-ui-icons users_single-02"></i>
-                            <p>User Profile</p>
+                            <p>Empleados</p>
                         </a>
                     </li>
                     <li>
                         <a href="../examples/tables.html">
                             <i class="now-ui-icons design_bullet-list-67"></i>
-                            <p>Table List</p>
+                            <p>Inventarios</p>
                         </a>
                     </li>
                     <li>
                         <a href="../examples/typography.html">
                             <i class="now-ui-icons text_caps-small"></i>
-                            <p>Typography</p>
+                            <p>Configuracion</p>
                         </a>
                     </li>
                     <li class="active-pro">
                         <a href="../examples/upgrade.html">
                             <i class="now-ui-icons arrows-1_cloud-download-93"></i>
-                            <p>Upgrade to PRO</p>
+                            <p>Crisfalt Developer</p>
                         </a>
                     </li>
                 </ul>

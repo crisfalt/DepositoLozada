@@ -14,8 +14,8 @@
     <div class="col-lg-4">
         <div class="card card-chart">
             <div class="card-header">
-                <h5 class="card-category">Global Sales</h5>
-                <h4 class="card-title">Shipped Products</h4>
+                <h5 class="card-category">Ventas</h5>
+                <h4 class="card-title">Ventas Mensuales</h4>
                 <div class="dropdown">
                     <button type="button" class="btn btn-round btn-default dropdown-toggle btn-simple btn-icon no-caret" data-toggle="dropdown">
                         <i class="now-ui-icons loader_gear"></i>
@@ -35,7 +35,7 @@
             </div>
             <div class="card-footer">
                 <div class="stats">
-                    <i class="now-ui-icons arrows-1_refresh-69"></i> Just Updated
+                    <i class="now-ui-icons arrows-1_refresh-69"></i> Actualizado
                 </div>
             </div>
         </div>
@@ -43,8 +43,8 @@
     <div class="col-lg-4 col-md-6">
         <div class="card card-chart">
             <div class="card-header">
-                <h5 class="card-category">2018 Sales</h5>
-                <h4 class="card-title">All products</h4>
+                <h5 class="card-category">Compras</h5>
+                <h4 class="card-title">Compras Mensuales</h4>
                 <div class="dropdown">
                     <button type="button" class="btn btn-round btn-default dropdown-toggle btn-simple btn-icon no-caret" data-toggle="dropdown">
                         <i class="now-ui-icons loader_gear"></i>
@@ -64,7 +64,7 @@
             </div>
             <div class="card-footer">
                 <div class="stats">
-                    <i class="now-ui-icons arrows-1_refresh-69"></i> Just Updated
+                    <i class="now-ui-icons arrows-1_refresh-69"></i> Actualizado
                 </div>
             </div>
         </div>
@@ -72,8 +72,8 @@
     <div class="col-lg-4 col-md-6">
         <div class="card card-chart">
             <div class="card-header">
-                <h5 class="card-category">Email Statistics</h5>
-                <h4 class="card-title">24 Hours Performance</h4>
+                <h5 class="card-category">Cargues</h5>
+                <h4 class="card-title">Cargues 24 horas</h4>
             </div>
             <div class="card-body">
                 <div class="chart-area">
@@ -82,7 +82,7 @@
             </div>
             <div class="card-footer">
                 <div class="stats">
-                    <i class="now-ui-icons ui-2_time-alarm"></i> Last 7 days
+                    <i class="now-ui-icons ui-2_time-alarm"></i> Ultimos 7 Dias
                 </div>
             </div>
         </div>
@@ -92,8 +92,8 @@
     <div class="col-md-6">
     <div class="card card-tasks">
         <div class="card-header">
-        <h5 class="card-category">Backend development</h5>
-        <h4 class="card-title">Tasks</h4>
+        <h5 class="card-category">Compromisos de Marzo</h5>
+        <h4 class="card-title">Tareas de Marzo</h4>
         </div>
         <div class="card-body">
         <div class="table-full-width table-responsive">
@@ -167,7 +167,7 @@
         <div class="card-footer">
         <hr>
         <div class="stats">
-            <i class="now-ui-icons loader_refresh spin"></i> Updated 3 minutes ago
+            <i class="now-ui-icons loader_refresh spin"></i> Se actualizo cada 3 Minutos
         </div>
         </div>
     </div>
@@ -175,24 +175,24 @@
     <div class="col-md-6">
         <div class="card">
         <div class="card-header">
-            <h5 class="card-category">All Persons List</h5>
-            <h4 class="card-title"> Employees Stats</h4>
+            <h5 class="card-category">Lista del Personal</h5>
+            <h4 class="card-title"> Empleados Actuales</h4>
         </div>
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table">
                 <thead class=" text-primary">
                     <th >
-                    Name
+                    Nombre
                     </th>
                     <th >
-                    Country
+                    Cargo
                     </th>
                     <th >
                     City
                     </th>
                     <th  class="text-right" >
-                    Salary
+                    Salario
                     </th>
                 </thead>
                 <tbody>
