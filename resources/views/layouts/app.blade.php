@@ -26,10 +26,10 @@
         Tip 1: You can change the color of the sidebar using: data-color="blue | green | orange | red | yellow"
     -->
             <div class="logo">
-                <a href="#" class="simple-text logo-mini">
+                <a href="" class="simple-text logo-mini">
                     DL
                 </a>
-                <a href="#" class="simple-text logo-normal">
+                <a href="" class="simple-text logo-normal">
                     Deposito Lozada
                 </a>
             </div>
@@ -37,49 +37,80 @@
                 <ul class="nav">
                     <!-- <li class="active"> para que quede como activo -->
                     <li>
-                        <a href="../examples/dashboard.html">
+                        <a href="">
                             <i class="now-ui-icons design_app"></i>
                             <p>Dashboard</p>
                         </a>
                     </li>
                     <li>
-                        <a href="../examples/icons.html">
-                            <i class="now-ui-icons education_atom"></i>
+                        <a href="">
+                            <i class="now-ui-icons files_single-copy-04"></i>
                             <p>Ventas</p>
                         </a>
                     </li>
                     <li>
-                        <a href="../examples/map.html">
-                            <i class="now-ui-icons location_map-big"></i>
+                        <a href="">
+                            <i class="now-ui-icons shopping_bag-16"></i>
                             <p>Compras</p>
                         </a>
                     </li>
                     <li>
-                        <a href="../examples/notifications.html">
-                            <i class="now-ui-icons ui-1_bell-53"></i>
+                        <a href="">
+                            <i class="now-ui-icons users_single-02"></i>
                             <p>Clientes</p>
                         </a>
                     </li>
                     <li>
-                        <a href="../examples/user.html">
-                            <i class="now-ui-icons users_single-02"></i>
+                        <a href="">
+                            <i class="now-ui-icons sport_user-run"></i>
+                            <p>Proveedores</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="">
+                            <i class="now-ui-icons business_badge"></i>
                             <p>Empleados</p>
                         </a>
                     </li>
                     <li>
-                        <a href="../examples/tables.html">
+                        <a href="">
                             <i class="now-ui-icons design_bullet-list-67"></i>
                             <p>Inventarios</p>
                         </a>
                     </li>
                     <li>
-                        <a href="../examples/typography.html">
-                            <i class="now-ui-icons text_caps-small"></i>
-                            <p>Configuracion</p>
+                        <a href="">
+                            <i class="now-ui-icons shopping_delivery-fast"></i>
+                            <p>Rutas</p>
                         </a>
                     </li>
-                    <li class="active-pro">
-                        <a href="../examples/upgrade.html">
+                    <li>
+                        <a href="">
+                            <i class="now-ui-icons business_chart-bar-32"></i>
+                            <p>Reportes</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="">
+                            <i class="now-ui-icons ui-1_settings-gear-63"></i>
+                            <p>Categorías</p>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="">
+                            <i class="now-ui-icons ui-1_settings-gear-63"></i>
+                            <p>Configuración</p>
+                        </a>
+                    </li>
+                    <li>
+                    <a href="{{ route('tipomovimiento') }}">
+                            <i class="now-ui-icons ui-1_settings-gear-63"></i>
+                            <p>Tipos de Mantenimiento</p>
+                        </a>
+                    </li>
+                    <li class="">
+                        <a href="">
                             <i class="now-ui-icons arrows-1_cloud-download-93"></i>
                             <p>Crisfalt Developer</p>
                         </a>
@@ -99,7 +130,7 @@
                                 <span class="navbar-toggler-bar bar3"></span>
                             </button>
                         </div>
-                        <a class="navbar-brand" href="#pablo">Icons</a>
+                        <a class="navbar-brand">@yield('titulo-contenido','pagina')</a>
                     </div>
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-bar navbar-kebab"></span>
@@ -107,44 +138,60 @@
                         <span class="navbar-toggler-bar navbar-kebab"></span>
                     </button>
                     <div class="collapse navbar-collapse justify-content-end" id="navigation">
-                        <form>
+                        <!-- <form>
                             <div class="input-group no-border">
                                 <input type="text" value="" class="form-control" placeholder="Search...">
                                 <span class="input-group-addon">
                                     <i class="now-ui-icons ui-1_zoom-bold"></i>
                                 </span>
                             </div>
-                        </form>
+                        </form> -->
                         <ul class="navbar-nav">
-                            <li class="nav-item">
-                                <a class="nav-link" href="#pablo">
-                                    <i class="now-ui-icons media-2_sound-wave"></i>
-                                    <p>
-                                        <span class="d-lg-none d-md-block">Stats</span>
-                                    </p>
-                                </a>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="now-ui-icons location_world"></i>
-                                    <p>
-                                        <span class="d-lg-none d-md-block">Some Actions</span>
-                                    </p>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-                                    <a class="dropdown-item" href="#">Action</a>
-                                    <a class="dropdown-item" href="#">Another action</a>
-                                    <a class="dropdown-item" href="#">Something else here</a>
-                                </div>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#pablo">
-                                    <i class="now-ui-icons users_single-02"></i>
-                                    <p>
-                                        <span class="d-lg-none d-md-block">Account</span>
-                                    </p>
-                                </a>
-                            </li>
+                            @guest
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('login') }}">
+                                        Ingresar
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('register') }}">
+                                        Registro
+                                    </a>
+                                </li>
+                            @else 
+                                <!-- <li class="nav-item">
+                                    <a class="nav-link" href="#pablo">
+                                        <i class="now-ui-icons media-2_sound-wave"></i>
+                                        <p>
+                                            <span class="d-lg-none d-md-block">Stats</span>
+                                        </p>
+                                    </a>
+                                </li> -->
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="now-ui-icons users_single-02"></i>
+                                        <p>
+                                            <span class="d-lg-none d-md-block">Mi Cuenta</span>
+                                        </p>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                                        <p class="dropdown-item">{{ Auth::user()->name }}</p>
+                                        <a class="dropdown-item" href="#">Mi Perfil</a>
+                                        <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();">Cerrar Mi Cuenta</a>
+                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                            {{ csrf_field() }}
+                                        </form>
+                                    </div>
+                                </li>
+                                <!-- <li class="nav-item">
+                                    <a class="nav-link" href="#pablo">
+                                        <i class="now-ui-icons users_single-02"></i>
+                                        <p>
+                                            <span class="d-lg-none d-md-block">Account</span>
+                                        </p>
+                                    </a>
+                                </li> -->
+                            @endguest
                         </ul>
                     </div>
                 </div>
