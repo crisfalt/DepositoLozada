@@ -4,8 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class TipoMovimiento extends Model
+class TipoContenido extends Model
 {
+    //
     public static $messages = [
         'nombre.required' => 'El nombre es un campo obligatorio',
         'nombre.min' => 'El nombre debe tener minimo 3 caracteres',
@@ -19,8 +20,4 @@ class TipoMovimiento extends Model
             'descripcion' => 'max:300',
             'estado' => 'required'
     ];
-    //relacion con movimiento
-    /*public function movimiento() {
-        return $this -> belongsTo(Movimiento::class);
-    }*/
 }

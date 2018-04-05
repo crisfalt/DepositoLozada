@@ -17,6 +17,7 @@
     <link href="{{ asset('/css/now-ui-dashboard.css?v=1.0.1')}}" rel="stylesheet" />
     <!-- CSS Just for demo purpose, don't include it in your project -->
     <link href="{{ asset('/demo/demo.css')}}" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/jquery-confirm.css') }}" />
 </head>
 
 <body class="">
@@ -107,6 +108,30 @@
                     <a href="{{ route('tipomovimiento') }}">
                             <i class="now-ui-icons ui-1_settings-gear-63"></i>
                             <p>Tipos de Mantenimiento</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('marca') }}">
+                            <i class="now-ui-icons ui-1_settings-gear-63"></i>
+                            <p>Marcas</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('sizebotella') }}">
+                            <i class="now-ui-icons ui-1_settings-gear-63"></i>
+                            <p>Tamaños Envases</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('tipoenvase') }}">
+                            <i class="now-ui-icons ui-1_settings-gear-63"></i>
+                            <p>Tipos de Envases</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('tipocontenido') }}">
+                            <i class="now-ui-icons ui-1_settings-gear-63"></i>
+                            <p>Tipo de Contenido</p>
                         </a>
                     </li>
                     <li class="">
@@ -253,6 +278,8 @@
 <script src="{{ asset('/js/now-ui-dashboard.js?v=1.0.1') }}"></script>
 <!-- Now Ui Dashboard DEMO methods, don't include it in your project! -->
 <script src="{{ asset('/demo/demo.js') }}"></script>
+<!-- plugin js para eliminar registros -->
+<script src="{{ asset('/js/jquery-confirm.js') }}" type="text/javascript"></script>
 <script>
     $(document).ready(function() {
         // Javascript method's body can be found in assets/js/demos.js

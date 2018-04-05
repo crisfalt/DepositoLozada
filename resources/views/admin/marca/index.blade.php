@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
-@section('title','TiposMovimiento')
+@section('title','Marcas')
 
-@section('titulo-contenido','Tipos de Movimientos')
+@section('titulo-contenido','Marcas')
 
 @section('header-class')
 <div class="panel-header panel-header-sm">
@@ -45,7 +45,7 @@
         <div class="card">
             <div class="card-header">
                 {{-- <h4 class="card-title"> Simple Table</h4> --}}
-                <a href="{{ url('/tipomovimiento/create') }}" class="btn btn-warning btn-round">Nuevo Tipo Mantenimiento</a>
+                <a href="{{ url('/marca/create') }}" class="btn btn-warning btn-round">Nueva Marca</a>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -68,13 +68,13 @@
                             </th>
                         </thead>
                         <tbody>
-                            @foreach ( $tiposMovimiento as $tipoMovimiento )
+                            @foreach( $Marcas as $marca )
                                 <tr>
-                                    <td>{{ $tipoMovimiento -> id }}</td>
-                                    <td>{{ $tipoMovimiento -> nombre }}</td>
-                                    <td>{{ $tipoMovimiento -> descripcion }}</td>
+                                    <td>{{ $marca -> id }}</td>
+                                    <td>{{ $marca -> nombre }}</td>
+                                    <td>{{ $marca -> descripcion }}</td>
                                     <td>
-                                        @if ( $tipoMovimiento -> estado == 'A' )
+                                        @if ( $marca -> estado == 'A' )
                                             Activo
                                         @else
                                             Inactivo
@@ -85,13 +85,13 @@
                                             {{ csrf_field() }}
                                             {{ method_field('DELETE') }}
     
-                                            <a href="{{ url('/tipomovimiento/'.$tipoMovimiento->id) }}" rel="tooltip" title="Ver producto" class="btn btn-info btn-simple btn-xs">
+                                            <a href="{{ url('/marca/'.$marca->id) }}" rel="tooltip" title="Ver Marca {{ $marca -> nombre }}" class="btn btn-info btn-simple btn-xs">
                                                 <i class="fa fa-info"></i>
                                             </a>
-                                            <a href="{{ url('/tipomovimiento/'.$tipoMovimiento->id.'/edit') }}" rel="tooltip" title="Editar producto" class="btn btn-success btn-simple btn-xs">
+                                            <a href="{{ url('/marca/'.$marca->id.'/edit') }}" rel="tooltip" title="Editar Marca {{ $marca -> nombre }}" class="btn btn-success btn-simple btn-xs">
                                                 <i class="fa fa-edit"></i>
                                             </a>
-                                            <a class='btn btn-danger btn-simple btn-xs' rel="tooltip" title="Eliminar" onclick="Delete('{{ $tipoMovimiento -> nombre }}','{{ $tipoMovimiento -> id }}')">
+                                            <a class='btn btn-danger btn-simple btn-xs' rel="tooltip" title="Eliminar Marca {{ $marca -> nombre }}" onclick="Delete('{{ $marca -> nombre }}','{{ $marca -> id }}')">
                                                 <i class='fa fa-times'></i>
                                             </a>
                                             <!-- <button type="submit" rel="tooltip" title="Eliminar" class="btn btn-danger btn-simple btn-xs">
@@ -130,7 +130,7 @@
 			$.confirm({
 				theme: 'supervan',
 				title: 'Eliminar Tipo de Movimiento',
-				content: 'Seguro(a) que deseas eliminar el Tipo de Movimiento ' + nameProduct + '. <br> Click Aceptar or Cancelar',
+				content: 'Seguro(a) que deseas eliminar la Marca' + nameProduct + '. <br> Click Aceptar or Cancelar',
 				icon: 'fa fa-question-circle',
 				animation: 'scale',
 				animationBounce: 2.5,
@@ -144,7 +144,7 @@
 							$.confirm({
 								theme: 'supervan',
 								title: 'Estas Seguro ?',
-								content: 'Una vez eliminado debes volver a crear el tipo de movimiento',
+								content: 'Una vez eliminado debes volver a crear la marca',
 								icon: 'fa fa-warning',
 								animation: 'scale',
 								animationBounce: 2.5,
@@ -179,7 +179,7 @@
             $('#tableTiposMovimientos').DataTable({
                 "language": {
 
-                    "emptyTable": "No hay tipos de movimientos , click en el boton <b>Nuevo Tipo Movimiento</b> para agregar uno nuevo",
+                    "emptyTable": "No hay marcas registradas , click en el boton <b>Nueva Marca</b> para agregar uno nueva",
                     "paginate": {
                         "first": "Primero",
                         "last": "Ultimo",
@@ -188,7 +188,7 @@
                     },
                     "search": "Buscar: ",
                     "info": "Mostrando del _START_ al _END_, de un total de _TOTAL_ entradas",
-                    "lengthMenu": "Mostrar _MENU_ Productos por Página",
+                    "lengthMenu": "Mostrar _MENU_ Marcas por Página",
                     "zeroRecords": "No se encontro ningun resultado",
                     "loadingRecords": "Cargando...",
                     "processing": "Procesando...",

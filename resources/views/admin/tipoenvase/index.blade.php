@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
-@section('title','TiposMovimiento')
+@section('title','Tipos de Envases')
 
-@section('titulo-contenido','Tipos de Movimientos')
+@section('titulo-contenido','Tipos de Envases')
 
 @section('header-class')
 <div class="panel-header panel-header-sm">
@@ -21,35 +21,16 @@
         <span data-notify="icon" class="now-ui-icons ui-1_check"></span>
         <span data-notify="message">{{ session('notification') }}</span>
     </div>
-
-    {{-- <div class="alert alert-info">
-        <button type="button" aria-hidden="true" class="close">
-            <i class="now-ui-icons ui-1_simple-remove"></i>
-        </button>
-        <span>{{ session('notification') }}</span>
-    </div> --}}
-
-    {{-- <div class="alert alert-success">
-        <div class="container-fluid">
-            <div class="alert-icon">
-                <i class="material-icons">check</i>
-            </div>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true"><i class="material-icons">clear</i></span>
-            </button>
-            {{ session('notification') }}
-        </div>
-    </div> --}}
     @endif
     <div class="col-md-12">
         <div class="card">
             <div class="card-header">
                 {{-- <h4 class="card-title"> Simple Table</h4> --}}
-                <a href="{{ url('/tipomovimiento/create') }}" class="btn btn-warning btn-round">Nuevo Tipo Mantenimiento</a>
+                <a href="{{ url('/tipoenvase/create') }}" class="btn btn-warning btn-round">Nuevo Tipo de Envase</a>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table" cellspacing="0" id="tableTiposMovimientos">
+                    <table class="table" cellspacing="0" id="tableTiposEnvases">
                         <thead class=" text-primary">
                             <th class="text-left">
                                 #Id
@@ -68,13 +49,13 @@
                             </th>
                         </thead>
                         <tbody>
-                            @foreach ( $tiposMovimiento as $tipoMovimiento )
+                            @foreach( $tiposEnvases as $tipoEnvase )
                                 <tr>
-                                    <td>{{ $tipoMovimiento -> id }}</td>
-                                    <td>{{ $tipoMovimiento -> nombre }}</td>
-                                    <td>{{ $tipoMovimiento -> descripcion }}</td>
+                                    <td>{{ $tipoEnvase -> id }}</td>
+                                    <td>{{ $tipoEnvase -> nombre }}</td>
+                                    <td>{{ $tipoEnvase -> descripcion }}</td>
                                     <td>
-                                        @if ( $tipoMovimiento -> estado == 'A' )
+                                        @if ( $tipoEnvase -> estado == 'A' )
                                             Activo
                                         @else
                                             Inactivo
@@ -85,13 +66,13 @@
                                             {{ csrf_field() }}
                                             {{ method_field('DELETE') }}
     
-                                            <a href="{{ url('/tipomovimiento/'.$tipoMovimiento->id) }}" rel="tooltip" title="Ver producto" class="btn btn-info btn-simple btn-xs">
+                                            <a href="{{ url('/tipoenvase/'.$tipoEnvase->id) }}" rel="tooltip" title="Ver Tamaño {{ $tipoEnvase -> nombre }}" class="btn btn-info btn-simple btn-xs">
                                                 <i class="fa fa-info"></i>
                                             </a>
-                                            <a href="{{ url('/tipomovimiento/'.$tipoMovimiento->id.'/edit') }}" rel="tooltip" title="Editar producto" class="btn btn-success btn-simple btn-xs">
+                                            <a href="{{ url('/tipoenvase/'.$tipoEnvase->id.'/edit') }}" rel="tooltip" title="Editar Tamaño {{ $tipoEnvase -> nombre }}" class="btn btn-success btn-simple btn-xs">
                                                 <i class="fa fa-edit"></i>
                                             </a>
-                                            <a class='btn btn-danger btn-simple btn-xs' rel="tooltip" title="Eliminar" onclick="Delete('{{ $tipoMovimiento -> nombre }}','{{ $tipoMovimiento -> id }}')">
+                                            <a class='btn btn-danger btn-simple btn-xs' rel="tooltip" title="Eliminar Tamaño {{ $tipoEnvase -> nombre }}" onclick="Delete('{{ $tipoEnvase -> nombre }}','{{ $tipoEnvase -> id }}')">
                                                 <i class='fa fa-times'></i>
                                             </a>
                                             <!-- <button type="submit" rel="tooltip" title="Eliminar" class="btn btn-danger btn-simple btn-xs">
@@ -117,20 +98,14 @@
     <script src="https://cdn.datatables.net/responsive/2.2.1/js/dataTables.responsive.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/2.2.1/js/responsive.bootstrap4.min.js"></script>
 
-    <script>
-        $(document).ready(function() {
-            $.ajaxSetup({
-                    headers: {'X-CSRF-Token': $('meta[name=_token]').attr('content')}
-                });
-        });
-    </script>
+    {{-- metodo jquery para usar la libreria de confirmar para eliminar --}}
     <script>
         function Delete( nameProduct , idDel ) {
             var pathname = window.location.pathname; //ruta actual
 			$.confirm({
 				theme: 'supervan',
-				title: 'Eliminar Tipo de Movimiento',
-				content: 'Seguro(a) que deseas eliminar el Tipo de Movimiento ' + nameProduct + '. <br> Click Aceptar or Cancelar',
+				title: 'Eliminar Tipo de Envase',
+				content: 'Seguro(a) que deseas eliminar el tipo del envase ' + nameProduct + '. <br> Click Aceptar or Cancelar',
 				icon: 'fa fa-question-circle',
 				animation: 'scale',
 				animationBounce: 2.5,
@@ -144,7 +119,7 @@
 							$.confirm({
 								theme: 'supervan',
 								title: 'Estas Seguro ?',
-								content: 'Una vez eliminado debes volver a crear el tipo de movimiento',
+								content: 'Una vez eliminado debes volver a crear el tipo del envase',
 								icon: 'fa fa-warning',
 								animation: 'scale',
 								animationBounce: 2.5,
@@ -176,10 +151,10 @@
     </script>
     <script>
         $(document).ready(function() {
-            $('#tableTiposMovimientos').DataTable({
+            $('#tableTiposEnvases').DataTable({
                 "language": {
 
-                    "emptyTable": "No hay tipos de movimientos , click en el boton <b>Nuevo Tipo Movimiento</b> para agregar uno nuevo",
+                    "emptyTable": "No hay tipos de envases registrados , click en el boton <b>Nuevo Tipo</b> para agregar uno nuevo",
                     "paginate": {
                         "first": "Primero",
                         "last": "Ultimo",
@@ -188,7 +163,7 @@
                     },
                     "search": "Buscar: ",
                     "info": "Mostrando del _START_ al _END_, de un total de _TOTAL_ entradas",
-                    "lengthMenu": "Mostrar _MENU_ Productos por Página",
+                    "lengthMenu": "Mostrar _MENU_ Tipos de Envases por Página",
                     "zeroRecords": "No se encontro ningun resultado",
                     "loadingRecords": "Cargando...",
                     "processing": "Procesando...",
