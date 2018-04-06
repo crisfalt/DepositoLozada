@@ -64,6 +64,24 @@ Route::get('/tipocontenido/{id}','TipoContenidoController@show'); //mostrar el t
 Route::get('/tipocontenido/{id}/edit' , 'TipoContenidoController@edit');
 Route::post('/tipocontenido/{id}/edit' , 'TipoContenidoController@update');
 
+//CRUD TIPOS PACAS
+Route::get('/tipopaca' , 'TipoPacaController@index')->name('tipopaca');
+Route::get('/tipopaca/create' , 'TipoPacaController@create');
+Route::post('/tipopaca' , 'TipoPacaController@store');
+Route::delete('/tipopaca/{id}','TipoPacaController@destroy'); //vista para eliminar
+Route::get('/tipopaca/{id}','TipoPacaController@show'); //mostrar el tipo de movimiento
+Route::get('/tipopaca/{id}/edit' , 'TipoPacaController@edit');
+Route::post('/tipopaca/{id}/edit' , 'TipoPacaController@update');
+
+//CRUD BODEGAS
+Route::get('/bodega' , 'BodegaController@index')->name('bodega');
+Route::get('/bodega/create' , 'BodegaController@create');
+Route::post('/bodega' , 'BodegaController@store');
+Route::delete('/bodega/{id}','BodegaController@destroy'); //vista para eliminar
+Route::get('/bodega/{id}','BodegaController@show'); //mostrar el tipo de movimiento
+Route::get('/bodega/{id}/edit' , 'BodegaController@edit');
+Route::post('/bodega/{id}/edit' , 'BodegaController@update');
+
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
