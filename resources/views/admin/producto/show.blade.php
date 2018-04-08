@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
-@section('title','Bodegas')
+@section('title','Productos')
 
-@section('titulo-contenido','Bodegas')
+@section('titulo-contenido','Productos')
 
 @section('header-class')
 <div class="panel-header panel-header-sm">
@@ -20,25 +20,21 @@
                 <div class="text-center">
                     <a href="#">
                         {{-- <img class="avatar border-gray" src="../assets/img//mike.jpg" alt="..."> --}}
-                        <h5 class="title">{{ $bodega -> nombre }}</h5>
+                    <h5 class="title">{{ $Producto -> nombre }}</h5>
                     </a>
+                    <p class="description">
+                        @if ( $marca -> estado == 'A' )
+                            Activo
+                        @else
+                            Inactivo
+                        @endif
+                    </p>
                 </div>
                 <p class="description text-center">
-                    {{ $bodega -> direccion }}
-                </p>
-                <p class="description text-center">
-                    {{ $bodega -> telefono }}
-                </p>
-                <p class="description text-center">
-                    @if ( $bodega -> celular != 0 )
-                        {{ $bodega -> celular }}
-                    @endif
-                </p>
-                <p class="description text-center">
-                    {{ $municipios[0] -> nombre }}
+                    {{ $marca -> descripcion }}
                 </p>
                 <div class="text-center">
-                    <a href="{{ url('/bodega') }}" class="btn btn-info btn-round"><i class="now-ui-icons arrows-1_minimal-left"></i> Volver</a>
+                    <a href="{{ url('/marca') }}" class="btn btn-info btn-round"><i class="now-ui-icons arrows-1_minimal-left"></i> Volver</a>
                 </div>
             </div>
         </div>

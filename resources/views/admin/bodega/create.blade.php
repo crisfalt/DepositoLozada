@@ -76,7 +76,7 @@
                     </div>
                     <div class="text-center">
                         <button class="btn btn-warning">Registrar Bodega</button>
-                        <a href="{{ url('/marca') }}" class="btn btn-default">Cancelar</a>
+                        <a href="{{ url('/bodega') }}" class="btn btn-default">Cancelar</a>
                     </div>
                 </form>
             </div>

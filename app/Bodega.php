@@ -11,6 +11,7 @@ class Bodega extends Model
     public static $messages = [
         'nombre.required' => 'El nombre es un campo obligatorio',
         'nombre.max' => 'El nombre debe tener maximo 100 caracteres',
+        'nombre.unique' => 'El nombre que elegiste ya existe',
         'direccion.required' => 'La direccion es un campo obligatorio',
         'direccion.max' => 'La direccion debe tener maximo 100 caracteres',
         'telefono.required' => 'El Telefono es un campo obligatorio',
@@ -22,14 +23,14 @@ class Bodega extends Model
     ];
 
     public static $rules = [
-            'nombre' => 'required|max:100',
+            'nombre' => 'required|max:100|unique:bodegas,nombre',
             'direccion' => 'required|max:100',
             'telefono' => 'numeric|required|max:9999999999999999',
             'celular' => 'numeric|max:9999999999999999',
             'fk_municipio' => 'required'
     ];
 
-    public function municipios() {
+    public function municipio() {
         return $this->belongsTo( Municipio::class );
     }
 

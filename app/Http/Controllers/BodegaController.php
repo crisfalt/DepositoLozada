@@ -16,8 +16,10 @@ class BodegaController extends Controller
 
     //mostrar un tipo de movimiento
     public function show( $id ) {
-        $tipoContenido = TipoContenido::find( $id );
-        return view('admin.tipocontenido.show')->with(compact('tipoContenido'));
+        $bodega = Bodega::find( $id );
+        $municipios = Municipio::where('id',$bodega->fk_municipio)->get();
+        // $municipio = $municipios[0];
+        return view('admin.bodega.show')->with(compact('bodega','municipios'));
     }
 
     public function create() {

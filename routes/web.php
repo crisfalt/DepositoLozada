@@ -82,6 +82,21 @@ Route::get('/bodega/{id}','BodegaController@show'); //mostrar el tipo de movimie
 Route::get('/bodega/{id}/edit' , 'BodegaController@edit');
 Route::post('/bodega/{id}/edit' , 'BodegaController@update');
 
+//CRUD PRoductos
+Route::get('/producto' , 'ProductoController@index')->name('producto');
+Route::get('/producto/create' , 'ProductoController@create');
+Route::post('/producto' , 'ProductoController@store');
+Route::delete('/producto/{id}','ProductoController@destroy'); //vista para eliminar
+Route::get('/producto/{id}','ProductoController@show'); //mostrar el tipo de movimiento
+Route::get('/producto/{id}/edit' , 'ProductoController@edit');
+Route::post('/producto/{id}/edit' , 'ProductoController@update');
+
+//CRUD IMAGENES DE UN PRODUCTO
+Route::get('/producto/{codigo}/imagenes', 'ImagenesProductoController@index'); // listado
+Route::post('/producto/{codigo}/imagenes', 'ImagenesProductoController@store'); // registrar
+Route::delete('/producto/{codigo}/imagenes', 'ImagenesProductoController@destroy'); // form eliminar
+Route::get('/producto/{codigo}/imagenes/select/{image}', 'ImagenesProductoController@select'); // destacar
+
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
