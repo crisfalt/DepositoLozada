@@ -1,8 +1,47 @@
 @extends('layouts.app')
 
-@section('title','Imagenes Producto {{ $producto[0] -> nombre }}')
+@section('title','Imagenes Producto')
 
-@section('titulo-contenido','Imagenes Producto {{ $producto[0] -> nombre }}')
+@section('styles')
+    <style>
+        .quarter {
+			height: 400px;
+			width: 400px;
+		}
+		/* estilo para que la imagen quede bien redonda */
+		.rounded {
+			height: 400px;
+			width: 400px;
+			-webkit-border-radius: 50%;
+			-moz-border-radius: 50%;
+			-ms-border-radius: 50%;
+			-o-border-radius: 50%;
+			border-radius: 50%;
+			background-size:cover;
+		}
+
+        .upload {
+            width: 128px;
+            height: 128px;
+            background: url( {{ asset('img/cloud.png')}} );
+            overflow: hidden;
+            text-align: center;
+            margin: auto;
+        }
+
+
+        .upload input {
+            display: block !important;
+            width: 128px !important;
+            height: 128px !important;
+            opacity: 0 !important;
+            overflow: hidden !important;
+            
+        }
+    </style>
+@endsection
+
+@section('titulo-contenido','Imagenes Producto')
 
 @section('header-class')
 <div class="panel-header panel-header-sm">
@@ -12,6 +51,7 @@
 @section('contenido')
 <div class="row">
     <!-- mostrar mensaje del controlador -->
+
     @if (session('notification'))
 
     <div class="alert alert-info alert-with-icon" data-notify="container">
@@ -25,8 +65,77 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-header">
-                <h4 class="card-title"> Simple Table</h4>
+                <h4 class="card-title text-center">Imagenes del Producto {{ $producto->nombre }}</h4>
             </div>
+            @if ($errors->any())
+                <div class="alert alert-warning">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+            <div class="card-body">
+                <form method="POST" action="" enctype="multipart/form-data">
+                    {{ csrf_field() }}
+                    {{-- <div class="row">
+                            <div class="col-md-6"><label>Imagen a Subir</label></div>
+                    </div> --}}
+                    
+                    <center><p>Seleccionar Imagen</p></center>
+
+                    <div class="row text-center">
+                        {{-- <div class="col-md-12">
+                            <div class="form-group"> --}}
+                                <div class="upload"><input type="file" class="form-control" title="Imagen a subir" name="photo" id="photo"></div>
+                            {{-- </div>
+                        </div> --}}
+                    </div>
+                    <br>
+                    <div class="row text-center">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                        <!-- Aqui pone la imagen que sube -->
+                                <img src="" alt="..." class="img quarter" id="image">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <input type="hidden" id="txtPhoto" name="txtPhoto" value=""> -->
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-danger btn-round">Subir Nueva Imagen</button>
+                        <a href="{{ url('/producto') }}" class="btn btn-default btn-round">Volver al listado de productos</a>
+                    </div>
+                </form>
+                <hr>
+                <div class="row text-center">
+                    @if ( count( $imagenes ) != 0 )
+                        @foreach( $imagenes as $image )
+                        <div class="col-md-4">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <!-- campo calculado en el modelo productimage metodo getUrlAttribute -->
+                                    <img class="img-raised img-rounded" src="{{ $image -> url }}" alt="" width="250" height="250">
+                                    <form method="post" action="">
+                                        {{ csrf_field() }}
+                                        {{ method_field('DELETE') }}
+                                        <input type="hidden" name="image_id" value="{{ $image -> id }}">
+                                        <button type="submit" class="btn btn-danger btn-round">Eliminar Imagen</button>
+                                        @if( $image -> featured == true )
+                                            <button type="button" class="btn btn-warning btn-fab btn-fab-mini btn-round" rel="tooltip" title="Imagen destacada actualmente"><i class="now-ui-icons ui-2_favourite-28"></i></button>
+                                        @else
+                                            <a href="{{ url('/producto/'.$producto -> codigo.'/imagenes/select/'.$image -> id) }}" class="btn btn-info btn-fab btn-fab-mini btn-round" rel="tooltip" title="Imagen por destacar"><i class="now-ui-icons ui-2_favourite-28"></i></a>
+                                        @endif
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
+                    @endif
+                </div>
+
+            </div>
+            <hr>
             {{-- <div class="card-body">
                 <div class="table-responsive">
                     <table class="table" cellspacing="0" id="tableTiposMovimientos">
@@ -100,90 +209,21 @@
 
 @section('scripts')
 
-    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script> 
-    <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
-    <script src="https://cdn.datatables.net/responsive/2.2.1/js/dataTables.responsive.min.js"></script>
-    <script src="https://cdn.datatables.net/responsive/2.2.1/js/responsive.bootstrap4.min.js"></script>
+    <script>
+        //codigo para mostrar una imagen y refrescar el campo
+        function mostrarImagen(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#image').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
 
-    <script>
-        $(document).ready(function() {
-            $.ajaxSetup({
-                    headers: {'X-CSRF-Token': $('meta[name=_token]').attr('content')}
-                });
+        $('#photo').on('change', function (e) {
+            mostrarImagen(this);
         });
-    </script>
-    <script>
-        function Delete( nameProduct , idDel ) {
-            var pathname = window.location.pathname; //ruta actual
-			$.confirm({
-				theme: 'supervan',
-				title: 'Eliminar Producto',
-				content: 'Seguro(a) que deseas eliminar el producto' + nameProduct + '. <br> Click Aceptar or Cancelar',
-				icon: 'fa fa-question-circle',
-				animation: 'scale',
-				animationBounce: 2.5,
-				closeAnimation: 'scale',
-				opacity: 0.5,
-				buttons: {
-					'confirm': {
-						text: 'Aceptar',
-						btnClass: 'btn-blue',
-						action: function () {
-							$.confirm({
-								theme: 'supervan',
-								title: 'Estas Seguro ?',
-								content: 'Una vez eliminado debes volver a crear el producto',
-								icon: 'fa fa-warning',
-								animation: 'scale',
-								animationBounce: 2.5,
-								closeAnimation: 'zoom',
-								buttons: {
-									confirm: {
-										text: 'Si, Estoy Seguro!',
-										btnClass: 'btn-orange',
-										action: function () {
-                                            $('.delete').attr('action' , pathname + '/' + idDel );
-											$('.delete').submit();
-										}
-									},
-									cancel: {
-										text: 'No, Cancelar',
-										//$.alert('you clicked on <strong>cancel</strong>');
-									}
-								}
-							});
-						}
-					},
-					cancel: {
-						text: 'Cancelar',
-						//$.alert('you clicked on <strong>cancel</strong>');
-					},
-				}
-			});
-		}
-    </script>
-    <script>
-        $(document).ready(function() {
-            $('#tableTiposMovimientos').DataTable({
-                "language": {
-
-                    "emptyTable": "No hay productos registrados , click en el boton <b>Nuevo Producto</b> para agregar uno nuevo",
-                    "paginate": {
-                        "first": "Primero",
-                        "last": "Ultimo",
-                        "previous": "Anterior",
-                        "next": "Siguiente",
-                    },
-                    "search": "Buscar: ",
-                    "info": "Mostrando del _START_ al _END_, de un total de _TOTAL_ entradas",
-                    "lengthMenu": "Mostrar _MENU_ Productos por Página",
-                    "zeroRecords": "No se encontro ningun resultado",
-                    "loadingRecords": "Cargando...",
-                    "processing": "Procesando...",
-                },
-                "responsive" : "true",
-                "autoWidth": "true"
-            });
-        });
+        
     </script>
 @endsection

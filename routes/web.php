@@ -19,6 +19,32 @@ Route::get('/welcome', function () {
     return view('welcome');
 });
 
+Route::middleware(['auth', 'admin'])->prefix('admin')->namespace('Admin')->group(function () {
+
+});
+
+Route::middleware(['auth', 'vendedor'])->prefix('vendedor')->namespace('Vendedor')->group(function () {
+    
+});
+
+//CRUD Zonas
+Route::get('/zona' , 'ZonaController@index')->name('zona');
+Route::get('/zona/create' , 'ZonaController@create');
+Route::post('/zona' , 'ZonaController@store');
+Route::delete('/zona/{id}','ZonaController@destroy'); //vista para eliminar
+Route::get('/zona/{id}','ZonaController@show'); //mostrar el tipo de movimiento
+Route::get('/zona/{id}/edit' , 'ZonaController@edit');
+Route::post('/zona/{id}/edit' , 'ZonaController@update');
+
+//CRUD Rutas
+Route::get('/ruta' , 'RutaController@index')->name('ruta');
+Route::get('/ruta/create' , 'RutaController@create');
+Route::post('/ruta' , 'RutaController@store');
+Route::delete('/ruta/{id}','RutaController@destroy'); //vista para eliminar
+Route::get('/ruta/{id}','RutaController@show'); //mostrar el tipo de movimiento
+Route::get('/ruta/{id}/edit' , 'RutaController@edit');
+Route::post('/ruta/{id}/edit' , 'RutaController@update');
+
 //CRUD TIPOS DE MOVIMIENTOS
 Route::get('/tipomovimiento' , 'TipoMovimientoController@index')->name('tipomovimiento');
 Route::get('/tipomovimiento/create' , 'TipoMovimientoController@create');
@@ -90,6 +116,24 @@ Route::delete('/producto/{id}','ProductoController@destroy'); //vista para elimi
 Route::get('/producto/{id}','ProductoController@show'); //mostrar el tipo de movimiento
 Route::get('/producto/{id}/edit' , 'ProductoController@edit');
 Route::post('/producto/{id}/edit' , 'ProductoController@update');
+
+//CRUD Descripcion de Precio
+Route::get('/descripcionprecio' , 'DescripcionPrecioController@index')->name('descripcionprecio');
+Route::get('/descripcionprecio/create' , 'DescripcionPrecioController@create');
+Route::post('/descripcionprecio' , 'DescripcionPrecioController@store');
+Route::delete('/descripcionprecio/{id}','DescripcionPrecioController@destroy'); //vista para eliminar
+Route::get('/descripcionprecio/{id}','DescripcionPrecioController@show'); //mostrar el tipo de movimiento
+Route::get('/descripcionprecio/{id}/edit' , 'DescripcionPrecioController@edit');
+Route::post('/descripcionprecio/{id}/edit' , 'DescripcionPrecioController@update');
+
+//CRUD Descripcion de Precio
+Route::get('/descripcioniva' , 'DescripcionIvaController@index')->name('descripcioniva');
+Route::get('/descripcioniva/create' , 'DescripcionIvaController@create');
+Route::post('/descripcioniva' , 'DescripcionIvaController@store');
+Route::delete('/descripcioniva/{id}','DescripcionIvaController@destroy'); //vista para eliminar
+Route::get('/descripcioniva/{id}','DescripcionIvaController@show'); //mostrar el tipo de movimiento
+Route::get('/descripcioniva/{id}/edit' , 'DescripcionIvaController@edit');
+Route::post('/descripcioniva/{id}/edit' , 'DescripcionIvaController@update');
 
 //CRUD IMAGENES DE UN PRODUCTO
 Route::get('/producto/{codigo}/imagenes', 'ImagenesProductoController@index'); // listado

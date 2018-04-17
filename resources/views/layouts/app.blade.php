@@ -18,6 +18,7 @@
     <!-- CSS Just for demo purpose, don't include it in your project -->
     <link href="{{ asset('/demo/demo.css')}}" rel="stylesheet" />
     <link rel="stylesheet" type="text/css" href="{{ asset('css/jquery-confirm.css') }}" />
+    @yield('styles')
 </head>
 
 <body class="">
@@ -150,6 +151,30 @@
                         <a href="{{ route('producto') }}">
                             <i class="now-ui-icons ui-1_settings-gear-63"></i>
                             <p>Productos</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('descripcionprecio') }}">
+                            <i class="now-ui-icons ui-1_settings-gear-63"></i>
+                            <p>Descripcion de Precio</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('descripcioniva') }}">
+                            <i class="now-ui-icons ui-1_settings-gear-63"></i>
+                            <p>Descripcion de Iva</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('zona') }}">
+                            <i class="now-ui-icons ui-1_settings-gear-63"></i>
+                            <p>Zonas</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('ruta') }}">
+                            <i class="now-ui-icons ui-1_settings-gear-63"></i>
+                            <p>Rutas</p>
                         </a>
                     </li>
                     <li class="">

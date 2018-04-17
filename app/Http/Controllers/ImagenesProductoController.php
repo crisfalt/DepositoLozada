@@ -11,10 +11,9 @@ class ImagenesProductoController extends Controller
 {
     //
     public function index( $codigo ) {
-        $producto = Producto::where('codigo',$codigo)->get();
-        // dd($producto[0]->codigo);
-        $imagenes = ImagenesProducto::where('fk_producto',$producto[0]->codigo) -> orderBy('featured','desc') -> get(); //para mostrar las imagenes ordenadas por las destacada
-        dd($imagenes[0]->nombre);
+        $producto = Producto::where('codigo',$codigo)->first();
+        // dd($producto->codigo);
+        $imagenes = ImagenesProducto::where('fk_producto',$producto->codigo) -> orderBy('featured','desc') -> get(); //para mostrar las imagenes ordenadas por las destacada
         return view('admin.producto.imagenes.index')->with(compact('producto','imagenes')); //listado de productos
     }
 
@@ -24,8 +23,9 @@ class ImagenesProductoController extends Controller
         // return view(); //almacenar el registro de un producto
         //validar datos con reglas de laravel en documentacion hay mas
         //mensajes personalizados para cada campo
+        // dd($request->file('photo'));
         $messages = [
-            'photo.required' => 'La imagen es un campo obligatorio'
+            'photo.required' => 'No se ha seleccionado ninguna imagen'
             // 'photo.image' => 'Debe ser una imagen con formato (jpg, png, bmp, gif, or svg))'
         ];
         $rules = [
@@ -34,17 +34,21 @@ class ImagenesProductoController extends Controller
         $this->validate($request,$rules,$messages);
         //crear un prodcuto nuevo
         $file = $request->file('photo');
-        $path = public_path() . '/images/products'; //concatena public_path la ruta absoluta a public y concatena la carpeta para imagenes
+        $path = public_path() . '/imagenes/productos'; //concatena public_path la ruta absoluta a public y concatena la carpeta para imagenes
         $fileName = uniqid() . $file->getClientOriginalName();//crea una imagen asi sea igual no la sobreescribe
         $moved = $file->move( $path , $fileName );//dar la orden al archivo para que se guarde en la ruta indicada la sube al servidor
-
+        $notification = "";
         if( $moved ) {
-            $productImage = new ProductImage();
-            $productImage -> image = $fileName;
-            $productImage -> product_id = $id;
+            $productImage = new ImagenesProducto();
+            $productImage -> url_imagen = $fileName;
+            $productImage -> fk_producto = $id;
             $productImage -> save(); //registrar imagen del producto
+            $notification = "La Imagen se ha subido sastifactoriamente";
         }
-        return back();
+        else {
+            $notification = "Hubo un error subiendo la imagen";
+        }
+        return back() -> with(compact('notification'));
         //crear registro para imagen de producto
         // return dd($request->file('photo'));
     }
@@ -55,30 +59,33 @@ class ImagenesProductoController extends Controller
         // return "Mostrar aqui formulario para producto con id $id";
 
         //eliminar archivo imagen de la carpeta public
-        $productImage = ProductImage::find( $request -> input('image_id') );
-        if( substr( $productImage -> image , 0 , 4  ) === "http" ) {
+        $productImage = ImagenesProducto::find( $request -> input('image_id') );
+        if( substr( $productImage -> url_imagen , 0 , 4  ) === "http" ) {
             $deleted = true;
         }
         else {
-            $fullPath = public_path() . '/images/products/' . $productImage -> image; //concatena public_path la ruta absoluta a public y concatena la carpeta para imagenes
+            $fullPath = public_path() . '/imagenes/productos/' . $productImage -> url_imagen; //concatena public_path la ruta absoluta a public y concatena la carpeta para imagenes
             $deleted = File::delete( $fullPath ); //nos devuelve si la imagen ha sido eliminada o no del public
         }
         //eliminar registro de la bd
+        $notification = "";
         if( $deleted ) {
             $productImage -> delete(); //ELIMINAR
+            $notification = "Imagen eliminda Correctamente";
         }
-        return back(); //nos devuelve a la pagina anterior
+        return back()->with(compact('notification') ); //nos devuelve a la pagina anterior
     }
 
     //poner imagen destacada
     public function select( $idProduct , $idImage ) {
+        // dd("llego al select");
         //quitar la anterior imagen destacada
-        ProductImage::where( 'product_id' , $idProduct ) -> update( [
+        ImagenesProducto::where( 'fk_producto' , $idProduct ) -> update( [
             'featured' => false
         ]);
 
         //poner la imagen destacada
-        $productImage = ProductImage::find( $idImage );
+        $productImage = ImagenesProducto::find( $idImage );
         $productImage -> featured = true;
         $productImage -> save(); //guardar cambios
         return back();

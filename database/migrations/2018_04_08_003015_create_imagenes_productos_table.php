@@ -17,7 +17,7 @@ class CreateImagenesProductosTable extends Migration
             $table->increments('id');
             $table->string('url_imagen');
             //inicio foreign key
-            $table->integer('fk_producto')->unsigned();//foranea a autoincremental
+            $table->string('fk_producto',100);//foranea a autoincremental
             $table->foreign('fk_producto')->references('codigo')->on('productos');//id campo primario de tabla padre categories nombre tabla padre
             //fin foreignkey
             $table->boolean('featured')->default(false);//default de una columna
