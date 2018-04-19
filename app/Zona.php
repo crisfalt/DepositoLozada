@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Bodega;
+use App\Ruta;
 
 class Zona extends Model
 {
@@ -27,6 +28,10 @@ class Zona extends Model
 
     public function bodega() {
         return $bodega = Bodega::where('id',$this->bodega_id) -> first();
+    }
+
+    public function rutas() {
+        return $this->hasMany(Ruta::class); //1 zona tiene muchas rutas
     }
 
 }

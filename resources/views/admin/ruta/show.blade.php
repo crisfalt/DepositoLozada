@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
-@section('title','Tipo de Paca')
+@section('title','Ruta')
 
-@section('titulo-contenido','Tipo de Paca')
+@section('titulo-contenido','Ruta')
 
 @section('header-class')
 <div class="panel-header panel-header-sm">
@@ -20,10 +20,10 @@
                 <div class="text-center">
                     <a href="#">
                         {{-- <img class="avatar border-gray" src="../assets/img//mike.jpg" alt="..."> --}}
-                    <h5 class="title">{{ $tipoPaca -> nombre }}</h5>
+                    <h5 class="title">{{ $ruta -> nombre }}</h5>
                     </a>
                     <p class="description">
-                        @if ( $tipoPaca -> estado == 'A' )
+                        @if ( $ruta -> estado == 'A' )
                             Activo
                         @else
                             Inactivo
@@ -31,23 +31,10 @@
                     </p>
                 </div>
                 <p class="description text-center">
-                    {{ $tipoPaca -> descripcion }}
-                </p>
-                <p class="description text-center">
-                    La paca tiene {{ $tipoPaca -> cantidad }} unidades
-                </p>
-                <p class="description text-center">
-                    La paca tiene un valor de {{ $tipoPaca -> precio }}
-                </p>
-                <p class="description text-center">
-                    @if ($tipoPaca -> retornable)
-                        Es retornable
-                    @else
-                        No es retornable
-                    @endif
+                    {{ $ruta -> descripcion }}
                 </p>
                 <div class="text-center">
-                    <a href="{{ url('/tipopaca') }}" class="btn btn-info btn-round"><i class="now-ui-icons arrows-1_minimal-left"></i> Volver</a>
+                    <a href="{{ url('/zona/'.$ruta -> zona() -> id.'/rutas') }}" class="btn btn-info btn-round"><i class="now-ui-icons arrows-1_minimal-left"></i> Volver</a>
                 </div>
             </div>
         </div>

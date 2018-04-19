@@ -80,6 +80,12 @@ class ZonaController extends Controller
         //$categories = Category::all(); //traer categorias
         // return "Mostrar aqui formulario para producto con id $id";
         $zona = Zona::find( $id );
+        //inicio eliminar todas las rutas de la zona que se eliminara
+        $rutas = $zona -> rutas() -> get();
+        foreach( $rutas as $ruta ) {
+            $ruta -> delete();
+        }
+        //fin eliminiar rutas
         $zona -> delete(); //ELIMINAR
         $notification = 'zona ' . $zona -> nombre . ' Eliminada Exitosamente';
         return back() -> with( compact( 'notification' ) ); //nos devuelve a la pagina anterior

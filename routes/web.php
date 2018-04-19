@@ -36,9 +36,9 @@ Route::get('/zona/{id}','ZonaController@show'); //mostrar el tipo de movimiento
 Route::get('/zona/{id}/edit' , 'ZonaController@edit');
 Route::post('/zona/{id}/edit' , 'ZonaController@update');
 
-//CRUD Rutas
-Route::get('/ruta' , 'RutaController@index')->name('ruta');
-Route::get('/ruta/create' , 'RutaController@create');
+//CRUD Rutas de las zonas
+Route::get('/zona/{id}/rutas' , 'RutaController@index');
+Route::get('/ruta/{id}/create' , 'RutaController@create');
 Route::post('/ruta' , 'RutaController@store');
 Route::delete('/ruta/{id}','RutaController@destroy'); //vista para eliminar
 Route::get('/ruta/{id}','RutaController@show'); //mostrar el tipo de movimiento

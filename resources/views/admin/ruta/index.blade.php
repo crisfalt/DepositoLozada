@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
-@section('title','Tipos de Pacas')
+@section('title','Rutas')
 
-@section('titulo-contenido','Tipos de Pacas')
+@section('titulo-contenido','Rutas')
 
 @section('header-class')
 <div class="panel-header panel-header-sm">
@@ -10,6 +10,19 @@
 @endsection
 
 @section('contenido')
+<!-- <div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+            </div>
+        </div>
+        <div class="card-body">
+            <form action="">
+                
+            </form>
+        </div>
+    </div>
+</div> -->
 <div class="row">
     <!-- mostrar mensaje del controlador -->
     @if (session('notification'))
@@ -25,8 +38,11 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-header">
-                {{-- <h4 class="card-title"> Simple Table</h4> --}}
-                <a href="{{ url('/tipopaca/create') }}" class="btn btn-warning btn-round">Nuevo Tipo de Paca</a>
+                <div class="row">
+                    <div class="col-md-6 text-left"><a href="{{ url('/ruta/'.$zona->id.'/create') }}" class="btn btn-warning btn-round">Nueva Ruta</a></div>
+                    <div class="col-md-6 text-right"><a href="{{ url('/zona') }}" class="btn btn-info btn-round">Volver</a></div>
+                </div>
+                <h4 class="card-title text-center"> Rutas de la Zona {{ $zona -> nombre }}</h4>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -42,15 +58,6 @@
                                 Descripcion
                             </th>
                             <th>
-                                Cantidad
-                            </th>
-                            <th>
-                                Precio
-                            </th>
-                            <th>
-                                Retornable
-                            </th>
-                            <th>
                                 Estado
                             </th>
                             <th class="text-center">
@@ -58,39 +65,30 @@
                             </th>
                         </thead>
                         <tbody>
-                            @foreach( $tiposPacas as $tipoPaca )
+                            @foreach( $rutas as $ruta )
                                 <tr>
-                                    <td>{{ $tipoPaca -> id }}</td>
-                                    <td>{{ $tipoPaca -> nombre }}</td>
-                                    <td>{{ $tipoPaca -> descripcion }}</td>
-                                    <td>{{ $tipoPaca -> cantidad }}</td>
-                                    <td>{{ $tipoPaca -> precio }}</td>
+                                    <td>{{ $ruta -> id }}</td>
+                                    <td>{{ $ruta -> nombre }}</td>
+                                    <td>{{ $ruta -> descripcion }}</td>
                                     <td>
-                                        @if ( $tipoPaca -> retornable == '1')
-                                            SI
-                                        @else
-                                            NO
-                                        @endif
-                                    </td>
-                                    <td>
-                                        @if ( $tipoPaca -> estado == 'A' )
+                                        @if ( $ruta -> estado == 'A' )
                                             Activo
                                         @else
                                             Inactivo
                                         @endif
                                     </td>
-                                    <td class="td-actions text-right">
+                                    <td class="td-actions text-center">
                                         <form method="post" class="delete">
                                             {{ csrf_field() }}
                                             {{ method_field('DELETE') }}
     
-                                            <a href="{{ url('/tipopaca/'.$tipoPaca->id) }}" rel="tooltip" title="Ver Tipo Paca {{ $tipoPaca -> nombre }}" class="btn btn-info btn-simple btn-xs">
+                                            <a href="{{ url('/ruta/'.$ruta->id) }}" rel="tooltip" title="Ver Ruta {{ $ruta -> nombre }}" class="btn btn-info btn-simple btn-xs">
                                                 <i class="fa fa-info"></i>
                                             </a>
-                                            <a href="{{ url('/tipopaca/'.$tipoPaca->id.'/edit') }}" rel="tooltip" title="Editar Tipo Paca {{ $tipoPaca -> nombre }}" class="btn btn-success btn-simple btn-xs">
+                                            <a href="{{ url('/ruta/'.$ruta->id.'/edit') }}" rel="tooltip" title="Editar Ruta {{ $ruta -> nombre }}" class="btn btn-success btn-simple btn-xs">
                                                 <i class="fa fa-edit"></i>
                                             </a>
-                                            <a class='btn btn-danger btn-simple btn-xs' rel="tooltip" title="Eliminar Tipo Contenido {{ $tipoPaca -> nombre }}" onclick="Delete('{{ $tipoPaca -> nombre }}','{{ $tipoPaca -> id }}')">
+                                            <a class='btn btn-danger btn-simple btn-xs' rel="tooltip" title="Eliminar Ruta {{ $ruta -> nombre }}" onclick="Delete('{{ $ruta -> nombre }}','{{ $ruta -> id }}')">
                                                 <i class='fa fa-times'></i>
                                             </a>
                                             <!-- <button type="submit" rel="tooltip" title="Eliminar" class="btn btn-danger btn-simple btn-xs">
@@ -119,11 +117,12 @@
     {{-- metodo jquery para usar la libreria de confirmar para eliminar --}}
     <script>
         function Delete( nameProduct , idDel ) {
-            var pathname = window.location.pathname; //ruta actual
+            // var pathname = window.location.pathname; //ruta actual
+            var pathname = '/ruta';
 			$.confirm({
 				theme: 'supervan',
 				title: 'Eliminar Tipo de Contenido',
-				content: 'Seguro(a) que deseas eliminar el tipo de Paca ' + nameProduct + '. <br> Click Aceptar or Cancelar',
+				content: 'Seguro(a) que deseas eliminar la Ruta ' + nameProduct + '. <br> Click Aceptar or Cancelar',
 				icon: 'fa fa-question-circle',
 				animation: 'scale',
 				animationBounce: 2.5,
@@ -137,7 +136,7 @@
 							$.confirm({
 								theme: 'supervan',
 								title: 'Estas Seguro ?',
-								content: 'Una vez eliminado debes volver a crear el tipo de paca',
+								content: 'Una vez eliminado debes volver a crear la ruta',
 								icon: 'fa fa-warning',
 								animation: 'scale',
 								animationBounce: 2.5,
@@ -172,7 +171,7 @@
             $('#tableTiposEnvases').DataTable({
                 "language": {
 
-                    "emptyTable": "No hay tipos de contenido pacas , click en el boton <b>Nuevo Tipo de Paca</b> para agregar uno nuevo",
+                    "emptyTable": "No hay rutas , click en el boton <b>Nueva Ruta</b> para agregar una nueva",
                     "paginate": {
                         "first": "Primero",
                         "last": "Ultimo",
@@ -181,7 +180,7 @@
                     },
                     "search": "Buscar: ",
                     "info": "Mostrando del _START_ al _END_, de un total de _TOTAL_ entradas",
-                    "lengthMenu": "Mostrar _MENU_ Tipos de Pacas por Página",
+                    "lengthMenu": "Mostrar _MENU_ Rutas por Página",
                     "zeroRecords": "No se encontro ningun resultado",
                     "loadingRecords": "Cargando...",
                     "processing": "Procesando...",

@@ -69,7 +69,7 @@
                                             <a href="{{ url('/zona/'.$zona->id) }}" rel="tooltip" title="Ver Zona {{ $zona -> nombre }}" class="btn btn-info btn-simple btn-xs">
                                                 <i class="fa fa-info"></i>
                                             </a>
-                                            <a href="{{ url('/zona/'.$zona->codigo.'/rutas') }}" rel="tooltip" title="Rutas Zona {{ $zona -> nombre }}" class="btn btn-warning btn-simple btn-xs">
+                                            <a href="{{ url('/zona/'.$zona->id.'/rutas') }}" rel="tooltip" title="Rutas Zona {{ $zona -> nombre }}" class="btn btn-warning btn-simple btn-xs">
                                                 <i class="fa fa-street-view"></i>
                                             </a>
                                             <a href="{{ url('/zona/'.$zona->id.'/edit') }}" rel="tooltip" title="Editar Zona {{ $zona -> nombre }}" class="btn btn-success btn-simple btn-xs">

@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
-@section('title','Tipos de Pacas')
+@section('title','Zona')
 
-@section('titulo-contenido','Tipos de Pacas')
+@section('titulo-contenido','Zona')
 
 @section('header-class')
 <div class="panel-header panel-header-sm">
@@ -14,7 +14,7 @@
     <div class="col-md-6">
         <div class="card">
             <div class="card-header">
-                <h5 class="title">Editar Tipo de Paca {{ $tipoPaca -> nombre }}</h5>
+                <h5 class="title">Editar Tipo de Paca {{ $zona -> nombre }}</h5>
             </div>
             <div class="card-body">
                 <!-- Mostrar los errores capturados por validate -->
@@ -27,13 +27,13 @@
                     </ul>
                 </div>
                 @endif
-                <form method="post" action="{{ url('/tipopaca/'.$tipoPaca->id.'/edit') }}">
+                <form method="post" action="{{ url('/zona/'.$zona->id.'/edit') }}">
                     {{ csrf_field() }}
                     <div class="row">
                         <div class="col-md-12 pr-1">
                             <div class="form-group">
                                 <label>Nombre</label>
-                                <input type="text" class="form-control" name="nombre" value="{{ old('nombre' , $tipoPaca->nombre ) }}">
+                                <input type="text" class="form-control" name="nombre" value="{{ old('nombre' , $zona->nombre ) }}">
                             </div>
                         </div>
                     </div>
@@ -41,53 +41,25 @@
                         <div class="col-md-12 pr-1">
                             <div class="form-group">
                                 <label>Descripcion</label>
-                                <textarea class="form-control" placeholder="Descripción" rows="5" name="descripcion">{{ old('descripcion' , $tipoPaca->descripcion) }}</textarea>
+                                <textarea class="form-control" placeholder="Descripción" rows="5" name="descripcion">{{ old('descripcion' , $zona->descripcion) }}</textarea>
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-12 pr-1">
-                            <div class="form-group">
-                                <label>Cantidad de unidades en la Paca</label>
-                                <input type="number" step="0.01" class="form-control" name="cantidad" value="{{ old('cantidad',$tipoPaca->cantidad) }}">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12 pr-1">
-                            <div class="form-group">
-                                <label>Precio de la Paca</label>
-                                <input type="number" step="0.01" class="form-control" name="precio" value="{{ old('precio',$tipoPaca->precio) }}">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12 pr-1">
-                            <div class="form-group">
-                                <label>Es Retornable ?</label>
-                                <label class="radio-inline col-md-4">
-                                    <input type="radio" name="retornable" value="SI"> SI
-                                </label>
-                                <label class="radio-inline col-md-4">
-                                    <input type="radio" name="retornable" value="NO"> NO
-                                </label>
-                            </div>
-                        </div>
-                    </div>
+                    <input type="hidden" name="fk_bodega" value="{{ $zona -> bodega() -> id }}">
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label>Estado</label>
                                 <select class="form-control" name="estado">
-                                    <option class="form-control" value="A" @if ($tipoPaca->estado == old('estado',$tipoPaca->estado)) selected @endif>Activo</option>
-                                    <option class="form-control" value="I" @if ($tipoPaca->estado == old('estado',$tipoPaca->estado)) selected @endif>Inactivo</option>
+                                    <option class="form-control" value="A" @if ($zona->estado == old('estado',$zona->estado)) selected @endif>Activo</option>
+                                    <option class="form-control" value="I" @if ($zona->estado == old('estado',$zona->estado)) selected @endif>Inactivo</option>
                                 </select>
                             </div>
                         </div>
                     </div>
                     <div class="text-center">
                         <button class="btn btn-warning">Actualizar Tipo de Paca</button>
-                        <a href="{{ url('/tipopaca') }}" class="btn btn-default">Cancelar</a>
+                        <a href="{{ url('/zona') }}" class="btn btn-default">Cancelar</a>
                     </div>
                 </form>
             </div>

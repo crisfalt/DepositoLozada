@@ -171,12 +171,6 @@
                             <p>Zonas</p>
                         </a>
                     </li>
-                    <li>
-                        <a href="{{ route('ruta') }}">
-                            <i class="now-ui-icons ui-1_settings-gear-63"></i>
-                            <p>Rutas</p>
-                        </a>
-                    </li>
                     <li class="">
                         <a href="">
                             <i class="now-ui-icons arrows-1_cloud-download-93"></i>
