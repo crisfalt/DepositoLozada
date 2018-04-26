@@ -57,19 +57,19 @@
                         </a>
                     </li>
                     <li>
-                        <a href="">
+                        <a href="{{ route('cliente') }}">
                             <i class="now-ui-icons users_single-02"></i>
                             <p>Clientes</p>
                         </a>
                     </li>
                     <li>
-                        <a href="">
+                        <a href="{{ route('proveedor') }}">
                             <i class="now-ui-icons sport_user-run"></i>
                             <p>Proveedores</p>
                         </a>
                     </li>
                     <li>
-                        <a href="">
+                        <a href="{{ route('register') }}">
                             <i class="now-ui-icons business_badge"></i>
                             <p>Empleados</p>
                         </a>

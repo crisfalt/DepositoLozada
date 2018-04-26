@@ -2,7 +2,7 @@
 
 @section('title','DepositoLozada | Registrar')
 
-@section('titulo-contenido','Registrar Usuario')
+@section('titulo-contenido','Registrar Cliente')
 
 @section('header-class')
 <div class="panel-header panel-header-sm">
@@ -14,7 +14,7 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-header">
-                <h5 class="title">Registrar Usuario</h5>
+                <h5 class="title">Registrar Cliente</h5>
             </div>
             <!-- Mostrar los errores capturados por validate -->
             @if ($errors->any())
@@ -27,7 +27,7 @@
                 </div>
                 @endif
             <div class="card-body">
-                <form method="POST" action="{{ route('register') }}">
+                <form method="POST" action="{{ route('cliente') }}">
                     {{ csrf_field() }}
                     <div class="row">
                         <div class="col-md-4">
@@ -64,13 +64,13 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="phone" class="col-md-8 control-label">Numero de Telefono</label>
-                                <input id="phone" type="text" class="form-control" name="phone" value="{{ old('phone') }}" onkeypress="return solo_numeros(event)" required>
+                                <input id="phone" type="text" class="form-control" name="phone" value="{{ old('phone') }}" onkeypress="return solo_numeros(event)">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="celular" class="col-md-8 control-label">Numero de Celular</label>
-                                <input id="celular" type="text" class="form-control" name="celular" value="{{ old('celular') }}" onkeypress="return solo_numeros(event)" required>
+                                <input id="celular" type="text" class="form-control" name="celular" value="{{ old('celular') }}" onkeypress="return solo_numeros(event)">
                             </div>
                         </div>
                     </div>
@@ -83,36 +83,22 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="password" class="col-md-6 control-label">Contraseña</label>
-                                <input id="password" type="password" class="form-control" name="password" required>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="password-confirm" class="col-md-8 control-label">Confirmar Contraseña</label>
-                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Tipo de Perfil</label>
-                                <select class="form-control" name="perfil_id">
-                                        <option class="form-control" value="I">Seleccione</option>
-                                        @foreach ( $perfiles as $perfil )
-                                            <option class="form-control" value="{{ $perfil->id }}" @if( $perfil -> id == old( 'perfil_id') )  selected @endif>{{ $perfil->nombre }}</option>
+                                <label>Bodega Perteneciente</label>
+                                <select class="form-control" name="bodega_id">
+                                        <option class="form-control" value="I" required>Seleccione</option>
+                                        @foreach ( $bodegas as $bodega )
+                                            <option class="form-control" value="{{ $bodega->id }}" @if( $bodega -> id == old( 'bodega_id') )  selected @endif>{{ $bodega->nombre }}</option>
                                         @endforeach
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-group">
-                                <label>Bodega Perteneciente</label>
-                                <select class="form-control" name="bodega_id">
-                                        <option class="form-control" value="I">Seleccione</option>
-                                        @foreach ( $bodegas as $bodega )
-                                            <option class="form-control" value="{{ $bodega->id }}" @if( $bodega -> id == old( 'bodega_id') )  selected @endif>{{ $bodega->nombre }}</option>
+                                <label>Ruta Para el Cliente</label>
+                                <select class="form-control" name="ruta_id">
+                                        <option class="form-control" value="I" required>Seleccione</option>
+                                        @foreach ( $rutas as $ruta )
+                                            <option class="form-control" value="{{ $ruta->id }}" @if( $ruta -> id == old( 'ruta_id') )  selected @endif>{{ $ruta->nombre }}</option>
                                         @endforeach
                                 </select>
                             </div>

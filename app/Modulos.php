@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class PerfilContieneRol extends Model
+class Modulos extends Model
 {
     //
 }

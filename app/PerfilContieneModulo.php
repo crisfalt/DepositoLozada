@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class RolAsignaPermiso extends Model
+class PerfilContieneModulo extends Model
 {
     //
 }

@@ -6,6 +6,9 @@ use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use App\TipoDocumento;
+use App\Perfil;
+use App\Bodega;
 
 class RegisterController extends Controller
 {
@@ -49,8 +52,15 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
             'name' => 'required|string|max:255',
+            'number_id' => 'required|max:30',
+            'tipo_documento_id' => 'required',
+            'address' => 'required|max:150',
+            'phone' => 'numeric|between:0,99999999999999999999',
+            'celular' => 'numeric|between:0,99999999999999999999',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
+            'perfil_id' => 'required',
+            'bodega_id' => 'required',
         ]);
     }
 
@@ -65,8 +75,24 @@ class RegisterController extends Controller
         // dd( $data['name']);
         return User::create([
             'name' => $data['name'],
+            'tipo_documento_id' => $data['tipo_documento_id'],
+            'number_id' => $data['number_id'],
+            'address' => $data['address'],
+            'phone' => $data['phone'],
+            'celular' => $data['celular'],
             'email' => $data['email'],
-            'password' => bcrypt($data['password']),
+            'perfil_id' => $data['perfil_id'],
+            'bodega_id' => $data['bodega_id'],
+            'password' => bcrypt($data['password']),//encriptar passwrod
         ]);
+    }
+
+    //sobreescribir metodo de RegisterUsers
+    public function showRegistrationForm()
+    {
+        $tiposDocumento = TipoDocumento::orderBy('nombre')->get();
+        $perfiles = Perfil::orderBy('nombre')->get();
+        $bodegas = Bodega::orderBy('nombre')->get();
+        return view('auth.register') -> with( compact('tiposDocumento','perfiles','bodegas') );
     }
 }

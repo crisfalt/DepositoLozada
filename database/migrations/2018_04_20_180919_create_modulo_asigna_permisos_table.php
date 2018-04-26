@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateRolAsignaPermisosTable extends Migration
+class CreateModuloAsignaPermisosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,15 @@ class CreateRolAsignaPermisosTable extends Migration
      */
     public function up()
     {
-        Schema::create('rol_asigna_permisos', function (Blueprint $table) {
+        Schema::create('modulo_asigna_permisos', function (Blueprint $table) {
             $table->increments('id');
             //inicio llave foranea al perfil
             $table->integer('permiso_id')->unsigned();
             $table->foreign('permiso_id')->references('id')->on('permisos');
             //fin
             //inicio llave foranea al rol
-            $table->integer('rol_id')->unsigned();
-            $table->foreign('rol_id')->references('id')->on('rols');
+            $table->integer('modulo_id')->unsigned();
+            $table->foreign('modulo_id')->references('id')->on('modulos');
             //fin
             $table->timestamps();
         });
@@ -34,6 +34,6 @@ class CreateRolAsignaPermisosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('rol_asigna_permisos');
+        Schema::dropIfExists('modulo_asigna_permisos');
     }
 }

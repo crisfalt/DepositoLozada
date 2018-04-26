@@ -27,6 +27,24 @@ Route::middleware(['auth', 'vendedor'])->prefix('vendedor')->namespace('Vendedor
     
 });
 
+//CRUD Clientes
+Route::get('/cliente' , 'ClienteController@index')->name('cliente');
+Route::get('/cliente/create' , 'ClienteController@create');
+Route::post('/cliente' , 'ClienteController@store');
+Route::delete('/cliente/{id}','ClienteController@destroy'); //vista para eliminar
+Route::get('/cliente/{id}','ClienteController@show'); //mostrar el tipo de movimiento
+Route::get('/cliente/{id}/edit' , 'ClienteController@edit');
+Route::post('/cliente/{id}/edit' , 'ClienteController@update');
+
+//CRUD Proveedores
+Route::get('/proveedor' , 'ProveedorController@index')->name('proveedor');
+Route::get('/proveedor/create' , 'ProveedorController@create');
+Route::post('/proveedor' , 'ProveedorController@store');
+Route::delete('/proveedor/{id}','ProveedorController@destroy'); //vista para eliminar
+Route::get('/proveedor/{id}','ProveedorController@show'); //mostrar el tipo de movimiento
+Route::get('/proveedor/{id}/edit' , 'ProveedorController@edit');
+Route::post('/proveedor/{id}/edit' , 'ProveedorController@update');
+
 //CRUD Zonas
 Route::get('/zona' , 'ZonaController@index')->name('zona');
 Route::get('/zona/create' , 'ZonaController@create');
