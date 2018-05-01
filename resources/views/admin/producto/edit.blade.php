@@ -160,8 +160,13 @@
                                     <div class="form-group">
                                         <label>Estado</label>
                                         <select class="form-control" name="estado">
-                                            <option class="form-control" value="A">Activo</option>
+                                        @if( $producto->estado == 'A' and $producto->estado == old('estado',$producto->estado)  )
+                                            <option class="form-control" value="A" selected>Activo</option>
                                             <option class="form-control" value="I">Inactivo</option>
+                                        @else
+                                            <option class="form-control" value="A">Activo</option>            
+                                            <option class="form-control" value="I" selected>Inactivo</option>
+                                        @endif    
                                         </select>
                                     </div>
                                 </div>

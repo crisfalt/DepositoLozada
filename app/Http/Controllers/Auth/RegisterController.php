@@ -6,6 +6,7 @@ use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Http\Request;
 use App\TipoDocumento;
 use App\Perfil;
 use App\Bodega;
@@ -30,7 +31,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/welcome';
 
     /**
      * Create a new controller instance.
@@ -39,7 +40,7 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest');
+        $this->middleware('admin');
     }
 
     /**
@@ -95,4 +96,11 @@ class RegisterController extends Controller
         $bodegas = Bodega::orderBy('nombre')->get();
         return view('auth.register') -> with( compact('tiposDocumento','perfiles','bodegas') );
     }
+
+    //metodo que se sobreescribe para redireccionar despues de crear un usuario
+    protected function registered(Request $request, $user)
+    {
+        return redirect('/welcome');
+    }
+
 }

@@ -14,7 +14,7 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-header">
-                <h5 class="title">Registrar Usuario</h5>
+                <h5 class="title">Registrar Empleado</h5>
             </div>
             <!-- Mostrar los errores capturados por validate -->
             @if ($errors->any())

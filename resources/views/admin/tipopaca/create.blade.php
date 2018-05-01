@@ -56,21 +56,21 @@
                     <div class="row">
                         <div class="col-md-12 pr-1">
                             <div class="form-group">
-                                <label>Precio de la Paca</label>
-                                <input type="number" step="0.01" class="form-control" name="precio" value="{{ old('precio',0) }}">
+                                <label>Es Retornable ?</label>
+                                <label class="radio-inline col-md-4">
+                                    <input type="radio" name="retornable" value="SI" > SI
+                                </label>
+                                <label class="radio-inline col-md-4">
+                                    <input type="radio" name="retornable" value="NO"> NO
+                                </label>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-12 pr-1">
                             <div class="form-group">
-                                <label>Es Retornable ?</label>
-                                <label class="radio-inline col-md-4">
-                                    <input type="radio" name="retornable" value="SI"> SI
-                                </label>
-                                <label class="radio-inline col-md-4">
-                                    <input type="radio" name="retornable" value="NO"> NO
-                                </label>
+                                <label id="lbl_precio">Precio de la Paca</label>
+                                <input type="number" step="0.01" class="form-control" name="precio" id="precio" value="{{ old('precio',0) }}">
                             </div>
                         </div>
                     </div>
@@ -94,4 +94,25 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('scripts')
+<script>
+    $(document).ready(function () {
+        $('#lbl_precio').hide();
+        $('#precio').hide();
+        $('#precio').val(0);
+        $('input:radio[name=retornable]').change(function () {
+            if ($("input[name='retornable']:checked").val() == 'SI') {
+                $('#lbl_precio').show();
+                $('#precio').show();
+            }
+            if ($("input[name='retornable']:checked").val() == 'NO') {
+                $('#lbl_precio').hide();
+                $('#precio').hide();
+                $('#precio').val(0);
+            }
+        });
+    });
+</script>
 @endsection

@@ -27,7 +27,7 @@
                     </ul>
                 </div>
                 @endif
-                <form method="post" action="{{ url('/marca/'.$marca->id.'/edit') }}">
+                <form method="post" action="{{ url('/bodega/'.$bodega->id.'/edit') }}">
                     {{ csrf_field() }}
                     <div class="row">
                         <div class="col-md-12 pr-1">
@@ -50,8 +50,13 @@
                             <div class="form-group">
                                 <label>Estado</label>
                                 <select class="form-control" name="estado">
-                                    <option class="form-control" value="A" @if ($marca->estado == old('estado',$marca->estado)) selected @endif>Activo</option>
-                                    <option class="form-control" value="I" @if ($marca->estado == old('estado',$marca->estado)) selected @endif>Inactivo</option>
+                                    @if( $bodega->estado == 'A' and $bodega->estado == old('estado',$bodega->estado)  )
+                                        <option class="form-control" value="A" selected>Activo</option>
+                                        <option class="form-control" value="I">Inactivo</option>
+                                    @else
+                                        <option class="form-control" value="A">Activo</option>            
+                                        <option class="form-control" value="I" selected>Inactivo</option>
+                                    @endif    
                                 </select>
                             </div>
                         </div>

@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 
-class AdminMiddleware
+class CajeroMiddleware
 {
     /**
      * Handle an incoming request.
@@ -18,7 +18,7 @@ class AdminMiddleware
         if( !auth() -> user() ) {
             return redirect('/');
         }
-        if( auth() -> user() -> perfil_id != 1 ) {
+        if( auth() -> user() -> perfil_id != 4 ) {
             return redirect('/');
         }
         return $next($request);

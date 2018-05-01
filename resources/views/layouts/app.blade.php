@@ -38,139 +38,183 @@
             <div class="sidebar-wrapper">
                 <ul class="nav">
                     <!-- <li class="active"> para que quede como activo -->
-                    <li>
-                        <a href="">
-                            <i class="now-ui-icons design_app"></i>
-                            <p>Dashboard</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="">
-                            <i class="now-ui-icons files_single-copy-04"></i>
-                            <p>Ventas</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="">
-                            <i class="now-ui-icons shopping_bag-16"></i>
-                            <p>Compras</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('cliente') }}">
-                            <i class="now-ui-icons users_single-02"></i>
-                            <p>Clientes</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('proveedor') }}">
-                            <i class="now-ui-icons sport_user-run"></i>
-                            <p>Proveedores</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('register') }}">
-                            <i class="now-ui-icons business_badge"></i>
-                            <p>Empleados</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="">
-                            <i class="now-ui-icons design_bullet-list-67"></i>
-                            <p>Inventarios</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="">
-                            <i class="now-ui-icons shopping_delivery-fast"></i>
-                            <p>Rutas</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="">
-                            <i class="now-ui-icons business_chart-bar-32"></i>
-                            <p>Reportes</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="">
-                            <i class="now-ui-icons ui-1_settings-gear-63"></i>
-                            <p>Categorías</p>
-                        </a>
-                    </li>
+                    @if( Auth::user() -> perfil_id == 1 )
+                        <li>
+                            <a href="">
+                                <i class="now-ui-icons design_app"></i>
+                                <p>Dashboard</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="">
+                                <i class="now-ui-icons files_single-copy-04"></i>
+                                <p>Ventas</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="">
+                                <i class="now-ui-icons shopping_bag-16"></i>
+                                <p>Compras</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('cliente') }}">
+                                <i class="now-ui-icons users_single-02"></i>
+                                <p>Clientes</p>
+                            </a>
+                        </li>
+                        <li>
+                            <!-- me trae las transacciones del dia de esta caja -->
+                            <a href="{{ route('caja') }}"> 
+                                <i class="now-ui-icons users_single-02"></i>
+                                <p>Caja</p>
+                            </a>
+                        </li>
+                        <li>
+                            <!-- me trae las transacciones del dia de esta caja -->
+                            <a href="{{ route('perfil') }}"> 
+                                <i class="now-ui-icons users_single-02"></i>
+                                <p>Tipos de Empleados</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('proveedor') }}">
+                                <i class="now-ui-icons sport_user-run"></i>
+                                <p>Proveedores</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('register') }}">
+                                <i class="now-ui-icons business_badge"></i>
+                                <p>Empleados</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="">
+                                <i class="now-ui-icons design_bullet-list-67"></i>
+                                <p>Inventarios</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="">
+                                <i class="now-ui-icons shopping_delivery-fast"></i>
+                                <p>Rutas</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="">
+                                <i class="now-ui-icons business_chart-bar-32"></i>
+                                <p>Reportes</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="">
+                                <i class="now-ui-icons ui-1_settings-gear-63"></i>
+                                <p>Categorías</p>
+                            </a>
+                        </li>
 
-                    <li>
-                        <a href="">
-                            <i class="now-ui-icons ui-1_settings-gear-63"></i>
-                            <p>Configuración</p>
-                        </a>
-                    </li>
-                    <li>
-                    <a href="{{ route('tipomovimiento') }}">
-                            <i class="now-ui-icons ui-1_settings-gear-63"></i>
-                            <p>Tipos de Mantenimiento</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('marca') }}">
-                            <i class="now-ui-icons ui-1_settings-gear-63"></i>
-                            <p>Marcas</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('sizebotella') }}">
-                            <i class="now-ui-icons ui-1_settings-gear-63"></i>
-                            <p>Tamaños Envases</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('tipoenvase') }}">
-                            <i class="now-ui-icons ui-1_settings-gear-63"></i>
-                            <p>Tipos de Envases</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('tipocontenido') }}">
-                            <i class="now-ui-icons ui-1_settings-gear-63"></i>
-                            <p>Tipo de Contenido</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('tipopaca') }}">
-                            <i class="now-ui-icons ui-1_settings-gear-63"></i>
-                            <p>Tipo de Paca</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('bodega') }}">
-                            <i class="now-ui-icons ui-1_settings-gear-63"></i>
-                            <p>Bodegas</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('producto') }}">
-                            <i class="now-ui-icons ui-1_settings-gear-63"></i>
-                            <p>Productos</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('descripcionprecio') }}">
-                            <i class="now-ui-icons ui-1_settings-gear-63"></i>
-                            <p>Descripcion de Precio</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('descripcioniva') }}">
-                            <i class="now-ui-icons ui-1_settings-gear-63"></i>
-                            <p>Descripcion de Iva</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('zona') }}">
-                            <i class="now-ui-icons ui-1_settings-gear-63"></i>
-                            <p>Zonas</p>
-                        </a>
-                    </li>
+                        <li>
+                            <a href="">
+                                <i class="now-ui-icons ui-1_settings-gear-63"></i>
+                                <p>Configuración</p>
+                            </a>
+                        </li>
+                        <li>
+                        <a href="{{ route('tipomovimiento') }}">
+                                <i class="now-ui-icons ui-1_settings-gear-63"></i>
+                                <p>Tipos de Mantenimiento</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('marca') }}">
+                                <i class="now-ui-icons ui-1_settings-gear-63"></i>
+                                <p>Marcas</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('sizebotella') }}">
+                                <i class="now-ui-icons ui-1_settings-gear-63"></i>
+                                <p>Tamaños Envases</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('tipoenvase') }}">
+                                <i class="now-ui-icons ui-1_settings-gear-63"></i>
+                                <p>Tipos de Envases</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('tipocontenido') }}">
+                                <i class="now-ui-icons ui-1_settings-gear-63"></i>
+                                <p>Tipo de Contenido</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('tipopaca') }}">
+                                <i class="now-ui-icons ui-1_settings-gear-63"></i>
+                                <p>Tipo de Paca</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('bodega') }}">
+                                <i class="now-ui-icons ui-1_settings-gear-63"></i>
+                                <p>Bodegas</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('producto') }}">
+                                <i class="now-ui-icons ui-1_settings-gear-63"></i>
+                                <p>Productos</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('descripcionprecio') }}">
+                                <i class="now-ui-icons ui-1_settings-gear-63"></i>
+                                <p>Descripcion de Precio</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('descripcioniva') }}">
+                                <i class="now-ui-icons ui-1_settings-gear-63"></i>
+                                <p>Descripcion de Iva</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('zona') }}">
+                                <i class="now-ui-icons ui-1_settings-gear-63"></i>
+                                <p>Zonas</p>
+                            </a>
+                        </li>
+                    @else
+                        @if( Auth::user() -> perfil_id == 4 ) 
+                            <li>
+                                <a href="">
+                                    <i class="now-ui-icons files_single-copy-04"></i>
+                                    <p>Ventas</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="">
+                                    <i class="now-ui-icons shopping_bag-16"></i>
+                                    <p>Compras</p>
+                                </a>
+                            </li>
+                        @else
+                            <li>
+                                <a href="">
+                                    <i class="now-ui-icons files_single-copy-04"></i>
+                                    <p>Ventas</p>
+                                </a>
+                            </li>
+                            <li>
+                            <a href="{{ url('/vendedor/producto') }}">
+                                <i class="now-ui-icons ui-1_settings-gear-63"></i>
+                                <p>Productos</p>
+                            </a>
+                        </li>
+                        @endif
+                    @endif
                     <li class="">
                         <a href="">
                             <i class="now-ui-icons arrows-1_cloud-download-93"></i>

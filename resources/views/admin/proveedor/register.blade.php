@@ -25,7 +25,7 @@
                         @endforeach
                     </ul>
                 </div>
-                @endif
+            @endif
             <div class="card-body">
                 <form method="POST" action="{{ route('proveedor') }}">
                     {{ csrf_field() }}

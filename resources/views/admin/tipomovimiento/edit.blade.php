@@ -50,8 +50,13 @@
                             <div class="form-group">
                                 <label>Estado</label>
                                 <select class="form-control" name="estado">
-                                    <option class="form-control" value="A" @if ($tipoMovimiento->estado == old('estado',$tipoMovimiento->estado)) selected @endif>Activo</option>
-                                    <option class="form-control" value="I" @if ($tipoMovimiento->estado == old('estado',$tipoMovimiento->estado)) selected @endif>Inactivo</option>
+                                @if( $tipoMovimiento->estado == 'A' and $tipoMovimiento->estado == old('estado',$tipoMovimiento->estado)  )
+                                    <option class="form-control" value="A" selected>Activo</option>
+                                    <option class="form-control" value="I">Inactivo</option>
+                                @else
+                                    <option class="form-control" value="A">Activo</option>            
+                                    <option class="form-control" value="I" selected>Inactivo</option>
+                                @endif    
                                 </select>
                             </div>
                         </div>
