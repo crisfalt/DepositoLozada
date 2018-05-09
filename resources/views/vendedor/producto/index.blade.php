@@ -25,50 +25,48 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table" cellspacing="0" id="tableTiposMovimientos">
-                        <thead class=" text-primary">
-                            <th class="text-left">
-                                Codigo
-                            </th>
-                            <th>
-                                Nombre
-                            </th>
-                            <th>
-                                Cantidad Disponible en Inventario
-                            </th>
-                            <th class="text-center">
-                                Opciones
-                            </th>
-                        </thead>
-                        <tbody>
-                            @foreach( $Productos as $producto )
-                                <tr>
-                                    <td>{{ $producto -> codigo }}</td>
-                                    <td>{{ $producto -> nombre }}</td>
-                                    <td class="text-center">{{ $producto -> cantidad }}</td>
-                                    {{-- <td>
-                                        @if ( $marca -> estado == 'A' )
-                                            Activo
-                                        @else
-                                            Inactivo
-                                        @endif
-                                    </td> --}}
-                                    <td class="td-actions text-center">
-                                        <form method="post" class="delete">
-                                            {{ csrf_field() }}
-                                            {{ method_field('DELETE') }}
-    
-                                            <a href="{{ url('/vendedor/producto/'.$producto->codigo) }}" rel="tooltip" title="Ver Producto {{ $producto -> nombre }}" class="btn btn-info btn-simple btn-xs">
-                                                <i class="fa fa-info"></i>
-                                            </a>
-                                        </form>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                <table class="display nowrap" cellspacing="0" width="100%" id="tableTiposMovimientos">
+                    <thead class=" text-primary">
+                        <th class="text-left">
+                            Codigo
+                        </th>
+                        <th>
+                            Nombre
+                        </th>
+                        <th>
+                            Cantidad Disponible en Inventario
+                        </th>
+                        <th class="text-center">
+                            Opciones
+                        </th>
+                    </thead>
+                    <tbody>
+                        @foreach( $Productos as $producto )
+                            <tr>
+                                <td>{{ $producto -> codigo }}</td>
+                                <td>{{ $producto -> nombre }}</td>
+                                <td class="text-center">{{ $producto -> cantidad }}</td>
+                                {{-- <td>
+                                    @if ( $marca -> estado == 'A' )
+                                        Activo
+                                    @else
+                                        Inactivo
+                                    @endif
+                                </td> --}}
+                                <td class="td-actions text-center">
+                                    <form method="post" class="delete">
+                                        {{ csrf_field() }}
+                                        {{ method_field('DELETE') }}
+
+                                        <a href="{{ url('/vendedor/producto/'.$producto->codigo) }}" rel="tooltip" title="Ver Producto {{ $producto -> nombre }}" class="btn btn-info btn-icon btn-xs">
+                                            <i class="fa fa-info"></i>
+                                        </a>
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

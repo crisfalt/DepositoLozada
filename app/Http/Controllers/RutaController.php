@@ -8,6 +8,51 @@ use App\Zona;
 
 class RutaController extends Controller
 {
+
+    public function details( $id )  {
+        $ruta = Ruta::find($id);
+        return view('admin.ruta.details')->with(compact('ruta')); //listado de tipos movimientos
+    }
+
+    //metodo para reordenar la lista de la ruta
+    public function reordenar() {
+        $data = json_decode($_POST['array']);
+        // dd($data);
+        $ruta_id = $_POST['ruta_id'];
+        $ruta = Ruta::find( $ruta_id );
+        $listaOrdenada = $ruta -> listaOrdenada();
+        //mi metodo de busqueda binaria y secuencial voraz
+        for( $i = 0 ; $i < count( $listaOrdenada ) ; $i++ ) {
+            $cambiarOrden = $listaOrdenada[ $i ];
+            for( $j = 0 ; $j < count( $data ) ; $j++ ) {
+                if( $cambiarOrden -> id == $data[ $j ][ 0 ] ) {
+                    // echo "<script>console.log( 'lo encontro' );</script>";
+                    $cambiarOrden -> orden = $data[ $j ][ 1 ];
+                    $cambiarOrden -> save();
+                    break;
+                }
+            }
+        }
+        $response = array(
+            'status' => 'success',
+            'msg' => 'Ruta Ordenada Correctamente ',
+        );
+        return response()->json($response); 
+    }
+
+    //cargar todas las rutas existentes
+    public function allRutas() {
+        $rutas = Ruta::orderBy('nombre') -> get();
+        return view('admin.ruta.alls')->with(compact('rutas')); //listado de tipos movimientos
+    }
+
+    //cargar el mapa de una ruta
+    public function loadMap( $id ) {
+        $ruta = Ruta::find($id);
+        // dd( $ruta -> clientes() );
+        return view('admin.ruta.map')->with(compact('ruta'));
+    }
+
     //
     public function index( $id ) {
         $zona = Zona::find($id);

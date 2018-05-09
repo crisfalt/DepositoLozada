@@ -29,62 +29,60 @@
                 <a href="{{ url('/descripcioniva/create') }}" class="btn btn-warning btn-round">Nueva Descripcion de Iva</a>
             </div>
             <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table" cellspacing="0" id="tableTiposEnvases">
-                        <thead class=" text-primary">
-                            <th class="text-left">
-                                #Id
-                            </th>
-                            <th>
-                                Nombre
-                            </th>
-                            <th>
-                                Descripcion
-                            </th>
-                            <th>
-                                Estado
-                            </th>
-                            <th class="text-center">
-                                Opciones
-                            </th>
-                        </thead>
-                        <tbody>
-                            @foreach( $descripcionesIva as $descripcionIva )
-                                <tr>
-                                    <td>{{ $descripcionIva -> id }}</td>
-                                    <td>{{ $descripcionIva -> nombre }}</td>
-                                    <td>{{ $descripcionIva -> descripcion }}</td>
-                                    <td>
-                                        @if ( $descripcionIva -> estado == 'A' )
-                                            Activo
-                                        @else
-                                            Inactivo
-                                        @endif
-                                    </td>
-                                    <td class="td-actions text-right">
-                                        <form method="post" class="delete">
-                                            {{ csrf_field() }}
-                                            {{ method_field('DELETE') }}
-    
-                                            <a href="{{ url('/descripcioniva/'.$descripcionIva->id) }}" rel="tooltip" title="Ver Descripcion Iva {{ $descripcionIva -> nombre }}" class="btn btn-info btn-simple btn-xs">
-                                                <i class="fa fa-info"></i>
-                                            </a>
-                                            <a href="{{ url('/descripcioniva/'.$descripcionIva->id.'/edit') }}" rel="tooltip" title="Editar Descripcion Iva {{ $descripcionIva -> nombre }}" class="btn btn-success btn-simple btn-xs">
-                                                <i class="fa fa-edit"></i>
-                                            </a>
-                                            <a class='btn btn-danger btn-simple btn-xs' rel="tooltip" title="Eliminar Descripcion Iva {{ $descripcionIva -> nombre }}" onclick="Delete('{{ $descripcionIva -> nombre }}','{{ $descripcionIva -> id }}')">
-                                                <i class='fa fa-times'></i>
-                                            </a>
-                                            <!-- <button type="submit" rel="tooltip" title="Eliminar" class="btn btn-danger btn-simple btn-xs">
-                                                <i class="fa fa-times"></i>
-                                            </button> -->
-                                        </form>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                <table class="display nowrap" cellspacing="0" width="100%" id="tableTiposMovimientos">
+                    <thead class=" text-primary">
+                        <th class="text-left">
+                            #Id
+                        </th>
+                        <th>
+                            Nombre
+                        </th>
+                        <th>
+                            Descripcion
+                        </th>
+                        <th>
+                            Estado
+                        </th>
+                        <th class="text-center">
+                            Opciones
+                        </th>
+                    </thead>
+                    <tbody>
+                        @foreach( $descripcionesIva as $descripcionIva )
+                            <tr>
+                                <td>{{ $descripcionIva -> id }}</td>
+                                <td>{{ $descripcionIva -> nombre }}</td>
+                                <td>{{ $descripcionIva -> descripcion }}</td>
+                                <td>
+                                    @if ( $descripcionIva -> estado == 'A' )
+                                        Activo
+                                    @else
+                                        Inactivo
+                                    @endif
+                                </td>
+                                <td class="td-actions text-right">
+                                    <form method="post" class="delete">
+                                        {{ csrf_field() }}
+                                        {{ method_field('DELETE') }}
+
+                                        <a href="{{ url('/descripcioniva/'.$descripcionIva->id) }}" rel="tooltip" title="Ver Descripcion Iva {{ $descripcionIva -> nombre }}" class="btn btn-info btn-icon btn-sm">
+                                            <i class="fa fa-info"></i>
+                                        </a>
+                                        <a href="{{ url('/descripcioniva/'.$descripcionIva->id.'/edit') }}" rel="tooltip" title="Editar Descripcion Iva {{ $descripcionIva -> nombre }}" class="btn btn-success btn-icon btn-sm">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                        <a class='btn btn-danger btn-icon btn-sm' rel="tooltip" title="Eliminar Descripcion Iva {{ $descripcionIva -> nombre }}" onclick="Delete('{{ $descripcionIva -> nombre }}','{{ $descripcionIva -> id }}')">
+                                            <i class='fa fa-times'></i>
+                                        </a>
+                                        <!-- <button type="submit" rel="tooltip" title="Eliminar" class="btn btn-danger btn-simple btn-xs">
+                                            <i class="fa fa-times"></i>
+                                        </button> -->
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -151,7 +149,7 @@
     </script>
     <script>
         $(document).ready(function() {
-            $('#tableTiposEnvases').DataTable({
+            $('#tableTiposMovimientos').DataTable({
                 "language": {
 
                     "emptyTable": "No hay descripciones de Iva , click en el boton <b>Nueva Descripcion de Iva</b> para agregar uno nuevo",

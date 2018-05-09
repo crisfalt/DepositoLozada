@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('title','Editar Producto')
+<meta name="csrf-token" content="{{ csrf_token() }}">
 
 @section('titulo-contenido','Editar Producto')
 
@@ -217,21 +218,29 @@
                             </div>
                             <div class="row">
                             <div class="col s8" id="lista_precio">
-                                <table class="striped">
-                                <thead>
-                                    <tr>
-                                    <th>Precio</th>
-                                    <th>Descripcion</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="registro_precio">
-                                    @foreach ( $producto -> preciosVenta() as $precio )
+                                <table class="striped" id="tablePrecio">
+                                    <thead>
                                         <tr>
-                                            <td>{{ $precio -> valor }}</td>
-                                            <td>{{ $precio -> nombreDescripcion() -> nombre }}</td>
+                                            <th>Id</th>
+                                            <th>Precio</th>
+                                            <th>Descripcion</th>
+                                            <th>Eliminar</th>
                                         </tr>
-                                    @endforeach
-                                </tbody>
+                                    </thead>
+                                    <tbody id="registro_precio">
+                                        @foreach ( $producto -> preciosVenta() as $precio )
+                                            <tr>
+                                                <td>{{ $precio -> id }}</td>
+                                                <td>{{ $precio -> valor }}</td>
+                                                <td>{{ $precio -> nombreDescripcion() -> nombre }}</td>
+                                                <td>
+                                                    <a class='btn btn-danger btn-icon btn-sm' rel="tooltip" title="Eliminar Precio" onclick="Delete('{{ $precio -> nombreDescripcion() -> nombre }}','{{ $precio -> id }}','precio')">
+                                                        <i class='fa fa-times'></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
                                 </table>
                             </div>
                             </div>
@@ -272,21 +281,29 @@
                                 </div>
                                 <div class="row">
                                 <div class="col s8" id="lista_iva">
-                                    <table class="striped">
-                                    <thead>
-                                        <tr>
-                                        <th>Iva</th>
-                                        <th>Descripcion</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="registro_iva">
-                                        @foreach ( $producto -> ivasProducto() as $iva )
+                                    <table class="striped" id="tableIva">
+                                        <thead>
                                             <tr>
-                                                <td>{{ $iva -> valor }}%</td>
-                                                <td>{{ $iva -> nombreDescripcion() -> nombre }}</td>
+                                                <th>Id</th>
+                                                <th>Iva</th>
+                                                <th>Descripcion</th>
+                                                <th>Eliminar</th>
                                             </tr>
-                                        @endforeach
-                                    </tbody>
+                                        </thead>
+                                        <tbody id="registro_iva">
+                                            @foreach ( $producto -> ivasProducto() as $iva )
+                                                <tr>
+                                                    <td>{{ $iva -> id }}</td>
+                                                    <td>{{ $iva -> valor }}%</td>
+                                                    <td>{{ $iva -> nombreDescripcion() -> nombre }}</td>
+                                                    <td>
+                                                        <a class='btn btn-danger btn-icon btn-sm' rel="tooltip" title="Eliminar Iva" onclick="Delete('{{ $iva -> nombreDescripcion() -> nombre}}','{{ $iva -> id }}','iva')">
+                                                            <i class='fa fa-times'></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
                                     </table>
                                 </div>
                                 </div>
@@ -410,8 +427,10 @@
                             lista_precio.show();
                             registro_precio.append(
                                         '<tr>'+
+                                            '<td></td>'+
                                             '<td>'+precio.val()+'</td>'+
                                             '<td>'+nombre_precio+'</td>'+
+                                            '<td></td>'+
                                         '</tr>'
 
                             );
@@ -475,8 +494,10 @@
                 lista_iva.show();
                 registro_iva.append(
                                 '<tr>'+
+                                    '<td></td>'+
                                     '<td>'+iva.val()+'%</td>'+
                                     '<td>'+nombre_iva+'</td>'+
+                                    '<td></td>'+
                                 '</tr>'
 
                     );
@@ -492,6 +513,90 @@
             }
 
         }
+    </script>
+    <script>
+        function Delete( nameProduct , idDel , tipo ) {
+            var filasPrecios = $("#tablePrecio tr").length-1;//hay que restar 1 porque es el encabezado
+            var filasIvas = $("#tableIva tr").length-1;
+            if( filasPrecios > 1 || filasIvas > 1 ) {
+                var pathname = window.location.pathname; //ruta actual
+                $.confirm({
+                    theme: 'supervan',
+                    title: 'Eliminar Precio O Iva',
+                    content: 'Seguro(a) que deseas eliminar el precio o iva' + nameProduct + '. <br> Click Aceptar or Cancelar',
+                    icon: 'fa fa-question-circle',
+                    animation: 'scale',
+                    animationBounce: 2.5,
+                    closeAnimation: 'scale',
+                    opacity: 0.5,
+                    buttons: {
+                        'confirm': {
+                            text: 'Aceptar',
+                            btnClass: 'btn-blue',
+                            action: function () {
+                                $.confirm({
+                                    theme: 'supervan',
+                                    title: 'Estas Seguro ?',
+                                    content: 'Una vez eliminado debes volver a crear el precio o iva',
+                                    icon: 'fa fa-warning',
+                                    animation: 'scale',
+                                    animationBounce: 2.5,
+                                    closeAnimation: 'zoom',
+                                    buttons: {
+                                        confirm: {
+                                            text: 'Si, Estoy Seguro!',
+                                            btnClass: 'btn-orange',
+                                            action: function () {
+                                                $.ajax({
+                                                    headers: {
+                                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                                    },
+                                                    type: "POST",
+                                                    url: "/producto/precio_o_iva/eliminar",
+                                                    dataType: "json",
+                                                    data: {'id':idDel,'tipo':tipo},
+                                                    success: function( msg ){
+                                                        $.confirm({
+                                                            title: 'Confirmar!',
+                                                            content: msg.msg,
+                                                            buttons: {
+                                                                'confirm': {
+                                                                    text: 'Ok',
+                                                                    btnClass: 'btn-orange',
+                                                                    action: function () {
+                                                                        location.reload();
+                                                                    }
+                                                                },
+                                                            }
+                                                        });
+                                                    }
+                                                }); 
+                                                // $('.delete').attr('action' , pathname + '/' + idDel );
+                                                // $('.delete').submit();
+                                            }
+                                        },
+                                        cancel: {
+                                            text: 'No, Cancelar',
+                                            //$.alert('you clicked on <strong>cancel</strong>');
+                                        }
+                                    }
+                                });
+                            }
+                        },
+                        cancel: {
+                            text: 'Cancelar',
+                            //$.alert('you clicked on <strong>cancel</strong>');
+                        },
+                    }
+                });
+            }
+            else {
+                $.alert({
+                    title: 'Alerta!',
+                    content: 'No pueden haber productos sin al menos un iva o un precio',
+                });
+            } 
+		}
     </script>
 
 @endsection

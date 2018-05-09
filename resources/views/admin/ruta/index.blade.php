@@ -45,62 +45,60 @@
                 <h4 class="card-title text-center"> Rutas de la Zona {{ $zona -> nombre }}</h4>
             </div>
             <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table" cellspacing="0" id="tableTiposEnvases">
-                        <thead class=" text-primary">
-                            <th class="text-left">
-                                #Id
-                            </th>
-                            <th>
-                                Nombre
-                            </th>
-                            <th>
-                                Descripcion
-                            </th>
-                            <th>
-                                Estado
-                            </th>
-                            <th class="text-center">
-                                Opciones
-                            </th>
-                        </thead>
-                        <tbody>
-                            @foreach( $rutas as $ruta )
-                                <tr>
-                                    <td>{{ $ruta -> id }}</td>
-                                    <td>{{ $ruta -> nombre }}</td>
-                                    <td>{{ $ruta -> descripcion }}</td>
-                                    <td>
-                                        @if ( $ruta -> estado == 'A' )
-                                            Activo
-                                        @else
-                                            Inactivo
-                                        @endif
-                                    </td>
-                                    <td class="td-actions text-center">
-                                        <form method="post" class="delete">
-                                            {{ csrf_field() }}
-                                            {{ method_field('DELETE') }}
-    
-                                            <a href="{{ url('/ruta/'.$ruta->id) }}" rel="tooltip" title="Ver Ruta {{ $ruta -> nombre }}" class="btn btn-info btn-simple btn-xs">
-                                                <i class="fa fa-info"></i>
-                                            </a>
-                                            <a href="{{ url('/ruta/'.$ruta->id.'/edit') }}" rel="tooltip" title="Editar Ruta {{ $ruta -> nombre }}" class="btn btn-success btn-simple btn-xs">
-                                                <i class="fa fa-edit"></i>
-                                            </a>
-                                            <a class='btn btn-danger btn-simple btn-xs' rel="tooltip" title="Eliminar Ruta {{ $ruta -> nombre }}" onclick="Delete('{{ $ruta -> nombre }}','{{ $ruta -> id }}')">
-                                                <i class='fa fa-times'></i>
-                                            </a>
-                                            <!-- <button type="submit" rel="tooltip" title="Eliminar" class="btn btn-danger btn-simple btn-xs">
-                                                <i class="fa fa-times"></i>
-                                            </button> -->
-                                        </form>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                <table class="display nowrap" cellspacing="0" width="100%" id="tableTiposMovimientos">
+                    <thead class=" text-primary">
+                        <th class="text-left">
+                            #Id
+                        </th>
+                        <th>
+                            Nombre
+                        </th>
+                        <th>
+                            Descripcion
+                        </th>
+                        <th>
+                            Estado
+                        </th>
+                        <th class="text-center">
+                            Opciones
+                        </th>
+                    </thead>
+                    <tbody>
+                        @foreach( $rutas as $ruta )
+                            <tr>
+                                <td>{{ $ruta -> id }}</td>
+                                <td>{{ $ruta -> nombre }}</td>
+                                <td>{{ $ruta -> descripcion }}</td>
+                                <td>
+                                    @if ( $ruta -> estado == 'A' )
+                                        Activo
+                                    @else
+                                        Inactivo
+                                    @endif
+                                </td>
+                                <td class="td-actions text-center">
+                                    <form method="post" class="delete">
+                                        {{ csrf_field() }}
+                                        {{ method_field('DELETE') }}
+
+                                        <a href="{{ url('/ruta/'.$ruta->id) }}" rel="tooltip" title="Ver Ruta {{ $ruta -> nombre }}" class="btn btn-info btn-icon btn-xs">
+                                            <i class="fa fa-info"></i>
+                                        </a>
+                                        <a href="{{ url('/ruta/'.$ruta->id.'/edit') }}" rel="tooltip" title="Editar Ruta {{ $ruta -> nombre }}" class="btn btn-success btn-icon btn-xs">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                        <a class='btn btn-danger btn-icon btn-xs' rel="tooltip" title="Eliminar Ruta {{ $ruta -> nombre }}" onclick="Delete('{{ $ruta -> nombre }}','{{ $ruta -> id }}')">
+                                            <i class='fa fa-times'></i>
+                                        </a>
+                                        <!-- <button type="submit" rel="tooltip" title="Eliminar" class="btn btn-danger btn-simple btn-xs">
+                                            <i class="fa fa-times"></i>
+                                        </button> -->
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -168,7 +166,7 @@
     </script>
     <script>
         $(document).ready(function() {
-            $('#tableTiposEnvases').DataTable({
+            $('#tableTiposMovimientos').DataTable({
                 "language": {
 
                     "emptyTable": "No hay rutas , click en el boton <b>Nueva Ruta</b> para agregar una nueva",

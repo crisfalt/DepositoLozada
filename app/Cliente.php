@@ -12,9 +12,13 @@ class Cliente extends Model
     //     'celular' => 'sometimes|numeric|between:0,99999999999999999999',
     //     'email' => 'sometimes|string|email|max:255|unique:users',
     //
+    public static $messages = [
+        'number_id.unique' => 'Ya hay un usuario registrado con el mismo numero de documento',
+    ];
+
     public static $rules = [
         'name' => 'required|string|max:255',
-        'number_id' => 'required|max:30',
+        'number_id' => 'required|max:30|unique:clientes,number_id',
         'tipo_documento_id' => 'required',
         'address' => 'required|max:150',
         'phone' => '',

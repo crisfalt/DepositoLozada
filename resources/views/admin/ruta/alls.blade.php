@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
-@section('title','TiposMovimiento')
+@section('title','Rutas')
 
-@section('titulo-contenido','Tipos de Movimientos')
+@section('titulo-contenido','Rutas')
 
 @section('header-class')
 <div class="panel-header panel-header-sm">
@@ -10,6 +10,19 @@
 @endsection
 
 @section('contenido')
+<!-- <div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+            </div>
+        </div>
+        <div class="card-body">
+            <form action="">
+                
+            </form>
+        </div>
+    </div>
+</div> -->
 <div class="row">
     <!-- mostrar mensaje del controlador -->
     @if (session('notification'))
@@ -21,31 +34,14 @@
         <span data-notify="icon" class="now-ui-icons ui-1_check"></span>
         <span data-notify="message">{{ session('notification') }}</span>
     </div>
-
-    {{-- <div class="alert alert-info">
-        <button type="button" aria-hidden="true" class="close">
-            <i class="now-ui-icons ui-1_simple-remove"></i>
-        </button>
-        <span>{{ session('notification') }}</span>
-    </div> --}}
-
-    {{-- <div class="alert alert-success">
-        <div class="container-fluid">
-            <div class="alert-icon">
-                <i class="material-icons">check</i>
-            </div>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true"><i class="material-icons">clear</i></span>
-            </button>
-            {{ session('notification') }}
-        </div>
-    </div> --}}
     @endif
     <div class="col-md-12">
         <div class="card">
             <div class="card-header">
-                {{-- <h4 class="card-title"> Simple Table</h4> --}}
-                <a href="{{ url('/tipomovimiento/create') }}" class="btn btn-warning btn-round">Nuevo Tipo Mantenimiento</a>
+                <!-- <div class="row">
+                    <div class="col-md-6 text-right"><a href="{{ url('/zona') }}" class="btn btn-info btn-round">Volver</a></div>
+                </div> -->
+                <h4 class="card-title text-center"> Rutas Disponibles</h4>
             </div>
             <div class="card-body">
                 <table class="display nowrap" cellspacing="0" width="100%" id="tableTiposMovimientos">
@@ -60,6 +56,9 @@
                             Descripcion
                         </th>
                         <th>
+                            Zona
+                        </th>
+                        <th>
                             Estado
                         </th>
                         <th class="text-center">
@@ -67,35 +66,30 @@
                         </th>
                     </thead>
                     <tbody>
-                        @foreach ( $tiposMovimiento as $tipoMovimiento )
+                        @foreach( $rutas as $ruta )
                             <tr>
-                                <td>{{ $tipoMovimiento -> id }}</td>
-                                <td>{{ $tipoMovimiento -> nombre }}</td>
-                                <td>{{ $tipoMovimiento -> descripcion }}</td>
+                                <td>{{ $ruta -> id }}</td>
+                                <td>{{ $ruta -> nombre }}</td>
+                                <td>{{ $ruta -> descripcion }}</td>
+                                <td>{{ $ruta -> zona -> nombre }}</td>
                                 <td>
-                                    @if ( $tipoMovimiento -> estado == 'A' )
+                                    @if ( $ruta -> estado == 'A' )
                                         Activo
                                     @else
                                         Inactivo
                                     @endif
                                 </td>
-                                <td class="td-actions text-right">
+                                <td class="td-actions text-center">
                                     <form method="post" class="delete">
                                         {{ csrf_field() }}
                                         {{ method_field('DELETE') }}
 
-                                        <a href="{{ url('/tipomovimiento/'.$tipoMovimiento->id) }}" rel="tooltip" title="Ver producto" class="btn btn-info btn-icon btn-xs">
-                                            <i class="fa fa-info"></i>
+                                        <a href="{{ url('/ruta/'.$ruta->id.'/map') }}" rel="tooltip" title="Mapa Ruta {{ $ruta -> nombre }}" class="btn btn-info btn-icon btn-xs">
+                                            <i class="fa fa-location-arrow"></i>
                                         </a>
-                                        <a href="{{ url('/tipomovimiento/'.$tipoMovimiento->id.'/edit') }}" rel="tooltip" title="Editar producto" class="btn btn-success btn-icon btn-xs">
-                                            <i class="fa fa-edit"></i>
+                                        <a href="{{ url('/ruta/'.$ruta->id.'/details') }}" rel="tooltip" title="Clientes en la Ruta {{ $ruta -> nombre }}" class="btn btn-warning btn-icon btn-xs">
+                                            <i class="fa fa-drivers-license"></i>
                                         </a>
-                                        <a class='btn btn-danger btn-icon btn-xs' rel="tooltip" title="Eliminar" onclick="Delete('{{ $tipoMovimiento -> nombre }}','{{ $tipoMovimiento -> id }}')">
-                                            <i class='fa fa-times'></i>
-                                        </a>
-                                        <!-- <button type="submit" rel="tooltip" title="Eliminar" class="btn btn-danger btn-simple btn-xs">
-                                            <i class="fa fa-times"></i>
-                                        </button> -->
                                     </form>
                                 </td>
                             </tr>
@@ -115,20 +109,15 @@
     <script src="https://cdn.datatables.net/responsive/2.2.1/js/dataTables.responsive.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/2.2.1/js/responsive.bootstrap4.min.js"></script>
 
-    <script>
-        $(document).ready(function() {
-            $.ajaxSetup({
-                    headers: {'X-CSRF-Token': $('meta[name=_token]').attr('content')}
-                });
-        });
-    </script>
+    {{-- metodo jquery para usar la libreria de confirmar para eliminar --}}
     <script>
         function Delete( nameProduct , idDel ) {
-            var pathname = window.location.pathname; //ruta actual
+            // var pathname = window.location.pathname; //ruta actual
+            var pathname = '/ruta';
 			$.confirm({
 				theme: 'supervan',
-				title: 'Eliminar Tipo de Movimiento',
-				content: 'Seguro(a) que deseas eliminar el Tipo de Movimiento ' + nameProduct + '. <br> Click Aceptar or Cancelar',
+				title: 'Eliminar Tipo de Contenido',
+				content: 'Seguro(a) que deseas eliminar la Ruta ' + nameProduct + '. <br> Click Aceptar or Cancelar',
 				icon: 'fa fa-question-circle',
 				animation: 'scale',
 				animationBounce: 2.5,
@@ -142,7 +131,7 @@
 							$.confirm({
 								theme: 'supervan',
 								title: 'Estas Seguro ?',
-								content: 'Una vez eliminado debes volver a crear el tipo de movimiento',
+								content: 'Una vez eliminado debes volver a crear la ruta',
 								icon: 'fa fa-warning',
 								animation: 'scale',
 								animationBounce: 2.5,
@@ -177,7 +166,7 @@
             $('#tableTiposMovimientos').DataTable({
                 "language": {
 
-                    "emptyTable": "No hay tipos de movimientos , click en el boton <b>Nuevo Tipo Movimiento</b> para agregar uno nuevo",
+                    "emptyTable": "No hay rutas , click en el boton <b>Nueva Ruta</b> para agregar una nueva",
                     "paginate": {
                         "first": "Primero",
                         "last": "Ultimo",
@@ -186,7 +175,7 @@
                     },
                     "search": "Buscar: ",
                     "info": "Mostrando del _START_ al _END_, de un total de _TOTAL_ entradas",
-                    "lengthMenu": "Mostrar _MENU_ Productos por Página",
+                    "lengthMenu": "Mostrar _MENU_ Rutas por Página",
                     "zeroRecords": "No se encontro ningun resultado",
                     "loadingRecords": "Cargando...",
                     "processing": "Procesando...",

@@ -29,62 +29,60 @@
                 <a href="{{ url('/descripcionprecio/create') }}" class="btn btn-warning btn-round">Nueva Descripcion de Precio</a>
             </div>
             <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table" cellspacing="0" id="tableTiposEnvases">
-                        <thead class=" text-primary">
-                            <th class="text-left">
-                                #Id
-                            </th>
-                            <th>
-                                Nombre
-                            </th>
-                            <th>
-                                Descripcion
-                            </th>
-                            <th>
-                                Estado
-                            </th>
-                            <th class="text-center">
-                                Opciones
-                            </th>
-                        </thead>
-                        <tbody>
-                            @foreach( $descripcionesPrecio as $descripcionPrecio )
-                                <tr>
-                                    <td>{{ $descripcionPrecio -> id }}</td>
-                                    <td>{{ $descripcionPrecio -> nombre }}</td>
-                                    <td>{{ $descripcionPrecio -> descripcion }}</td>
-                                    <td>
-                                        @if ( $descripcionPrecio -> estado == 'A' )
-                                            Activo
-                                        @else
-                                            Inactivo
-                                        @endif
-                                    </td>
-                                    <td class="td-actions text-right">
-                                        <form method="post" class="delete">
-                                            {{ csrf_field() }}
-                                            {{ method_field('DELETE') }}
-    
-                                            <a href="{{ url('/descripcionprecio/'.$descripcionPrecio->id) }}" rel="tooltip" title="Ver Descripcion Precio {{ $descripcionPrecio -> nombre }}" class="btn btn-info btn-simple btn-xs">
-                                                <i class="fa fa-info"></i>
-                                            </a>
-                                            <a href="{{ url('/descripcionprecio/'.$descripcionPrecio->id.'/edit') }}" rel="tooltip" title="Editar Descripcion Precio {{ $descripcionPrecio -> nombre }}" class="btn btn-success btn-simple btn-xs">
-                                                <i class="fa fa-edit"></i>
-                                            </a>
-                                            <a class='btn btn-danger btn-simple btn-xs' rel="tooltip" title="Eliminar Descripcion Precio {{ $descripcionPrecio -> nombre }}" onclick="Delete('{{ $descripcionPrecio -> nombre }}','{{ $descripcionPrecio -> id }}')">
-                                                <i class='fa fa-times'></i>
-                                            </a>
-                                            <!-- <button type="submit" rel="tooltip" title="Eliminar" class="btn btn-danger btn-simple btn-xs">
-                                                <i class="fa fa-times"></i>
-                                            </button> -->
-                                        </form>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                <table class="display nowrap" cellspacing="0" width="100%" id="tableTiposMovimientos">
+                    <thead class=" text-primary">
+                        <th class="text-left">
+                            #Id
+                        </th>
+                        <th>
+                            Nombre
+                        </th>
+                        <th>
+                            Descripcion
+                        </th>
+                        <th>
+                            Estado
+                        </th>
+                        <th class="text-center">
+                            Opciones
+                        </th>
+                    </thead>
+                    <tbody>
+                        @foreach( $descripcionesPrecio as $descripcionPrecio )
+                            <tr>
+                                <td>{{ $descripcionPrecio -> id }}</td>
+                                <td>{{ $descripcionPrecio -> nombre }}</td>
+                                <td>{{ $descripcionPrecio -> descripcion }}</td>
+                                <td>
+                                    @if ( $descripcionPrecio -> estado == 'A' )
+                                        Activo
+                                    @else
+                                        Inactivo
+                                    @endif
+                                </td>
+                                <td class="td-actions text-right">
+                                    <form method="post" class="delete">
+                                        {{ csrf_field() }}
+                                        {{ method_field('DELETE') }}
+
+                                        <a href="{{ url('/descripcionprecio/'.$descripcionPrecio->id) }}" rel="tooltip" title="Ver Descripcion Precio {{ $descripcionPrecio -> nombre }}" class="btn btn-info btn-icon btn-sm">
+                                            <i class="fa fa-info"></i>
+                                        </a>
+                                        <a href="{{ url('/descripcionprecio/'.$descripcionPrecio->id.'/edit') }}" rel="tooltip" title="Editar Descripcion Precio {{ $descripcionPrecio -> nombre }}" class="btn btn-success btn-icon btn-sm">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                        <a class='btn btn-danger btn-icon btn-sm' rel="tooltip" title="Eliminar Descripcion Precio {{ $descripcionPrecio -> nombre }}" onclick="Delete('{{ $descripcionPrecio -> nombre }}','{{ $descripcionPrecio -> id }}')">
+                                            <i class='fa fa-times'></i>
+                                        </a>
+                                        <!-- <button type="submit" rel="tooltip" title="Eliminar" class="btn btn-danger btn-simple btn-xs">
+                                            <i class="fa fa-times"></i>
+                                        </button> -->
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -151,7 +149,7 @@
     </script>
     <script>
         $(document).ready(function() {
-            $('#tableTiposEnvases').DataTable({
+            $('#tableTiposMovimientos').DataTable({
                 "language": {
 
                     "emptyTable": "No hay descripciones de precio , click en el boton <b>Nueva Descripcion de Precio</b> para agregar uno nuevo",

@@ -7,6 +7,9 @@ use App\ImagenesProducto;
 
 class Producto extends Model
 {
+
+    protected $primaryKey = 'codigo';
+
     //
     public static $messages = [
         'codigo.required' => 'El codigo es un campo obligatorio',
@@ -79,9 +82,7 @@ class Producto extends Model
         'fk_tipo_contenido.required' => 'El tipo de contenido es un campo obligatorio',
         'fk_tipo_paca.required' => 'El tipo de paca es un campo obligatorio',
         'fk_bodega.required' => 'La Bodega es un campo obligatorio',
-        'estado.required' => 'El estado es un campo obligatorio',
-        'input_precio.required' => 'El Producto debe tener al menos 1 precio',
-        'input_iva.required' => 'El Producto debe tener al menos 1 iva'
+        'estado.required' => 'El estado es un campo obligatorio'
     ];
 
     public static $rules2 = [
@@ -96,9 +97,7 @@ class Producto extends Model
             'fk_tipo_contenido' => 'required',
             'fk_tipo_paca' => 'required',
             'fk_bodega' => 'required',
-            'estado' => 'required',
-            'input_precio' => 'required',
-            'input_iva' => 'required'
+            'estado' => 'required'
     ];
 
     public function marca() {

@@ -74,6 +74,10 @@ Route::middleware(['auth', 'admin'])->group(function () {
     //CRUD Rutas de las zonas
     Route::get('/zona/{id}/rutas' , 'RutaController@index');
     Route::get('/ruta/{id}/create' , 'RutaController@create');
+    Route::get('/ruta/alls' , 'RutaController@allRutas');//traer todas las rutas
+    Route::get('/ruta/{id}/map' , 'RutaController@loadMap');//cargar mapa de la ruta seleccionada
+    Route::get('/ruta/{id}/details' , 'RutaController@details');//muestra los clientes en una ruta
+    Route::post('/ruta/reordenar' , 'RutaController@reordenar');//metodo que almacena elnuevo orden
     Route::post('/ruta' , 'RutaController@store');
     Route::delete('/ruta/{id}','RutaController@destroy'); //vista para eliminar
     Route::get('/ruta/{id}','RutaController@show'); //mostrar el tipo de movimiento
@@ -146,6 +150,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     //CRUD PRoductos
     Route::get('/producto' , 'ProductoController@index')->name('producto');
     Route::get('/producto/create' , 'ProductoController@create');
+    Route::post('/producto/precio_o_iva/eliminar' , 'ProductoController@deletePrecioOIva');
     Route::post('/producto' , 'ProductoController@store');
     Route::delete('/producto/{id}','ProductoController@destroy'); //vista para eliminar
     Route::get('/producto/{id}','ProductoController@show'); //mostrar el tipo de movimiento

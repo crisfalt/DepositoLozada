@@ -4,6 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Zona;
+use App\OrdenRuta;
+use DB;
 
 class Ruta extends Model
 {
@@ -24,7 +26,26 @@ class Ruta extends Model
     ];
 
     public function zona() {
-        return Zona::where('id',$this -> zona_id ) -> first();
+        return $this->belongsTo(Zona::class); //1 pdoducto pertene a una categoria
+    }
+
+    public function clientes() {
+        return Cliente::where('ruta_id',$this -> id ) -> get();
+    }
+
+    public function union() {
+        $unidas = $dsale=DB::table('orden_rutas')
+                            ->join('clientes','orden_rutas.cliente_id','=','clientes.number_id')
+                            ->where('orden_rutas.ruta_id','=',$this->id)
+                            ->orderBy('orden_rutas.orden')
+                            ->distinct()
+                            ->get();
+        return $unidas;
+    }
+
+    public function listaOrdenada() {
+        $users = OrdenRuta::where('ruta_id',$this -> id ) ->orderBy('orden' , 'ASC') -> get();
+        return $users;
     }
 
 }

@@ -29,65 +29,63 @@
                 <a href="{{ url('/zona/create') }}" class="btn btn-warning btn-round">Nueva Zona</a>
             </div>
             <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table" cellspacing="0" id="tableTiposEnvases">
-                        <thead class=" text-primary">
-                            <th class="text-left">
-                                Bodega
-                            </th>
-                            <th>
-                                Nombre
-                            </th>
-                            <th>
-                                Descripcion
-                            </th>
-                            <th>
-                                Estado
-                            </th>
-                            <th class="text-center">
-                                Opciones
-                            </th>
-                        </thead>
-                        <tbody>
-                            @foreach( $zonas as $zona )
-                                <tr>
-                                    <td>{{ $zona -> bodega() -> nombre }}</td>
-                                    <td>{{ $zona -> nombre }}</td>
-                                    <td>{{ $zona -> descripcion }}</td>
-                                    <td>
-                                        @if ( $zona -> estado == 'A' )
-                                            Activo
-                                        @else
-                                            Inactivo
-                                        @endif
-                                    </td>
-                                    <td class="td-actions text-right">
-                                        <form method="post" class="delete">
-                                            {{ csrf_field() }}
-                                            {{ method_field('DELETE') }}
-    
-                                            <a href="{{ url('/zona/'.$zona->id) }}" rel="tooltip" title="Ver Zona {{ $zona -> nombre }}" class="btn btn-info btn-simple btn-xs">
-                                                <i class="fa fa-info"></i>
-                                            </a>
-                                            <a href="{{ url('/zona/'.$zona->id.'/rutas') }}" rel="tooltip" title="Rutas Zona {{ $zona -> nombre }}" class="btn btn-warning btn-simple btn-xs">
-                                                <i class="fa fa-street-view"></i>
-                                            </a>
-                                            <a href="{{ url('/zona/'.$zona->id.'/edit') }}" rel="tooltip" title="Editar Zona {{ $zona -> nombre }}" class="btn btn-success btn-simple btn-xs">
-                                                <i class="fa fa-edit"></i>
-                                            </a>
-                                            <a class='btn btn-danger btn-simple btn-xs' rel="tooltip" title="Eliminar Zona {{ $zona -> nombre }}" onclick="Delete('{{ $zona -> nombre }}','{{ $zona -> id }}')">
-                                                <i class='fa fa-times'></i>
-                                            </a>
-                                            <!-- <button type="submit" rel="tooltip" title="Eliminar" class="btn btn-danger btn-simple btn-xs">
-                                                <i class="fa fa-times"></i>
-                                            </button> -->
-                                        </form>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                <table class="display nowrap" cellspacing="0" width="100%" id="tableTiposMovimientos">
+                    <thead class=" text-primary">
+                        <th class="text-left">
+                            Bodega
+                        </th>
+                        <th>
+                            Nombre
+                        </th>
+                        <th>
+                            Descripcion
+                        </th>
+                        <th>
+                            Estado
+                        </th>
+                        <th class="text-center">
+                            Opciones
+                        </th>
+                    </thead>
+                    <tbody>
+                        @foreach( $zonas as $zona )
+                            <tr>
+                                <td>{{ $zona -> bodega() -> nombre }}</td>
+                                <td>{{ $zona -> nombre }}</td>
+                                <td>{{ $zona -> descripcion }}</td>
+                                <td>
+                                    @if ( $zona -> estado == 'A' )
+                                        Activo
+                                    @else
+                                        Inactivo
+                                    @endif
+                                </td>
+                                <td class="td-actions text-center">
+                                    <form method="post" class="delete">
+                                        {{ csrf_field() }}
+                                        {{ method_field('DELETE') }}
+
+                                        <a href="{{ url('/zona/'.$zona->id) }}" rel="tooltip" title="Ver Zona {{ $zona -> nombre }}" class="btn btn-info btn-icon btn-sm">
+                                            <i class="fa fa-info"></i>
+                                        </a>
+                                        <a href="{{ url('/zona/'.$zona->id.'/rutas') }}" rel="tooltip" title="Rutas Zona {{ $zona -> nombre }}" class="btn btn-warning btn-icon btn-sm">
+                                            <i class="fa fa-street-view"></i>
+                                        </a>
+                                        <a href="{{ url('/zona/'.$zona->id.'/edit') }}" rel="tooltip" title="Editar Zona {{ $zona -> nombre }}" class="btn btn-success btn-icon btn-sm">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                        <a class='btn btn-danger btn-icon btn-sm' rel="tooltip" title="Eliminar Zona {{ $zona -> nombre }}" onclick="Delete('{{ $zona -> nombre }}','{{ $zona -> id }}')">
+                                            <i class='fa fa-times'></i>
+                                        </a>
+                                        <!-- <button type="submit" rel="tooltip" title="Eliminar" class="btn btn-danger btn-simple btn-xs">
+                                            <i class="fa fa-times"></i>
+                                        </button> -->
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -154,7 +152,7 @@
     </script>
     <script>
         $(document).ready(function() {
-            $('#tableTiposEnvases').DataTable({
+            $('#tableTiposMovimientos').DataTable({
                 "language": {
 
                     "emptyTable": "No hay zonas , click en el boton <b>Nueva Zona</b> para agregar una nueva",

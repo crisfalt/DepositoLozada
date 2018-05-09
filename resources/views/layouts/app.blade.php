@@ -10,7 +10,10 @@
     <title>@yield('title', config('app.name'))</title>
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
     <!--     Fonts and icons     -->
+    <!-- <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'> -->
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
     <!-- CSS Files -->
     <link href="{{ asset('/css/bootstrap.min.css')}}" rel="stylesheet" />
@@ -23,7 +26,7 @@
 
 <body class="">
     <div class="wrapper ">
-        <div class="sidebar" data-color="orange">
+        <div class="sidebar font-menu" data-color="red" data-image="https://pz-3-gatorwraps.netdna-ssl.com/wp-content/uploads/2015/08/sidebar-background-3-min.jpg">
             <!--
         Tip 1: You can change the color of the sidebar using: data-color="blue | green | orange | red | yellow"
     -->
@@ -32,7 +35,7 @@
                     DL
                 </a>
                 <a href="" class="simple-text logo-normal">
-                    Deposito Lozada
+                    Deposito Lozada 
                 </a>
             </div>
             <div class="sidebar-wrapper">
@@ -40,66 +43,272 @@
                     <!-- <li class="active"> para que quede como activo -->
                     @if( Auth::user() -> perfil_id == 1 )
                         <li>
-                            <a href="">
+                            <a class="nav-link" href="">
                                 <i class="now-ui-icons design_app"></i>
                                 <p>Dashboard</p>
                             </a>
                         </li>
                         <li>
-                            <a href="">
-                                <i class="now-ui-icons files_single-copy-04"></i>
-                                <p>Ventas</p>
+                            <a data-toggle="collapse" href="#componentsExamples">
+                                <i class="fa fa-database"></i>
+                                <p>Filtros Productos<b class="caret"></b>
+                                </p>
                             </a>
+                            <div class="collapse" id="componentsExamples">
+                                <ul class="nav">                                    
+                                    <li>
+                                        <a href="{{ route('marca') }}">
+                                            <i class="now-ui-icons shopping_shop submenu"></i>
+                                            <span class="sidebar-normal"> Marcas </span>
+                                        </a>
+                                    </li>
+                                    
+                                    <li>
+                                        <a href="{{ route('sizebotella') }}">
+                                            <i class="fa fa-glass submenu"></i>
+                                            <span class="sidebar-normal"> Tamaño Envase </span>
+                                        </a>
+                                    </li>
+                                    
+                                    <li>
+                                        <a href="{{route('tipoenvase')}}">
+                                            <i class="fa fa-flask submenu"></i>
+                                            <span class="sidebar-normal"> Tipo Envase </span>
+                                        </a>
+                                    </li>
+                                    
+                                    <li>
+                                        <a href="{{route('tipocontenido')}}">
+                                        <i class="fa fa-coffee submenu"></i>
+                                            <span class="sidebar-normal glyphicon glyphicon-chevron-up">Tipo Contenido </span>
+                                        </a>
+                                    </li>
+                                    
+                                    <li>
+                                        <a href="{{route('tipopaca')}}">
+                                            <i class="now-ui-icons design_app submenu"></i>                                        
+                                            <span class="sidebar-normal">Tipo Paca </span>
+                                        </a>
+                                    </li>
+                                
+                                </ul>
+                            </div>
                         </li>
                         <li>
-                            <a href="">
-                                <i class="now-ui-icons shopping_bag-16"></i>
-                                <p>Compras</p>
+                            <a data-toggle="collapse" href="#componentsExamples2">
+                                <i class="now-ui-icons travel_istanbul"></i>
+                                <p>Bodegas<b class="caret"></b>
+                                </p>
                             </a>
+                            <div class="collapse" id="componentsExamples2">
+                                <ul class="nav">
+                                    <li>
+                                        <a href="{{ url('/bodega/create') }}">
+                                            <i class="fa fa-plus-square submenu"></i>
+                                            <span class="sidebar-normal"> Crear Bodega </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('bodega') }}">
+                                            <i class="fa fa-eye submenu"></i>
+                                            <span class="sidebar-normal"> Ver Bodegas </span>
+                                        </a>
+                                    </li>                                
+                                </ul>
+                            </div>
                         </li>
                         <li>
-                            <a href="{{ route('cliente') }}">
-                                <i class="now-ui-icons users_single-02"></i>
-                                <p>Clientes</p>
+                            <a data-toggle="collapse" href="#componentsExamples3">
+                                <i class="fa fa-cubes shopping_box"></i>
+                                <p>Productos<b class="caret"></b>
+                                </p>
                             </a>
+                            <div class="collapse" id="componentsExamples3">
+                                <ul class="nav">
+                                    <li>
+                                        <a href="{{ url('/producto/create') }}">
+                                            <i class="fa fa-plus-square submenu"></i>
+                                            <span class="sidebar-normal"> Nuevo Producto </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('producto') }}">
+                                            <i class="fa fa-eye submenu"></i>
+                                            <span class="sidebar-normal"> Ver Productos </span>
+                                        </a>
+                                    </li>                                
+                                </ul>
+                            </div>
                         </li>
                         <li>
-                            <!-- me trae las transacciones del dia de esta caja -->
-                            <a href="{{ route('caja') }}"> 
-                                <i class="now-ui-icons users_single-02"></i>
-                                <p>Caja</p>
+                            <a data-toggle="collapse" href="#componentsExamples4">
+                                <i class="fa fa-users"></i>
+                                <p>Clientes<b class="caret"></b>
+                                </p>
                             </a>
+                            <div class="collapse" id="componentsExamples4">
+                                <ul class="nav">
+                                    <li>
+                                        <a href="{{ url('/cliente/create') }}">
+                                            <i class="fa fa-user-plus submenu"></i>
+                                            <span class="sidebar-normal"> Nuevo Cliente </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('cliente') }}">
+                                            <i class="fa fa-eye submenu"></i>
+                                            <span class="sidebar-normal"> Ver Clientes </span>
+                                        </a>
+                                    </li>                                
+                                </ul>
+                            </div>
                         </li>
                         <li>
-                            <!-- me trae las transacciones del dia de esta caja -->
-                            <a href="{{ route('perfil') }}"> 
-                                <i class="now-ui-icons users_single-02"></i>
-                                <p>Tipos de Empleados</p>
+                            <a data-toggle="collapse" href="#componentsExamples5">
+                                <i class="fa fa-user"></i>
+                                <p>Proveedores<b class="caret"></b>
+                                </p>
                             </a>
+                            <div class="collapse" id="componentsExamples5">
+                                <ul class="nav">
+                                    <li>
+                                        <a href="{{ url('/proveedor/create') }}">
+                                            <i class="fa fa-user-plus submenu"></i>
+                                            <span class="sidebar-normal"> Nuevo Proveedor </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('proveedor') }}">
+                                            <i class="fa fa-eye submenu"></i>
+                                            <span class="sidebar-normal"> Ver Proveedores </span>
+                                        </a>
+                                    </li>                                
+                                </ul>
+                            </div>
                         </li>
                         <li>
-                            <a href="{{ route('proveedor') }}">
-                                <i class="now-ui-icons sport_user-run"></i>
-                                <p>Proveedores</p>
+                            <a data-toggle="collapse" href="#componentsExamples6">
+                                <i class="fa fa-user-secret"></i>
+                                <p>Empleados<b class="caret"></b>
+                                </p>
                             </a>
+                            <div class="collapse" id="componentsExamples6">
+                                <ul class="nav">
+                                    <li>
+                                        <a href="{{ url('/register') }}">
+                                            <i class="fa fa-user-plus submenu"></i>
+                                            <span class="sidebar-normal"> Registrar Empleado </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <i class="fa fa-eye submenu"></i>
+                                            <span class="sidebar-normal"> Listar Empleados </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ url('/perfil/create') }}">
+                                            <i class="fa fa-user-plus submenu"></i>
+                                            <span class="sidebar-normal"> Registrar Perfil </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('perfil') }}">
+                                            <i class="fa fa-eye submenu"></i>
+                                            <span class="sidebar-normal"> Listar Perfiles </span>
+                                        </a>
+                                    </li>                               
+                                </ul>
+                            </div>
                         </li>
                         <li>
-                            <a href="{{ route('register') }}">
-                                <i class="now-ui-icons business_badge"></i>
-                                <p>Empleados</p>
+                            <a data-toggle="collapse" href="#componentsExamples7">
+                                <i class="fa fa-fax"></i>
+                                <p>Caja<b class="caret"></b>
+                                </p>
                             </a>
+                            <div class="collapse" id="componentsExamples7">
+                                <ul class="nav">
+                                    <li>
+                                        <a href="#">
+                                            <i class="fa fa-share submenu"></i>
+                                            <span class="sidebar-normal"> Entrada </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <i class="fa fa-reply submenu"></i>
+                                            <span class="sidebar-normal"> Salida </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <i class="fa fa-line-chart submenu"></i>
+                                            <span class="sidebar-normal"> Movimientos Cajas </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ url('/caja/create') }}">
+                                            <i class="fa fa-plus-square submenu"></i>
+                                            <span class="sidebar-normal"> Agregar Caja </span>
+                                        </a>
+                                    </li> 
+                                    <li>
+                                        <a href="{{ route('caja') }}">
+                                            <i class="fa fa-eye submenu"></i>
+                                            <span class="sidebar-normal"> Listar Cajas </span>
+                                        </a>
+                                    </li>                             
+                                </ul>
+                            </div>
                         </li>
                         <li>
-                            <a href="">
-                                <i class="now-ui-icons design_bullet-list-67"></i>
-                                <p>Inventarios</p>
+                            <a data-toggle="collapse" href="#componentsExamples8">
+                                <i class="fa fa-map"></i>
+                                <p>Zonas y Rutas<b class="caret"></b>
+                                </p>
                             </a>
-                        </li>
-                        <li>
-                            <a href="">
-                                <i class="now-ui-icons shopping_delivery-fast"></i>
-                                <p>Rutas</p>
-                            </a>
+                            <div class="collapse" id="componentsExamples8">
+                                <ul class="nav">
+                                    <li>
+                                        <a href="{{ url('/zona/create') }}">
+                                            <i class="fa fa-plus-square submenu"></i>
+                                            <span class="sidebar-normal"> Registrar Zona </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('zona') }}">
+                                            <i class="fa fa-globe submenu"></i>
+                                            <span class="sidebar-normal"> Ver Zonas </span>
+                                        </a>
+                                    </li>
+                                    <!-- <li>
+                                        <a href="#">
+                                            <i class="fa fa-plus-square submenu"></i>
+                                            <span class="sidebar-normal"> Registrar Ruta </span>
+                                        </a>
+                                    </li>-->
+                                    <li>
+                                        <a href="{{ url('/ruta/alls') }}">
+                                            <i class="fa fa-road submenu"></i>
+                                            <span class="sidebar-normal"> Ver Rutas </span>
+                                        </a>
+                                    </li>
+                                    <!-- <li>
+                                        <a href="#">
+                                            <i class="fa fa-flag submenu"></i>
+                                            <span class="sidebar-normal"> Reasignar Ruta </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ url('/caja/create') }}">
+                                            <i class="fa fa-reorder submenu"></i>
+                                            <span class="sidebar-normal"> ReOrdenar Ruta </span>
+                                        </a>
+                                    </li>  -->
+                              
+                                </ul>
+                            </div>
                         </li>
                         <li>
                             <a href="">
@@ -110,62 +319,7 @@
                         <li>
                             <a href="">
                                 <i class="now-ui-icons ui-1_settings-gear-63"></i>
-                                <p>Categorías</p>
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="">
-                                <i class="now-ui-icons ui-1_settings-gear-63"></i>
                                 <p>Configuración</p>
-                            </a>
-                        </li>
-                        <li>
-                        <a href="{{ route('tipomovimiento') }}">
-                                <i class="now-ui-icons ui-1_settings-gear-63"></i>
-                                <p>Tipos de Mantenimiento</p>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ route('marca') }}">
-                                <i class="now-ui-icons ui-1_settings-gear-63"></i>
-                                <p>Marcas</p>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ route('sizebotella') }}">
-                                <i class="now-ui-icons ui-1_settings-gear-63"></i>
-                                <p>Tamaños Envases</p>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ route('tipoenvase') }}">
-                                <i class="now-ui-icons ui-1_settings-gear-63"></i>
-                                <p>Tipos de Envases</p>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ route('tipocontenido') }}">
-                                <i class="now-ui-icons ui-1_settings-gear-63"></i>
-                                <p>Tipo de Contenido</p>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ route('tipopaca') }}">
-                                <i class="now-ui-icons ui-1_settings-gear-63"></i>
-                                <p>Tipo de Paca</p>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ route('bodega') }}">
-                                <i class="now-ui-icons ui-1_settings-gear-63"></i>
-                                <p>Bodegas</p>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ route('producto') }}">
-                                <i class="now-ui-icons ui-1_settings-gear-63"></i>
-                                <p>Productos</p>
                             </a>
                         </li>
                         <li>
@@ -178,12 +332,6 @@
                             <a href="{{ route('descripcioniva') }}">
                                 <i class="now-ui-icons ui-1_settings-gear-63"></i>
                                 <p>Descripcion de Iva</p>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ route('zona') }}">
-                                <i class="now-ui-icons ui-1_settings-gear-63"></i>
-                                <p>Zonas</p>
                             </a>
                         </li>
                     @else
@@ -349,8 +497,7 @@
 <script src="{{ asset('/js/core/popper.min.js') }}"></script>
 <script src="{{ asset('/js/core/bootstrap.min.js') }}"></script>
 <script src="{{ asset('/js/plugins/perfect-scrollbar.jquery.min.js') }}"></script>
-<!--  Google Maps Plugin    -->
-<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
+<!-- <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script> -->
 <!-- Chart JS -->
 <script src="{{ asset('/js/plugins/chartjs.min.js') }}"></script>
 <!--  Notifications Plugin    -->
@@ -359,14 +506,46 @@
 <script src="{{ asset('/js/now-ui-dashboard.js?v=1.0.1') }}"></script>
 <!-- Now Ui Dashboard DEMO methods, don't include it in your project! -->
 <script src="{{ asset('/demo/demo.js') }}"></script>
+<script src="{{ asset('/demo/jquery.sharrre.js') }}"></script>
 <!-- plugin js para eliminar registros -->
 <script src="{{ asset('/js/jquery-confirm.js') }}" type="text/javascript"></script>
-<script>
+<!-- LOS NUEVOS SCRIPTS -->
+<script src="{{ asset('/js/plugins/moment.min.js') }}"></script>
+<script src="{{ asset('/js/plugins/bootstrap-datetimepicker.js') }}"></script>
+<script src="{{ asset('/js/plugins/bootstrap-notify.js') }}"></script>
+<script src="{{ asset('/js/plugins/bootstrap-selectpicker.js') }}"></script>
+<script src="{{ asset('/js/plugins/bootstrap-switch.js') }}"></script>
+<script src="{{ asset('/js/plugins/bootstrap-tagsinput.js') }}"></script>
+<script src="{{ asset('/js/plugins/fullcalendar.min.js') }}"></script>
+<script src="{{ asset('/js/plugins/jasny-bootstrap.min.js') }}"></script>
+<script src="{{ asset('/js/plugins/jquery.bootstrap-wizard.js') }}"></script>
+<script src="{{ asset('/js/plugins/jquery.validate.min.js') }}"></script>
+<script src="{{ asset('/js/plugins/jquery-jvectormap.js') }}"></script>
+<script src="{{ asset('/js/plugins/nouislider.min.js') }}"></script>
+<script src="{{ asset('/js/plugins/perfect-scrollbar.jquery.min.js') }}"></script>
+<script src="{{ asset('/js/plugins/sweetalert2.min.js') }}"></script>
+ <!-- Google Maps Plugin   
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDS-rmXg8BxyY1KtI2N3s7h86kOhzZQvI8&callback=initMap"></script> -->
+<!-- <script>
     $(document).ready(function() {
         // Javascript method's body can be found in assets/js/demos.js
         demo.initGoogleMaps();
     });
-</script>
+</script> -->
+<!-- <script>
+    //hacer los submenus activos
+    // $(document).ready(function() {
+        var header = document.getElementById("componentsExamples");
+        var btns = header.getElementsByClassName("nav-item");
+        for (var i = 0; i < btns.length; i++) {
+            btns[i].addEventListener("click", function() {
+                var current = document.getElementsByClassName("active");
+                current[0].className = current[0].className.replace(" active", "");
+                this.className += " active";
+            });
+        }
+    // });    
+</script> -->
 @yield('scripts')
 
 </html>

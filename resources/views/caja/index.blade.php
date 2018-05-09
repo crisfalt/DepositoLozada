@@ -48,62 +48,60 @@
                 <a href="{{ url('/caja/create') }}" class="btn btn-warning btn-round">Nueva Caja</a>
             </div>
             <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table" cellspacing="0" id="tableTiposMovimientos">
-                        <thead class=" text-primary">
-                            <th class="text-left">
-                                #Id
-                            </th>
-                            <th>
-                                Nombre
-                            </th>
-                            <th>
-                                Bodega
-                            </th>
-                            <th>
-                                Estado
-                            </th>
-                            <th class="text-center">
-                                Opciones
-                            </th>
-                        </thead>
-                        <tbody>
-                            @foreach( $Cajas as $caja )
-                                <tr>
-                                    <td>{{ $caja -> id }}</td>
-                                    <td>{{ $caja -> nombre }}</td>
-                                    <td>{{ $caja -> bodega -> nombre }}</td>
-                                    <td>
-                                        @if ( $caja -> estado == 'A' )
-                                            Activo
-                                        @else
-                                            Inactivo
-                                        @endif
-                                    </td>
-                                    <td class="td-actions text-center">
-                                        <form method="post" class="delete">
-                                            {{ csrf_field() }}
-                                            {{ method_field('DELETE') }}
-    
-                                            <a href="{{ url('/caja/'.$caja->id) }}" rel="tooltip" title="Ver caja {{ $caja -> nombre }}" class="btn btn-info btn-simple btn-xs">
-                                                <i class="fa fa-info"></i>
-                                            </a>
-                                            <a href="{{ url('/caja/'.$caja->id.'/edit') }}" rel="tooltip" title="Editar caja {{ $caja -> nombre }}" class="btn btn-success btn-simple btn-xs">
-                                                <i class="fa fa-edit"></i>
-                                            </a>
-                                            <a class='btn btn-danger btn-simple btn-xs' rel="tooltip" title="Eliminar caja {{ $caja -> nombre }}" onclick="Delete('{{ $caja -> nombre }}','{{ $caja -> id }}')">
-                                                <i class='fa fa-times'></i>
-                                            </a>
-                                            <!-- <button type="submit" rel="tooltip" title="Eliminar" class="btn btn-danger btn-simple btn-xs">
-                                                <i class="fa fa-times"></i>
-                                            </button> -->
-                                        </form>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                <table class="display nowrap" cellspacing="0" width="100%" id="tableTiposMovimientos">
+                    <thead class=" text-primary">
+                        <th class="text-left">
+                            #Id
+                        </th>
+                        <th>
+                            Nombre
+                        </th>
+                        <th>
+                            Bodega
+                        </th>
+                        <th>
+                            Estado
+                        </th>
+                        <th class="text-center">
+                            Opciones
+                        </th>
+                    </thead>
+                    <tbody>
+                        @foreach( $Cajas as $caja )
+                            <tr>
+                                <td>{{ $caja -> id }}</td>
+                                <td>{{ $caja -> nombre }}</td>
+                                <td>{{ $caja -> bodega -> nombre }}</td>
+                                <td>
+                                    @if ( $caja -> estado == 'A' )
+                                        Activo
+                                    @else
+                                        Inactivo
+                                    @endif
+                                </td>
+                                <td class="td-actions text-center">
+                                    <form method="post" class="delete">
+                                        {{ csrf_field() }}
+                                        {{ method_field('DELETE') }}
+
+                                        <a href="{{ url('/caja/'.$caja->id) }}" rel="tooltip" title="Ver caja {{ $caja -> nombre }}" class="btn btn-info btn-icon btn-xs">
+                                            <i class="fa fa-info"></i>
+                                        </a>
+                                        <a href="{{ url('/caja/'.$caja->id.'/edit') }}" rel="tooltip" title="Editar caja {{ $caja -> nombre }}" class="btn btn-success btn-icon btn-xs">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                        <a class='btn btn-danger btn-icon btn-xs' rel="tooltip" title="Eliminar caja {{ $caja -> nombre }}" onclick="Delete('{{ $caja -> nombre }}','{{ $caja -> id }}')">
+                                            <i class='fa fa-times'></i>
+                                        </a>
+                                        <!-- <button type="submit" rel="tooltip" title="Eliminar" class="btn btn-danger btn-simple btn-xs">
+                                            <i class="fa fa-times"></i>
+                                        </button> -->
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

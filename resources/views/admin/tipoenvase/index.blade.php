@@ -29,62 +29,60 @@
                 <a href="{{ url('/tipoenvase/create') }}" class="btn btn-warning btn-round">Nuevo Tipo de Envase</a>
             </div>
             <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table" cellspacing="0" id="tableTiposEnvases">
-                        <thead class=" text-primary">
-                            <th class="text-left">
-                                #Id
-                            </th>
-                            <th>
-                                Nombre
-                            </th>
-                            <th>
-                                Descripcion
-                            </th>
-                            <th>
-                                Estado
-                            </th>
-                            <th class="text-center">
-                                Opciones
-                            </th>
-                        </thead>
-                        <tbody>
-                            @foreach( $tiposEnvases as $tipoEnvase )
-                                <tr>
-                                    <td>{{ $tipoEnvase -> id }}</td>
-                                    <td>{{ $tipoEnvase -> nombre }}</td>
-                                    <td>{{ $tipoEnvase -> descripcion }}</td>
-                                    <td>
-                                        @if ( $tipoEnvase -> estado == 'A' )
-                                            Activo
-                                        @else
-                                            Inactivo
-                                        @endif
-                                    </td>
-                                    <td class="td-actions text-right">
-                                        <form method="post" class="delete">
-                                            {{ csrf_field() }}
-                                            {{ method_field('DELETE') }}
-    
-                                            <a href="{{ url('/tipoenvase/'.$tipoEnvase->id) }}" rel="tooltip" title="Ver Tamaño {{ $tipoEnvase -> nombre }}" class="btn btn-info btn-simple btn-xs">
-                                                <i class="fa fa-info"></i>
-                                            </a>
-                                            <a href="{{ url('/tipoenvase/'.$tipoEnvase->id.'/edit') }}" rel="tooltip" title="Editar Tamaño {{ $tipoEnvase -> nombre }}" class="btn btn-success btn-simple btn-xs">
-                                                <i class="fa fa-edit"></i>
-                                            </a>
-                                            <a class='btn btn-danger btn-simple btn-xs' rel="tooltip" title="Eliminar Tamaño {{ $tipoEnvase -> nombre }}" onclick="Delete('{{ $tipoEnvase -> nombre }}','{{ $tipoEnvase -> id }}')">
-                                                <i class='fa fa-times'></i>
-                                            </a>
-                                            <!-- <button type="submit" rel="tooltip" title="Eliminar" class="btn btn-danger btn-simple btn-xs">
-                                                <i class="fa fa-times"></i>
-                                            </button> -->
-                                        </form>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                <table class="display nowrap" cellspacing="0" width="100%" id="tableTiposMovimientos">
+                    <thead class=" text-primary">
+                        <th class="text-left">
+                            #Id
+                        </th>
+                        <th>
+                            Nombre
+                        </th>
+                        <th>
+                            Descripcion
+                        </th>
+                        <th>
+                            Estado
+                        </th>
+                        <th class="text-center">
+                            Opciones
+                        </th>
+                    </thead>
+                    <tbody>
+                        @foreach( $tiposEnvases as $tipoEnvase )
+                            <tr>
+                                <td>{{ $tipoEnvase -> id }}</td>
+                                <td>{{ $tipoEnvase -> nombre }}</td>
+                                <td>{{ $tipoEnvase -> descripcion }}</td>
+                                <td>
+                                    @if ( $tipoEnvase -> estado == 'A' )
+                                        Activo
+                                    @else
+                                        Inactivo
+                                    @endif
+                                </td>
+                                <td class="td-actions text-right">
+                                    <form method="post" class="delete">
+                                        {{ csrf_field() }}
+                                        {{ method_field('DELETE') }}
+
+                                        <a href="{{ url('/tipoenvase/'.$tipoEnvase->id) }}" rel="tooltip" title="Ver Tamaño {{ $tipoEnvase -> nombre }}" class="btn btn-info btn-icon btn-xs">
+                                            <i class="fa fa-info"></i>
+                                        </a>
+                                        <a href="{{ url('/tipoenvase/'.$tipoEnvase->id.'/edit') }}" rel="tooltip" title="Editar Tamaño {{ $tipoEnvase -> nombre }}" class="btn btn-success btn-icon btn-xs">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                        <a class='btn btn-danger btn-icon btn-xs' rel="tooltip" title="Eliminar Tamaño {{ $tipoEnvase -> nombre }}" onclick="Delete('{{ $tipoEnvase -> nombre }}','{{ $tipoEnvase -> id }}')">
+                                            <i class='fa fa-times'></i>
+                                        </a>
+                                        <!-- <button type="submit" rel="tooltip" title="Eliminar" class="btn btn-danger btn-simple btn-xs">
+                                            <i class="fa fa-times"></i>
+                                        </button> -->
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -151,7 +149,7 @@
     </script>
     <script>
         $(document).ready(function() {
-            $('#tableTiposEnvases').DataTable({
+            $('#tableTiposMovimientos').DataTable({
                 "language": {
 
                     "emptyTable": "No hay tipos de envases registrados , click en el boton <b>Nuevo Tipo</b> para agregar uno nuevo",

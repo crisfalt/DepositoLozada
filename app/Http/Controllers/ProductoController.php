@@ -18,6 +18,26 @@ use App\ImagenesProducto;
 
 class ProductoController extends Controller
 {
+
+    //metodo para eliminar un iva o precio
+    public function deletePrecioOIva() {
+        $id = $_POST['id'];
+        $tipo = $_POST['tipo'];
+        if( $tipo == 'precio' ) {
+            $precio = PreciosProducto::find( $id );
+            $precio -> delete();
+        }
+        if( $tipo == 'iva' ) {
+            $iva = IvasProductos::find( $id );
+            $iva -> delete();
+        }
+        $response = array(
+            'status' => 'success',
+            'msg' => 'Precio o IVa Eliminada Correctamente',
+        );
+        return response()->json($response); 
+    }
+
     //
     public function index() {
         $Productos = Producto::orderBy('nombre') -> get();
@@ -158,9 +178,10 @@ class ProductoController extends Controller
         //mensajes personalizados para cada campo
         $this->validate($request,Producto::$rules2,Producto::$messages2);
         //crear un prodcuto nuevo
-        $producto = Producto::find( $id );
+        $producto = Producto::where( 'codigo',$id )->first();
         // $producto -> codigo = $request->input('codigo');
         $producto -> nombre = $request->input('nombre');
+        // dd($request->input('fk_tipo_contenido'));
         //$product -> description = $request->input('description');
         $producto -> descripcion = $request->input('descripcion');
         $producto -> cantidad = $request->input('cantidad');
@@ -175,27 +196,30 @@ class ProductoController extends Controller
         $producto -> estado = $request->input('estado');
         $producto -> save(); //registrar producto
         //fin de nuevo producto
-        $arrayPrecios = explode("," , $request->input('input_precio') );
-        $arrayDescripcionesPrecio = explode( "," , $request->input('input_descripcion_precio') );
-        $arrayIvas = explode( "," , $request->input('input_iva') );
-        $arrayDescripcionesIva = explode( "," , $request->input('input_descripcion_iva') );
-        //insertar los precios del producto con su respectiva descripcion
-        foreach( $arrayPrecios as $index => $precio ) {
-            $precioProducto = new PreciosProducto();
-            $precioProducto -> fk_producto = $producto->codigo;
-            $precioProducto -> valor = $precio;
-            $precioProducto -> fk_descripcion_precio = $arrayDescripcionesPrecio[$index];
-            $precioProducto -> save();
+        if( !empty( $request->input('input_precio') ) ) {
+            $arrayPrecios = explode("," , $request->input('input_precio') );
+            $arrayDescripcionesPrecio = explode( "," , $request->input('input_descripcion_precio') );
+            //insertar los precios del producto con su respectiva descripcion
+            foreach( $arrayPrecios as $index => $precio ) {
+                $precioProducto = new PreciosProducto();
+                $precioProducto -> fk_producto = $producto->codigo;
+                $precioProducto -> valor = $precio;
+                $precioProducto -> fk_descripcion_precio = $arrayDescripcionesPrecio[$index];
+                $precioProducto -> save();
+            }
         }
-        // //fin insertar precios
-        // //insertar los ivas del producto con su respectiva descripcion
-        foreach( $arrayIvas as $index => $iva ) {
-            $ivaProducto = new IvasProductos();
-            $ivaProducto -> fk_producto = $producto->codigo;
-            $ivaProducto -> valor = $iva;
-            $ivaProducto -> fk_descripcion_iva = $arrayDescripcionesIva[$index];
-            $ivaProducto -> save();
-        }
+        if( !empty($request->input('input_iva') ) ) {
+            $arrayIvas = explode( "," , $request->input('input_iva') );
+            $arrayDescripcionesIva = explode( "," , $request->input('input_descripcion_iva') );
+            // //insertar los ivas del producto con su respectiva descripcion
+            foreach( $arrayIvas as $index => $iva ) {
+                $ivaProducto = new IvasProductos();
+                $ivaProducto -> fk_producto = $producto->codigo;
+                $ivaProducto -> valor = $iva;
+                $ivaProducto -> fk_descripcion_iva = $arrayDescripcionesIva[$index];
+                $ivaProducto -> save();
+            }
+        }   
         $notification = 'Producto ' . $request->input('nombre') . ' Actualizado Exitosamente';
         return redirect('/producto') -> with( compact( 'notification' ) );
     }

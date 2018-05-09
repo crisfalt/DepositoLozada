@@ -29,80 +29,78 @@
                 <a href="{{ url('/tipopaca/create') }}" class="btn btn-warning btn-round">Nuevo Tipo de Paca</a>
             </div>
             <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table" cellspacing="0" id="tableTiposEnvases">
-                        <thead class=" text-primary">
-                            <th class="text-left">
-                                #Id
-                            </th>
-                            <th>
-                                Nombre
-                            </th>
-                            <th>
-                                Descripcion
-                            </th>
-                            <th>
-                                Cantidad
-                            </th>
-                            <th>
-                                Precio
-                            </th>
-                            <th>
-                                Retornable
-                            </th>
-                            <th>
-                                Estado
-                            </th>
-                            <th class="text-center">
-                                Opciones
-                            </th>
-                        </thead>
-                        <tbody>
-                            @foreach( $tiposPacas as $tipoPaca )
-                                <tr>
-                                    <td>{{ $tipoPaca -> id }}</td>
-                                    <td>{{ $tipoPaca -> nombre }}</td>
-                                    <td>{{ $tipoPaca -> descripcion }}</td>
-                                    <td>{{ $tipoPaca -> cantidad }}</td>
-                                    <td>{{ $tipoPaca -> precio }}</td>
-                                    <td>
-                                        @if ( $tipoPaca -> retornable == '1')
-                                            SI
-                                        @else
-                                            NO
-                                        @endif
-                                    </td>
-                                    <td>
-                                        @if ( $tipoPaca -> estado == 'A' )
-                                            Activo
-                                        @else
-                                            Inactivo
-                                        @endif
-                                    </td>
-                                    <td class="td-actions text-right">
-                                        <form method="post" class="delete">
-                                            {{ csrf_field() }}
-                                            {{ method_field('DELETE') }}
-    
-                                            <a href="{{ url('/tipopaca/'.$tipoPaca->id) }}" rel="tooltip" title="Ver Tipo Paca {{ $tipoPaca -> nombre }}" class="btn btn-info btn-simple btn-xs">
-                                                <i class="fa fa-info"></i>
-                                            </a>
-                                            <a href="{{ url('/tipopaca/'.$tipoPaca->id.'/edit') }}" rel="tooltip" title="Editar Tipo Paca {{ $tipoPaca -> nombre }}" class="btn btn-success btn-simple btn-xs">
-                                                <i class="fa fa-edit"></i>
-                                            </a>
-                                            <a class='btn btn-danger btn-simple btn-xs' rel="tooltip" title="Eliminar Tipo Contenido {{ $tipoPaca -> nombre }}" onclick="Delete('{{ $tipoPaca -> nombre }}','{{ $tipoPaca -> id }}')">
-                                                <i class='fa fa-times'></i>
-                                            </a>
-                                            <!-- <button type="submit" rel="tooltip" title="Eliminar" class="btn btn-danger btn-simple btn-xs">
-                                                <i class="fa fa-times"></i>
-                                            </button> -->
-                                        </form>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                <table class="display nowrap" cellspacing="0" width="100%" id="tableTiposMovimientos">
+                    <thead class=" text-primary">
+                        <th class="text-left">
+                            #Id
+                        </th>
+                        <th>
+                            Nombre
+                        </th>
+                        <th>
+                            Descripcion
+                        </th>
+                        <th>
+                            Cantidad
+                        </th>
+                        <th>
+                            Precio
+                        </th>
+                        <th>
+                            Retornable
+                        </th>
+                        <th>
+                            Estado
+                        </th>
+                        <th class="text-center">
+                            Opciones
+                        </th>
+                    </thead>
+                    <tbody>
+                        @foreach( $tiposPacas as $tipoPaca )
+                            <tr>
+                                <td>{{ $tipoPaca -> id }}</td>
+                                <td>{{ $tipoPaca -> nombre }}</td>
+                                <td>{{ $tipoPaca -> descripcion }}</td>
+                                <td>{{ $tipoPaca -> cantidad }}</td>
+                                <td>{{ $tipoPaca -> precio }}</td>
+                                <td>
+                                    @if ( $tipoPaca -> retornable == '1')
+                                        SI
+                                    @else
+                                        NO
+                                    @endif
+                                </td>
+                                <td>
+                                    @if ( $tipoPaca -> estado == 'A' )
+                                        Activo
+                                    @else
+                                        Inactivo
+                                    @endif
+                                </td>
+                                <td class="td-actions text-right">
+                                    <form method="post" class="delete">
+                                        {{ csrf_field() }}
+                                        {{ method_field('DELETE') }}
+
+                                        <a href="{{ url('/tipopaca/'.$tipoPaca->id) }}" rel="tooltip" title="Ver Tipo Paca {{ $tipoPaca -> nombre }}" class="btn btn-info btn-icon btn-xs">
+                                            <i class="fa fa-info"></i>
+                                        </a>
+                                        <a href="{{ url('/tipopaca/'.$tipoPaca->id.'/edit') }}" rel="tooltip" title="Editar Tipo Paca {{ $tipoPaca -> nombre }}" class="btn btn-success btn-icon btn-xs">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                        <a class='btn btn-danger btn-icon btn-xs' rel="tooltip" title="Eliminar Tipo Contenido {{ $tipoPaca -> nombre }}" onclick="Delete('{{ $tipoPaca -> nombre }}','{{ $tipoPaca -> id }}')">
+                                            <i class='fa fa-times'></i>
+                                        </a>
+                                        <!-- <button type="submit" rel="tooltip" title="Eliminar" class="btn btn-danger btn-simple btn-xs">
+                                            <i class="fa fa-times"></i>
+                                        </button> -->
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -169,7 +167,7 @@
     </script>
     <script>
         $(document).ready(function() {
-            $('#tableTiposEnvases').DataTable({
+            $('#tableTiposMovimientos').DataTable({
                 "language": {
 
                     "emptyTable": "No hay tipos de contenido pacas , click en el boton <b>Nuevo Tipo de Paca</b> para agregar uno nuevo",

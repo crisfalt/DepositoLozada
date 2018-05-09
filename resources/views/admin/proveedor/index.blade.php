@@ -29,74 +29,72 @@
                 <a href="{{ url('/proveedor/create') }}" class="btn btn-warning btn-round">Nuevo Proveedor</a>
             </div>
             <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table" cellspacing="0" id="tableTiposMovimientos">
-                        <thead class=" text-primary">
-                            <th class="text-left">
-                                # Documento
-                            </th>
-                            <th>
-                                Nombre
-                            </th>
-                            <th>
-                                Correo
-                            </th>
-                            <th>
-                                Direccion
-                            </th>
-                            <th>
-                                Telefono
-                            </th>
-                            <th>
-                                Celular
-                            </th>
-                            <th>
-                                Estado
-                            </th>
-                            <th class="text-center">
-                                Opciones
-                            </th>
-                        </thead>
-                        <tbody>
-                            @foreach( $proveedores as $proveedor )
-                                <tr>
-                                    <td>{{ $proveedor -> number_id }}</td>
-                                    <td>{{ $proveedor -> name }}</td>
-                                    <td>{{ $proveedor -> email }}</td>
-                                    <td>{{ $proveedor -> address }}</td>
-                                    <td>{{ $proveedor -> phone }}</td>
-                                    <td>{{ $proveedor -> celular }}</td>
-                                    <td>
-                                        @if ( $proveedor -> estado == 'A' )
-                                            Activo
-                                        @else
-                                            Inactivo
-                                        @endif
-                                    </td>
-                                    <td class="td-actions text-right">
-                                        <form method="post" class="delete">
-                                            {{ csrf_field() }}
-                                            {{ method_field('DELETE') }}
-    
-                                            <a href="{{ url('/proveedor/'.$proveedor->codigo) }}" rel="tooltip" title="Ver proveedor {{ $proveedor -> nombre }}" class="btn btn-info btn-simple btn-xs">
-                                                <i class="fa fa-info"></i>
-                                            </a>
-                                            <a href="{{ url('/proveedor/'.$proveedor->codigo.'/edit') }}" rel="tooltip" title="Editar proveedor {{ $proveedor -> nombre }}" class="btn btn-success btn-simple btn-xs">
-                                                <i class="fa fa-edit"></i>
-                                            </a>
-                                            <a class='btn btn-danger btn-simple btn-xs' rel="tooltip" title="Eliminar proveedor {{ $proveedor -> nombre }}" onclick="Delete('{{ $proveedor -> nombre }}','{{ $proveedor -> codigo }}')">
-                                                <i class='fa fa-times'></i>
-                                            </a>
-                                            <!-- <button type="submit" rel="tooltip" title="Eliminar" class="btn btn-danger btn-simple btn-xs">
-                                                <i class="fa fa-times"></i>
-                                            </button> -->
-                                        </form>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                <table class="display nowrap" cellspacing="0" width="100%" id="tableTiposMovimientos">
+                    <thead class=" text-primary">
+                        <th class="text-left">
+                            # Documento
+                        </th>
+                        <th>
+                            Nombre
+                        </th>
+                        <th>
+                            Correo
+                        </th>
+                        <th>
+                            Direccion
+                        </th>
+                        <th>
+                            Telefono
+                        </th>
+                        <th>
+                            Celular
+                        </th>
+                        <th>
+                            Estado
+                        </th>
+                        <th class="text-center">
+                            Opciones
+                        </th>
+                    </thead>
+                    <tbody>
+                        @foreach( $proveedores as $proveedor )
+                            <tr>
+                                <td>{{ $proveedor -> number_id }}</td>
+                                <td>{{ $proveedor -> name }}</td>
+                                <td>{{ $proveedor -> email }}</td>
+                                <td>{{ $proveedor -> address }}</td>
+                                <td>{{ $proveedor -> phone }}</td>
+                                <td>{{ $proveedor -> celular }}</td>
+                                <td>
+                                    @if ( $proveedor -> estado == 'A' )
+                                        Activo
+                                    @else
+                                        Inactivo
+                                    @endif
+                                </td>
+                                <td class="td-actions text-right">
+                                    <form method="post" class="delete">
+                                        {{ csrf_field() }}
+                                        {{ method_field('DELETE') }}
+
+                                        <a href="{{ url('/proveedor/'.$proveedor->codigo) }}" rel="tooltip" title="Ver proveedor {{ $proveedor -> nombre }}" class="btn btn-info btn-icon btn-xs">
+                                            <i class="fa fa-info"></i>
+                                        </a>
+                                        <a href="{{ url('/proveedor/'.$proveedor->codigo.'/edit') }}" rel="tooltip" title="Editar proveedor {{ $proveedor -> nombre }}" class="btn btn-success btn-icon btn-xs">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                        <a class='btn btn-danger btn-icon btn-xs' rel="tooltip" title="Eliminar proveedor {{ $proveedor -> nombre }}" onclick="Delete('{{ $proveedor -> nombre }}','{{ $proveedor -> codigo }}')">
+                                            <i class='fa fa-times'></i>
+                                        </a>
+                                        <!-- <button type="submit" rel="tooltip" title="Eliminar" class="btn btn-danger btn-simple btn-xs">
+                                            <i class="fa fa-times"></i>
+                                        </button> -->
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

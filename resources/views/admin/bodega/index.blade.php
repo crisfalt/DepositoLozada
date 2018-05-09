@@ -30,8 +30,8 @@
                 <a href="{{ url('/bodega/create') }}" class="btn btn-warning btn-round">Nueva Bodega</a>
             </div>
             <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table" cellspacing="0" id="tableTiposMovimientos">
+                <!-- <div class="table-responsive"> -->
+                    <table class="display nowrap" cellspacing="0" width="100%" id="tableTiposMovimientos">
                         <thead class=" text-primary">
                             <th class="text-left">
                                 Nombre
@@ -61,13 +61,13 @@
                                             {{ csrf_field() }}
                                             {{ method_field('DELETE') }}
     
-                                            <a href="{{ url('/bodega/'.$bodega->id) }}" rel="tooltip" title="Ver bodega {{ $bodega -> nombre }}" class="btn btn-info btn-simple btn-xs">
+                                            <a href="{{ url('/bodega/'.$bodega->id) }}" rel="tooltip" title="Ver bodega {{ $bodega -> nombre }}" class="btn btn-info btn-icon btn-sm">
                                                 <i class="fa fa-info"></i>
                                             </a>
-                                            <a href="{{ url('/bodega/'.$bodega->id.'/edit') }}" rel="tooltip" title="Editar bodega {{ $bodega -> nombre }}" class="btn btn-success btn-simple btn-xs">
+                                            <a href="{{ url('/bodega/'.$bodega->id.'/edit') }}" rel="tooltip" title="Editar bodega {{ $bodega -> nombre }}" class="btn btn-success btn-icon btn-sm">
                                                 <i class="fa fa-edit"></i>
                                             </a>
-                                            <a class='btn btn-danger btn-simple btn-xs' rel="tooltip" title="Eliminar Marca {{ $bodega -> nombre }}" onclick="Delete('{{ $bodega -> nombre }}','{{ $bodega -> id }}')">
+                                            <a class='btn btn-danger btn-icon btn-sm' rel="tooltip" title="Eliminar Marca {{ $bodega -> nombre }}" onclick="Delete('{{ $bodega -> nombre }}','{{ $bodega -> id }}')">
                                                 <i class='fa fa-times'></i>
                                             </a>
                                             <!-- <button type="submit" rel="tooltip" title="Eliminar" class="btn btn-danger btn-simple btn-xs">
@@ -79,7 +79,7 @@
                             @endforeach
                         </tbody>
                     </table>
-                </div>
+                <!-- </div> -->
             </div>
         </div>
     </div>

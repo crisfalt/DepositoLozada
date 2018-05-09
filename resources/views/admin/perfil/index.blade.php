@@ -48,62 +48,60 @@
                 <a href="{{ url('/perfil/create') }}" class="btn btn-warning btn-round">Nuevo Perfil</a>
             </div>
             <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table" cellspacing="0" id="tableTiposMovimientos">
-                        <thead class=" text-primary">
-                            <th class="text-left">
-                                #Id
-                            </th>
-                            <th>
-                                Nombre
-                            </th>
-                            <th>
-                                Descripcion
-                            </th>
-                            <th>
-                                Estado
-                            </th>
-                            <th class="text-center">
-                                Opciones
-                            </th>
-                        </thead>
-                        <tbody>
-                            @foreach( $perfiles as $perfil )
-                                <tr>
-                                    <td>{{ $perfil -> id }}</td>
-                                    <td>{{ $perfil -> nombre }}</td>
-                                    <td>{{ $perfil -> descripcion }}</td>
-                                    <td>
-                                        @if ( $perfil -> estado == 'A' )
-                                            Activo
-                                        @else
-                                            Inactivo
-                                        @endif
-                                    </td>
-                                    <td class="td-actions text-right">
-                                        <form method="post" class="delete">
-                                            {{ csrf_field() }}
-                                            {{ method_field('DELETE') }}
-    
-                                            <a href="{{ url('/perfil/'.$perfil->id) }}" rel="tooltip" title="Ver perfil {{ $perfil -> nombre }}" class="btn btn-info btn-simple btn-xs">
-                                                <i class="fa fa-info"></i>
-                                            </a>
-                                            <a href="{{ url('/perfil/'.$perfil->id.'/edit') }}" rel="tooltip" title="Editar perfil {{ $perfil -> nombre }}" class="btn btn-success btn-simple btn-xs">
-                                                <i class="fa fa-edit"></i>
-                                            </a>
-                                            <a class='btn btn-danger btn-simple btn-xs' rel="tooltip" title="Eliminar perfil {{ $perfil -> nombre }}" onclick="Delete('{{ $perfil -> nombre }}','{{ $perfil -> id }}')">
-                                                <i class='fa fa-times'></i>
-                                            </a>
-                                            <!-- <button type="submit" rel="tooltip" title="Eliminar" class="btn btn-danger btn-simple btn-xs">
-                                                <i class="fa fa-times"></i>
-                                            </button> -->
-                                        </form>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                <table class="display nowrap" cellspacing="0" width="100%" id="tableTiposMovimientos">
+                    <thead class=" text-primary">
+                        <th class="text-left">
+                            #Id
+                        </th>
+                        <th>
+                            Nombre
+                        </th>
+                        <th>
+                            Descripcion
+                        </th>
+                        <th>
+                            Estado
+                        </th>
+                        <th class="text-center">
+                            Opciones
+                        </th>
+                    </thead>
+                    <tbody>
+                        @foreach( $perfiles as $perfil )
+                            <tr>
+                                <td>{{ $perfil -> id }}</td>
+                                <td>{{ $perfil -> nombre }}</td>
+                                <td>{{ $perfil -> descripcion }}</td>
+                                <td>
+                                    @if ( $perfil -> estado == 'A' )
+                                        Activo
+                                    @else
+                                        Inactivo
+                                    @endif
+                                </td>
+                                <td class="td-actions text-right">
+                                    <form method="post" class="delete">
+                                        {{ csrf_field() }}
+                                        {{ method_field('DELETE') }}
+
+                                        <a href="{{ url('/perfil/'.$perfil->id) }}" rel="tooltip" title="Ver perfil {{ $perfil -> nombre }}" class="btn btn-info btn-icon btn-sm">
+                                            <i class="fa fa-info"></i>
+                                        </a>
+                                        <a href="{{ url('/perfil/'.$perfil->id.'/edit') }}" rel="tooltip" title="Editar perfil {{ $perfil -> nombre }}" class="btn btn-success btn-icon btn-sm">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                        <a class='btn btn-danger btn-icon btn-sm' rel="tooltip" title="Eliminar perfil {{ $perfil -> nombre }}" onclick="Delete('{{ $perfil -> nombre }}','{{ $perfil -> id }}')">
+                                            <i class='fa fa-times'></i>
+                                        </a>
+                                        <!-- <button type="submit" rel="tooltip" title="Eliminar" class="btn btn-danger btn-simple btn-xs">
+                                            <i class="fa fa-times"></i>
+                                        </button> -->
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

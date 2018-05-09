@@ -7,6 +7,7 @@ use App\Cliente;
 use App\Bodega;
 use App\Ruta;
 use App\TipoDocumento;
+use App\OrdenRuta;
 
 class ClienteController extends Controller
 {
@@ -47,8 +48,8 @@ class ClienteController extends Controller
         }
         //validar datos con reglas de laravel en documentacion hay mas
         //mensajes personalizados para cada campo
-        $this->validate($request,$reglas);
-        //crear un prodcuto nuevo
+        $this->validate($request,$reglas,Cliente::$messages);
+        //crear un cliente nuevo
         $cliente = new Cliente();
         $cliente -> number_id = $request->input('number_id');
         //$product -> description = $request->input('description');
@@ -56,11 +57,28 @@ class ClienteController extends Controller
         $cliente -> tipo_documento_id = $request->input('tipo_documento_id');
         $cliente -> phone = $request->input('phone');
         $cliente -> celular = $request->input('celular');
+        $cliente -> address = $request->input('address');
         $cliente -> email = $request->input('email');
         $cliente -> bodega_id = $request->input('bodega_id');
         $cliente -> ruta_id = $request->input('ruta_id');
         $cliente -> estado = "A";
         $cliente -> save(); //registrar producto
+        //luego de creado el cliente se agrega al orden_rutas en la ultima ruta
+        $ultimoOrdenRuta = OrdenRuta::where('ruta_id',$cliente->ruta_id)->orderBy('orden','ASC')->get()->last();//obtenemos el ultimo numero de una ruta
+        if( !empty( $ultimoOrdenRuta ) ) { //si existe ya un orden 
+            $ordenRuta = new OrdenRuta();
+            $ordenRuta -> orden = $ultimoOrdenRuta -> orden + 1; //agregamos un orden al que se lleva
+            $ordenRuta -> cliente_id = $cliente -> number_id;
+            $ordenRuta -> ruta_id = $cliente -> ruta_id;
+            $ordenRuta -> save();//guardamos la ordenruta
+        }
+        else {//no hay ningun orden se crea uno nuevo con el orden 1
+            $ordenRuta = new OrdenRuta();
+            $ordenRuta -> orden = 1; //agregamos un orden al que se lleva
+            $ordenRuta -> cliente_id = $cliente -> number_id;
+            $ordenRuta -> ruta_id = $cliente -> ruta_id;
+            $ordenRuta -> save();//guardamos la ordenruta
+        }
         $notification = 'Cliente Registrado Exitosamente';
         return redirect('/cliente') -> with( compact( 'notification' ) );
     }

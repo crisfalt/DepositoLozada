@@ -27,24 +27,24 @@
             <div class="card-header">
                 {{-- <h4 class="card-title"> Simple Table</h4> --}}
                 <a href="{{ url('/producto/create') }}" class="btn btn-warning btn-round">Nuevo Producto</a>
-            </div>
+            </div>                            
             <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table" cellspacing="0" id="tableTiposMovimientos">
+                <!-- <div id="datatable_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4"> -->
+                    <table class="display nowrap" cellspacing="0" width="100%" id="tableTiposMovimientos">
                         <thead class=" text-primary">
-                            <th class="text-left">
+                            <th class="text-left col-md-1">
                                 Codigo
                             </th>
-                            <th>
+                            <th class="col-md-2">
                                 Nombre
                             </th>
                             <th>
                                 Cantidad
                             </th>
-                            <th>
+                            <th class="col-md-1">
                                 Cantidad En Reserva
                             </th>
-                            <th>
+                            <th class="col-md-1">
                                 Precio de Compra
                             </th>
                             <th class="text-center">
@@ -54,11 +54,11 @@
                         <tbody>
                             @foreach( $Productos as $producto )
                                 <tr>
-                                    <td>{{ $producto -> codigo }}</td>
-                                    <td>{{ $producto -> nombre }}</td>
+                                    <td class="col-md-1">{{ $producto -> codigo }}</td>
+                                    <td class="col-md-2">{{ $producto -> nombre }}</td>
                                     <td>{{ $producto -> cantidad }}</td>
-                                    <td>{{ $producto -> cantidad_reserva }}</td>
-                                    <td>{{ $producto -> precio_compra }}</td>
+                                    <td class="col-md-1">{{ $producto -> cantidad_reserva }}</td>
+                                    <td class="col-md-1">{{ $producto -> precio_compra }}</td>
                                     {{-- <td>
                                         @if ( $marca -> estado == 'A' )
                                             Activo
@@ -66,21 +66,23 @@
                                             Inactivo
                                         @endif
                                     </td> --}}
-                                    <td class="td-actions text-right">
+                                    <td class="td-actions text-center">
                                         <form method="post" class="delete">
                                             {{ csrf_field() }}
                                             {{ method_field('DELETE') }}
-    
-                                            <a href="{{ url('/producto/'.$producto->codigo) }}" rel="tooltip" title="Ver Producto {{ $producto -> nombre }}" class="btn btn-info btn-simple btn-xs">
+                                            <!-- <button type="button" rel="tooltip" class="btn btn-info btn-icon btn-sm   btn-neutral  " data-original-title="" title="">
+                                                <i class="now-ui-icons users_single-02"></i>
+                                            </button> -->
+                                            <a href="{{ url('/producto/'.$producto->codigo) }}" rel="tooltip" title="Ver Producto {{ $producto -> nombre }}" class="btn btn-info btn-icon btn-sm">
                                                 <i class="fa fa-info"></i>
                                             </a>
-                                            <a href="{{ url('/producto/'.$producto->codigo.'/imagenes') }}" rel="tooltip" title="Imágenes del producto {{ $producto -> nombre }}" class="btn btn-warning btn-simple btn-xs">
+                                            <a href="{{ url('/producto/'.$producto->codigo.'/imagenes') }}" rel="tooltip" title="Imágenes del producto {{ $producto -> nombre }}" class="btn btn-warning btn-icon btn-sm">
                                                 <i class="fa fa-image"></i>
                                             </a>
-                                            <a href="{{ url('/producto/'.$producto->codigo.'/edit') }}" rel="tooltip" title="Editar Producto {{ $producto -> nombre }}" class="btn btn-success btn-simple btn-xs">
+                                            <a href="{{ url('/producto/'.$producto->codigo.'/edit') }}" rel="tooltip" title="Editar Producto {{ $producto -> nombre }}" class="btn btn-success btn-icon btn-sm">
                                                 <i class="fa fa-edit"></i>
                                             </a>
-                                            <a class='btn btn-danger btn-simple btn-xs' rel="tooltip" title="Eliminar Producto {{ $producto -> nombre }}" onclick="Delete('{{ $producto -> nombre }}','{{ $producto -> codigo }}')">
+                                            <a class='btn btn-danger btn-icon btn-sm' rel="tooltip" title="Eliminar Producto {{ $producto -> nombre }}" onclick="Delete('{{ $producto -> nombre }}','{{ $producto -> codigo }}')">
                                                 <i class='fa fa-times'></i>
                                             </a>
                                             <!-- <button type="submit" rel="tooltip" title="Eliminar" class="btn btn-danger btn-simple btn-xs">
@@ -92,7 +94,7 @@
                             @endforeach
                         </tbody>
                     </table>
-                </div>
+                <!-- </div> -->
             </div>
         </div>
     </div>
