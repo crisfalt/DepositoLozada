@@ -27,7 +27,6 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
-
         var perfil = {{ Auth::user() -> perfil_id }};
         if( perfil  == 4 ) { //si es un cajero
             $.ajax({
@@ -35,11 +34,27 @@
                 url: '/caja/cajas',
                 success: function (data) {
                     if( data.success ) {
-                        console.log(data.msg);
+                        console.log('asignar caja');
                         crearDialogo( data.Cajas );
                     }
                     else {
-                        alert( data.msg );
+                        console.log('ya tiene caja');
+                        $.confirm({
+                            title: 'Confirmar',
+                            content: data.msg,
+                            buttons: {
+                                'confirm': {
+                                    text: 'Ok',
+                                    btnClass: 'btn-blue',
+                                    action: function () {
+                                        $.alert({
+                                            title: 'Alerta',
+                                            content: 'Recuerda que debes hacer cierre de tu caja',
+                                        });
+                                    }
+                                },
+                            }
+                        });
                     }
                 },
                 error: function() { 

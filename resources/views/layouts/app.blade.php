@@ -141,6 +141,81 @@
                             </div>
                         </li>
                         <li>
+                            <a data-toggle="collapse" href="#componentsExamples9">
+                                <i class="fa fa-cubes shopping_box"></i>
+                                <p>Ventas<b class="caret"></b>
+                                </p>
+                            </a>
+                            <div class="collapse" id="componentsExamples9">
+                                <ul class="nav">
+                                    <li>
+                                        <a href="{{ url('/venta/create') }}">
+                                            <i class="fa fa-plus-square submenu"></i>
+                                            <span class="sidebar-normal"> Nueva Venta </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('venta') }}">
+                                            <i class="fa fa-eye submenu"></i>
+                                            <span class="sidebar-normal"> Ver Ventas </span>
+                                        </a>
+                                    </li>                                
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            <a data-toggle="collapse" href="#componentsExamples10">
+                                <i class="fa fa-cubes shopping_box"></i>
+                                <p>Compras<b class="caret"></b>
+                                </p>
+                            </a>
+                            <div class="collapse" id="componentsExamples10">
+                                <ul class="nav">
+                                    <li>
+                                        <a href="{{ url('/compra/create') }}">
+                                            <i class="fa fa-plus-square submenu"></i>
+                                            <span class="sidebar-normal"> Nueva Compra </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('compra') }}">
+                                            <i class="fa fa-eye submenu"></i>
+                                            <span class="sidebar-normal"> Ver Compras </span>
+                                        </a>
+                                    </li>                                
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            <a data-toggle="collapse" href="#componentsExamples11">
+                                <i class="fa fa-cubes shopping_box"></i>
+                                <p>Cargues<b class="caret"></b>
+                                </p>
+                            </a>
+                            <div class="collapse" id="componentsExamples11">
+                                <ul class="nav">
+                                    <li>
+                                        <a href="{{ url('/cargue/create') }}">
+                                            <i class="fa fa-plus-square submenu"></i>
+                                            <span class="sidebar-normal"> Nuevo Cargue </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('cargue') }}">
+                                            <i class="fa fa-eye submenu"></i>
+                                            <span class="sidebar-normal"> Ver Cargues </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ url('/cargue/deldia') }}">
+                                            <i class="fa fa-eye submenu"></i>
+                                            <span class="sidebar-normal"> Cargue del Dia </span>
+                                        </a>
+                                    </li>                                   
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
                             <a data-toggle="collapse" href="#componentsExamples4">
                                 <i class="fa fa-users"></i>
                                 <p>Clientes<b class="caret"></b>
@@ -230,19 +305,25 @@
                             <div class="collapse" id="componentsExamples7">
                                 <ul class="nav">
                                     <li>
-                                        <a href="#">
+                                        <a href="{{ url('/caja/entrada') }}">
                                             <i class="fa fa-share submenu"></i>
                                             <span class="sidebar-normal"> Entrada </span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="#">
+                                        <a href="{{ url('/caja/salida') }}">
                                             <i class="fa fa-reply submenu"></i>
                                             <span class="sidebar-normal"> Salida </span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="#">
+                                        <a href="{{ url('/caja/closed') }}">
+                                            <i class="fa fa-reply submenu"></i>
+                                            <span class="sidebar-normal"> Cierre Caja </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ url('/movimientocaja') }}">
                                             <i class="fa fa-line-chart submenu"></i>
                                             <span class="sidebar-normal"> Movimientos Cajas </span>
                                         </a>
@@ -320,6 +401,12 @@
                             <a href="">
                                 <i class="now-ui-icons ui-1_settings-gear-63"></i>
                                 <p>Configuración</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('formapago') }}">
+                                <i class="now-ui-icons ui-1_settings-gear-63"></i>
+                                <p>Forma de Pago</p>
                             </a>
                         </li>
                         <li>
@@ -531,20 +618,6 @@
         // Javascript method's body can be found in assets/js/demos.js
         demo.initGoogleMaps();
     });
-</script> -->
-<!-- <script>
-    //hacer los submenus activos
-    // $(document).ready(function() {
-        var header = document.getElementById("componentsExamples");
-        var btns = header.getElementsByClassName("nav-item");
-        for (var i = 0; i < btns.length; i++) {
-            btns[i].addEventListener("click", function() {
-                var current = document.getElementsByClassName("active");
-                current[0].className = current[0].className.replace(" active", "");
-                this.className += " active";
-            });
-        }
-    // });    
 </script> -->
 @yield('scripts')
 

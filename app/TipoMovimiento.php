@@ -20,7 +20,7 @@ class TipoMovimiento extends Model
             'estado' => 'required'
     ];
     //relacion con movimiento
-    /*public function movimiento() {
-        return $this -> belongsTo(Movimiento::class);
-    }*/
+    // public function movimiento() {
+    //     return $this -> hasToMany(Movimiento::class);
+    // }
 }

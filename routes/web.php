@@ -26,6 +26,13 @@ Route::get('/caja/cajas' , 'CajaController@getCajas'); //todas las cajas disponi
 Route::post('/caja/asignar/{caja}/{valor}' , 'CajaController@asignarCaja'); //asignar caja a la session actual
 
 Route::middleware(['auth', 'admin'])->group(function () {
+    //Rutas Cargue
+    Route::get('/cargue' , 'CargueController@index')->name('cargue');
+    Route::get('/cargue/create' , 'CargueController@create');
+    Route::get('/cargue/deldia' , 'CargueController@deldia');//obtener el cargue guardado del dia de hoy
+    Route::get('/cargue/filtrar/' , 'CargueController@filtrar');//filtrar por ajax las fechas
+    Route::post('/cargue/create' , 'CargueController@store');//guardar el cargue
+
     //CRUD Clientes
     Route::get('/cliente' , 'ClienteController@index')->name('cliente');
     Route::get('/cliente/create' , 'ClienteController@create');
@@ -47,11 +54,22 @@ Route::middleware(['auth', 'admin'])->group(function () {
     //CRUD cajas
     Route::get('/caja' , 'CajaController@index')->name('caja');
     Route::get('/caja/create' , 'CajaController@create');
+    Route::get('/caja/closed' , 'CajaController@closed');
+    Route::get('/caja/entrada' , 'CajaController@entrada');//ruta para las entradas de la caja
+    Route::get('/caja/salida' , 'CajaController@salida');//ruta para las entradas de la caja
     Route::post('/caja' , 'CajaController@store');
+    ///////el recibo///////////////////
+    Route::get('/caja/imprimir/{id}' , 'MovimientoCajaController@imprimir'); //imprimir recibo de salida de caja 
+    ////////////
     Route::delete('/caja/{id}','CajaController@destroy'); //vista para eliminar
     Route::get('/caja/{id}','CajaController@show'); //mostrar el tipo de movimiento
     Route::get('/caja/{id}/edit' , 'CajaController@edit');
     Route::post('/caja/{id}/edit' , 'CajaController@update');
+    Route::post('/caja/entrada' , 'CajaController@storeMovimiento');
+    Route::post('/caja/salida' , 'CajaController@storeMovimiento');
+
+    //CRUD Movimiento Cajas
+    Route::get('/movimientocaja' , 'MovimientoCajaController@index')->name('movimientocaja');
 
     //CRUD perfiles
     Route::get('/perfil' , 'PerfilController@index')->name('perfil');
@@ -180,6 +198,187 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('/producto/{codigo}/imagenes', 'ImagenesProductoController@store'); // registrar
     Route::delete('/producto/{codigo}/imagenes', 'ImagenesProductoController@destroy'); // form eliminar
     Route::get('/producto/{codigo}/imagenes/select/{image}', 'ImagenesProductoController@select'); // destacar
+
+    //CRUD estado compra
+    Route::get('estadocompra' , 'EstadoCompraController@index')->name('estadocompra');
+    Route::get('/estadocompra/create' , 'EstadoCompraController@create');
+    Route::post('/estadocompra' , 'EstadoCompraController@store');
+    Route::delete('/estadocompra/{id}','EstadoCompraController@destroy'); //vista para eliminar
+    Route::get('/estadocompra/{id}','EstadoCompraController@show'); //mostrar el tipo de 
+    Route::get('/estadocompra/{id}/edit' , 'EstadoCompraController@edit');
+    Route::post('/estadocompra/{id}/edit' , 'EstadoCompraController@update');
+
+    //CRUD estado venta
+    Route::get('estadoventa' , 'EstadoVentaController@index')->name('estadoventa');
+    Route::get('/estadoventa/create' , 'EstadoVentaController@create');
+    Route::post('/estadoventa' , 'EstadoVentaController@store');
+    Route::delete('/estadoventa/{id}','EstadoVentaController@destroy'); //vista para eliminar
+    Route::get('/estadoventa/{id}','EstadoVentaController@show'); //mostrar el tipo de 
+    Route::get('/estadoventa/{id}/edit' , 'EstadoVentaController@edit');
+    Route::post('/estadoventa/{id}/edit' , 'EstadoVentaController@update');
+    //CRUD forma pago
+    Route::get('/formapago' , 'FormaPagoController@index')->name('formapago');
+    Route::get('/formapago/create' , 'FormaPagoController@create');
+    Route::post('/formapago' , 'FormaPagoController@store');
+    Route::delete('/formapago/{id}','FormaPagoController@destroy'); //vista para eliminar
+    Route::get('/formapago/{id}','FormaPagoController@show'); //mostrar el tipo de 
+    Route::get('/formapago/{id}/edit' , 'FormaPagoController@edit');
+    Route::post('/formapago/{id}/edit' , 'FormaPagoController@update');
+    //CRUD ecompra
+    Route::get('compra' , 'compraController@index')->name('compra');
+    Route::get('/compra/create' , 'compraController@create');
+    Route::post('/compra' , 'compraController@store');
+    Route::delete('/compra/{id}','compraController@destroy'); //vista para eliminar
+    Route::get('/compra/{id}','compraController@show'); //mostrar el tipo de 
+    Route::get('/compra/{id}/edit' , 'compraController@edit');
+    Route::get('/compra/edit/{id}/{estado}' , 'compraController@update');	
+    Route::post('/compra/agregarCantidad/{cantidad}/{id}' , 'compraController@agregrarCantidad');
+    Route::post('/compra/agregrarCantidadEditar/{cantidad}/{id}' , 'compraController@agregrarCantidadEditar');
+    Route::post('/compra/MostrarCanastaIndividual/{id}' , 'compraController@MostrarCanastaIndividual',function($id)
+    {
+        $PrecioProducto_id = $id;
+
+        $precio =  PreciosProducto:: find ($PrecioProducto_id ) -> fk_producto;
+
+        return Response::json( $precio);
+    });
+
+    
+    Route::get('/compra/ConsultarCanasta/{tipopaca}' , 'compraController@ConsultarCanasta');
+    Route::post('/compra/AgregarCanasta' , 'compraController@AgregarCanasta');
+    //////consultar y agregar edit
+    Route::get('/compra/ConsultarCanastaEditar/{tipopaca}' , 'compraController@ConsultarCanastaEditar');
+    Route::post('/compra/AgregarCanastaEditar' , 'compraController@AgregarCanastaEditar');
+
+    
+    Route::get('/compracabeza/{id}/edit' , 'compraController@editcabeza');
+    Route::post	('/compracabeza/edit/{id}' , 'compraController@updatecabeza');
+
+    //cabezaeditarcrear
+    Route::get('/compracabezacrear/{id}/edit' , 'compraController@editcabezacrear');
+    Route::post	('/compracabezacrear/edit/{id}' , 'compraController@updatecabezacrear');
+
+
+    Route::get('/compra/recibo/{id}/{estado}' , 'compraController@recibo');
+    Route::get('/compra/imprimir/{id}/{estado}' , 'compraController@imprimir');
+    Route::get('/compra/imprimir/{id}/{estado}' , 'compraController@imprimir');
+    Route::get('/compra/cerrarSesion/{idSesion}','CompraController@cerrarSesion');
+
+    Route::get('/compra/cerrarSesion/{idSesion}','compraController@cerrarSesion');
+    ///filtros de compras create
+    Route::post('/compra/MostrarMarca/{id}','compraController@marca');
+    Route::get('/compra/MostrarTipoContenido/{id}','compraController@tipoContenido');
+    Route::get('/compra/MostrarTipoPaca/{id}','compraController@tipoPaca');
+    Route::get('/compra/MostrarProducto/{id}','compraController@Producto');
+    ///filtros de compras editar
+    Route::post('/compra/MostrarMarcaEditar/{id}','compraController@marcaEditar');
+    Route::get('/compra/MostrarTipoContenidoEditar/{id}','compraController@tipoContenidoEditar');
+    Route::get('/compra/MostrarTipoPacaEditar/{id}','compraController@tipoPacaEditar');
+    Route::get('/compra/MostrarProductoEditar/{id}','compraController@ProductoEditar');
+
+    //CRUD venta
+    Route::get('venta' , 'VentaController@index')->name('venta');
+    Route::get('/venta/create' , 'VentaController@create');
+    Route::post('/venta' , 'VentaController@store');
+    Route::delete('/venta/{id}','VentaController@destroy'); //vista para eliminar
+    Route::get('/venta/{id}','VentaController@show'); //mostrar el tipo de 
+    Route::get('/venta/{id}/edit' , 'VentaController@edit');
+    Route::get('/venta/edit/{id}/{estado}' , 'VentaController@update');	
+    Route::post('/venta/agregarCantidad/{cantidad}/{id}' , 'VentaController@agregrarCantidad');
+    Route::post('/venta/agregrarCantidadEditar/{cantidad}/{id}' , 'VentaController@agregrarCantidadEditar');
+    Route::post('/venta/MostrarCanastaIndividual/{id}' , 'VentaController@MostrarCanastaIndividual',function($id)
+    {
+        $PrecioProducto_id = $id;
+
+        $precio =  PreciosProducto:: find ($PrecioProducto_id ) -> fk_producto;
+
+        return Response::json( $precio);
+    });
+    //////consultar y agregar create
+    Route::post('/venta/MostrarCanastaIndividualEditar/{id}' , 'VentaController@MostrarCanastaIndividualEditar',function($id)
+    {
+        $PrecioProducto_id = $id;
+
+        $precio =  PreciosProducto:: find ($PrecioProducto_id ) -> fk_producto;
+
+        return Response::json( $precio);
+    });
+    Route::get('/venta/ConsultarCanasta/{tipopaca}' , 'VentaController@ConsultarCanasta');
+    Route::post('/venta/AgregarCanasta' , 'VentaController@AgregarCanasta');
+    //////consultar y agregar edit
+    Route::get('/venta/ConsultarCanastaEditar/{tipopaca}' , 'VentaController@ConsultarCanastaEditar');
+    Route::post('/venta/AgregarCanastaEditar' , 'VentaController@AgregarCanastaEditar');
+
+    
+    Route::get('/ventacabeza/{id}/edit' , 'VentaController@editcabeza');
+    Route::post	('/ventacabeza/edit/{id}' , 'VentaController@updatecabeza');
+
+    //cabezaeditarcrear
+    Route::get('/ventacabezacrear/{id}/edit' , 'VentaController@editcabezacrear');
+    Route::post	('/ventacabezacrear/edit/{id}' , 'VentaController@updatecabezacrear');
+
+
+    Route::get('/venta/recibo/{id}/{estado}' , 'VentaController@recibo');
+    Route::get('/venta/imprimir/{id}/{estado}' , 'VentaController@imprimir');
+    Route::get('/compra/imprimir/{id}/{estado}' , 'compraController@imprimir');
+    Route::get('/venta/cerrarSesion/{idSesion}','CompraController@cerrarSesion');
+
+    Route::get('/venta/cerrarSesion/{idSesion}','VentaController@cerrarSesion');
+    ///filtros de ventas create
+    Route::post('/venta/MostrarMarca/{id}','VentaController@marca');
+    Route::get('/venta/MostrarTipoContenido/{id}','VentaController@tipoContenido');
+    Route::get('/venta/MostrarTipoPaca/{id}','VentaController@tipoPaca');
+    Route::get('/venta/MostrarProducto/{id}','VentaController@Producto');
+    ///filtros de ventas editar
+    Route::post('/venta/MostrarMarcaEditar/{id}','VentaController@marcaEditar');
+    Route::get('/venta/MostrarTipoContenidoEditar/{id}','VentaController@tipoContenidoEditar');
+    Route::get('/venta/MostrarTipoPacaEditar/{id}','VentaController@tipoPacaEditar');
+    Route::get('/venta/MostrarProductoEditar/{id}','VentaController@ProductoEditar');
+
+    //cambia estado de la venta a entregado
+    Route::post('/venta/cambiaEstado/','VentaController@cambiaEstado');
+
+    //devolucion
+    Route::post('/venta/agregarCantidadDevolucion' , 'VentaController@agregrarCantidadDevolucion');
+    Route::post('/compra/agregarCantidadDevolucion' , 'compraController@agregrarCantidadDevolucion');
+
+    //CRUD detalle venta
+    Route::get('detalleventa' , 'DetalleVentaController@index')->name('DetalleVenta');
+    Route::get('/detalleventa/create' , 'DetalleVentaController@create');
+    Route::post('/detalleventa' , 'DetalleVentaController@store');
+    Route::post('/detalleventa/{id}/{numero_canasta}','DetalleVentaController@destroy'); //vista para eliminar
+    Route::post('/detalleventaEdit/{id}/{numero_canasta}','DetalleVentaController@destroyEdit');
+    Route::get('/detalleventa/{id}','DetalleVentaController@show'); //mostrar el tipo de 
+    Route::get('/detalleventa/{id}/edit' , 'DetalleVentaController@edit');
+    Route::post('/detalleventa/{id}/edit' , 'DetalleVentaController@update');
+
+
+
+
+    //CRUD detalle compra
+    Route::get('detallecompra' , 'DetallecompraController@index')->name('Detallecompra');
+    Route::get('/detallecompra/create' , 'DetallecompraController@create');
+    Route::post('/detallecompra' , 'DetallecompraController@store');
+    Route::post('/detallecompra/{id}/{numero_canasta}','DetallecompraController@destroy'); //vista para eliminar
+    Route::post('/detallecompraEdit/{id}/{numero_canasta}','DetallecompraController@destroyEdit'); 
+    Route::get('/detallecompra/{id}','DetallecompraController@show'); //mostrar el tipo de 
+    Route::get('/detallecompra/{id}/edit' , 'DetallecompraController@edit');
+    Route::post('/detallecompra/{id}/edit' , 'DetallecompraController@update');
+
+
+    //ruta buscador
+    Route::get('/search','SearchController@show');
+    Route::post('/AgregarCompra', 'CompraController@AgregarCompra');
+    Route::post('/AgregarCompraEditar', 'CompraController@AgregarCompraEditar');
+    Route::post('/AgregarVenta', 'VentaController@AgregarVenta');
+    Route::post('/AgregarVentaEditar', 'VentaController@AgregarVentaEditar');
+
+
+    //buscador
+    Route::get('/proveedors/json','SearchController@data');
+    Route::get('/productos/json','SearchController@data2');
+    Route::get('/precio/{id}/json','SearchController@precio');
+
 });
 
 Route::middleware(['auth', 'vendedor'])->prefix('vendedor')->namespace('Vendedor')->group(function () {

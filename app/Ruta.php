@@ -34,7 +34,7 @@ class Ruta extends Model
     }
 
     public function union() {
-        $unidas = $dsale=DB::table('orden_rutas')
+        $unidas = DB::table('orden_rutas')
                             ->join('clientes','orden_rutas.cliente_id','=','clientes.number_id')
                             ->where('orden_rutas.ruta_id','=',$this->id)
                             ->orderBy('orden_rutas.orden')

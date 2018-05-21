@@ -45,13 +45,18 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
+                    div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label>Estado</label>
                                 <select class="form-control" name="estado">
-                                    <option class="form-control" value="A" @if ($marca->estado == old('estado',$marca->estado)) selected @endif>Activo</option>
-                                    <option class="form-control" value="I" @if ($marca->estado == old('estado',$marca->estado)) selected @endif>Inactivo</option>
+                                    @if( $formaPagos->estado == 'A' and $formaPagos->estado == old('estado',$formaPagos->estado)  )
+                                        <option class="form-control" value="A" selected>Activo</option>
+                                        <option class="form-control" value="I">Inactivo</option>
+                                    @else
+                                        <option class="form-control" value="A">Activo</option>            
+                                        <option class="form-control" value="I" selected>Inactivo</option>
+                                    @endif    
                                 </select>
                             </div>
                         </div>

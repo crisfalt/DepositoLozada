@@ -64,6 +64,14 @@
                     <div class="row">
                         <div class="col-md-12 pr-1">
                             <div class="form-group">
+                                <label id="lbl_precio_envase">Precio del Envase (unidad)</label>
+                                <input type="number" step="0.01" class="form-control" name="precio_envase" id="precio_envase" value="{{ old('precio_envase',0) }}" onkeypress="return solo_numeros(event)">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 pr-1">
+                            <div class="form-group">
                                 <label>Es Retornable ?</label>
                                 <label class="radio-inline col-md-4">
                                     <input type="radio" name="retornable" value="SI"> SI

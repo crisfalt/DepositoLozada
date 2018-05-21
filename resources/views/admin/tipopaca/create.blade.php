@@ -70,7 +70,15 @@
                         <div class="col-md-12 pr-1">
                             <div class="form-group">
                                 <label id="lbl_precio">Precio de la Paca</label>
-                                <input type="number" step="0.01" class="form-control" name="precio" id="precio" value="{{ old('precio',0) }}">
+                                <input type="number" step="0.01" class="form-control" name="precio" id="precio" value="{{ old('precio',0) }}" onkeypress="return solo_numeros(event)">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 pr-1">
+                            <div class="form-group">
+                                <label id="lbl_precio_envase">Precio del Envase (unidad)</label>
+                                <input type="number" step="0.01" class="form-control" name="precio_envase" id="precio_envase" value="{{ old('precio_envase',0) }}" onkeypress="return solo_numeros(event)">
                             </div>
                         </div>
                     </div>
@@ -97,20 +105,37 @@
 @endsection
 
 @section('scripts')
+
 <script>
+    //validar que se digite solo numeros
+    function solo_numeros(e){
+        var key = window.Event ? e.which : e.keyCode 
+        return ((key >= 48 && key <= 57) || (key==8)) 
+    }
+
     $(document).ready(function () {
+        //ocultar campos precio de paca
         $('#lbl_precio').hide();
         $('#precio').hide();
         $('#precio').val(0);
+        //ocultar campos precio de envase
+        $('#lbl_precio_envase').hide();
+        $('#precio_envase').hide();
+        $('#precio_envase').val(0);
         $('input:radio[name=retornable]').change(function () {
             if ($("input[name='retornable']:checked").val() == 'SI') {
                 $('#lbl_precio').show();
                 $('#precio').show();
+                $('#lbl_precio_envase').show();
+                $('#precio_envase').show();
             }
             if ($("input[name='retornable']:checked").val() == 'NO') {
                 $('#lbl_precio').hide();
                 $('#precio').hide();
                 $('#precio').val(0);
+                $('#lbl_precio_envase').hide();
+                $('#precio_envase').hide();
+                $('#precio_envase').val(0);
             }
         });
     });

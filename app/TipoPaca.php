@@ -16,6 +16,8 @@ class TipoPaca extends Model
         'cantidad.numeric' => 'La cantidad es un campo que solo acepta numeros',
         'precio.min' => 'El precio no debe ser menor de cero',
         'precio.numeric' => 'El precio es un campo que solo acepta numeros',
+        'precio_envase.min' => 'El precio no debe ser menor de cero',
+        'precio_envase.numeric' => 'El precio es un campo que solo acepta numeros',
         'retornable.required' => 'El campo Retornable es un campo obligatorio',
         'estado.required' => 'El estado es un campo obligatorio'
     ];
@@ -25,6 +27,7 @@ class TipoPaca extends Model
             'descripcion' => 'max:300',
             'cantidad' => 'required|numeric',
             'precio' => 'numeric|min:0',
+            'precio_envase' => 'numeric|min:0',
             'retornable' => 'required',
             'estado' => 'required'
     ];

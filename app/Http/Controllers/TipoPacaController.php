@@ -41,6 +41,12 @@ class TipoPacaController extends Controller
         else {
             $tipoPaca -> precio = $request->input('precio');
         }
+        if( $request->input('precio_envase') == null ) {
+            $tipoPaca -> precio_envase = 0;
+        }
+        else {
+            $tipoPaca -> precio_envase = $request->input('precio_envase');
+        }
         // dd($request->input('retornable'));
         if( $request->input('retornable') == 'SI' ) {
             $tipoPaca -> retornable = true;
@@ -74,6 +80,7 @@ class TipoPacaController extends Controller
         $tipoPaca -> descripcion = $request->input('descripcion');
         $tipoPaca -> cantidad = $request->input('cantidad');
         $tipoPaca -> precio = $request->input('precio');
+        $tipoPaca -> precio_envase = $request->input('precio_envase');
         if( $request->input('retornable') == 'SI' ) {
             $tipoPaca -> retornable = true;
         }

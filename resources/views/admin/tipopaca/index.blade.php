@@ -44,7 +44,10 @@
                             Cantidad
                         </th>
                         <th>
-                            Precio
+                            Precio Canasta
+                        </th>
+                        <th>
+                            Precio Envase
                         </th>
                         <th>
                             Retornable
@@ -64,6 +67,7 @@
                                 <td>{{ $tipoPaca -> descripcion }}</td>
                                 <td>{{ $tipoPaca -> cantidad }}</td>
                                 <td>{{ $tipoPaca -> precio }}</td>
+                                <td>{{ $tipoPaca -> precio_envase }}</td>
                                 <td>
                                     @if ( $tipoPaca -> retornable == '1')
                                         SI

@@ -40,6 +40,9 @@
                     La paca tiene un valor de {{ $tipoPaca -> precio }}
                 </p>
                 <p class="description text-center">
+                    El envase tiene un valor de {{ $tipoPaca -> precio_envase }}
+                </p>
+                <p class="description text-center">
                     @if ($tipoPaca -> retornable)
                         Es retornable
                     @else
