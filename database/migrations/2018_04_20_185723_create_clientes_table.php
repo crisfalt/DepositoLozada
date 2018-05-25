@@ -26,6 +26,8 @@ class CreateClientesTable extends Migration
             $table->string('phone',20)->nullable();
             $table->string('celular',20)->nullable();
             $table->string('email')->unique()->nullable();
+            $table->double('valor_credito',8,2);
+            $table->string('url_foto',500);
             //inicio llave foranea a la bodega
             $table->integer('bodega_id')->unsigned();
             $table->foreign('bodega_id')->references('id')->on('bodegas');
@@ -34,7 +36,7 @@ class CreateClientesTable extends Migration
             $table->integer('ruta_id')->unsigned();
             $table->foreign('ruta_id')->references('id')->on('rutas');
             //fin
-            $table->string('estado',1) -> default('A');
+            $table->string('estado',1)->default('A');
             $table->timestamps();
         });
     }

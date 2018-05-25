@@ -49,6 +49,12 @@ class ClienteController extends Controller
         //validar datos con reglas de laravel en documentacion hay mas
         //mensajes personalizados para cada campo
         $this->validate($request,$reglas,Cliente::$messages);
+        //inicio subir foto al servidor
+        $file = $request->file('photo');
+        $path = public_path() . '/imagenes/clientes'; //concatena public_path la ruta absoluta a public y concatena la carpeta para imagenes
+        $fileName = uniqid() . $file->getClientOriginalName();//crea una imagen asi sea igual no la sobreescribe
+        //fin subir foto al servidor
+        $file->move( $path , $fileName );//dar la orden al archivo para que se guarde en la ruta indicada la sube al servidor
         //crear un cliente nuevo
         $cliente = new Cliente();
         $cliente -> number_id = $request->input('number_id');
@@ -61,6 +67,8 @@ class ClienteController extends Controller
         $cliente -> email = $request->input('email');
         $cliente -> bodega_id = $request->input('bodega_id');
         $cliente -> ruta_id = $request->input('ruta_id');
+        $cliente -> valor_credito = $request->input('valor_credito');
+        $cliente -> url_foto = $fileName;
         $cliente -> estado = "A";
         $cliente -> save(); //registrar producto
         //luego de creado el cliente se agrega al orden_rutas en la ultima ruta

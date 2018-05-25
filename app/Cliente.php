@@ -14,6 +14,7 @@ class Cliente extends Model
     //
     public static $messages = [
         'number_id.unique' => 'Ya hay un usuario registrado con el mismo numero de documento',
+        'photo.required' => 'No se ha seleccionado ninguna imagen'
     ];
 
     public static $rules = [
@@ -25,7 +26,9 @@ class Cliente extends Model
         'celular' => '',
         'email' => '',
         'ruta_id' => 'required',
-        'bodega_id' => 'required'
+        'bodega_id' => 'required',
+        'valor_credito' => 'numeric',
+        'photo' => 'required'
     ];
 
     public function bodega() {
