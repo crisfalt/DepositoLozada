@@ -8,6 +8,9 @@ use App\Ruta;
 
 class Zona extends Model
 {
+    protected $fillable = [
+        'id', 'nombre', 'descripcion','bodega_id','estado'
+    ];
     //
     public static $messages = [
         'nombre.required' => 'El nombre es un campo obligatorio',

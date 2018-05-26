@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\Zona;
 use App\OrdenRuta;
+use App\DiasRutas;
 use DB;
 
 class Ruta extends Model
@@ -16,17 +17,27 @@ class Ruta extends Model
         'nombre.max' => 'El nombre debe tener maximo 100 caracteres',
         // 'nombre.unique' => 'El nombre ya existe',
         'descripcion.max' => 'La descripcion debe tener maximo 300 caracteres',
-        'estado.required' => 'El estado es un campo obligatorio'
+        'estado.required' => 'El estado es un campo obligatorio',
+        'dias_almacenados.required' => 'Debes asignar al menos 1 dia de la semana a la ruta'
     ];
 
     public static $rules = [
-            // 'nombre' => 'required|min:3|max:100', |unique:rutas,nombre'
+            'nombre' => 'required|min:3|max:100',
             'descripcion' => 'max:300',
-            'estado' => 'required'
+            'estado' => 'required',
+            'dias_almacenados' => 'required'
     ];
 
+    public static function diasSemana() {
+        return $dias = array("Lunes","Martes","Miercoles","Jueves","Viernes","Sabado","Domingo");
+    }
+
     public function zona() {
-        return $this->belongsTo(Zona::class); //1 pdoducto pertene a una categoria
+        return Zona::where('id',$this -> zona_id) -> first(); //1 pdoducto pertene a una categoria
+    }
+
+    public function diasCargados() {
+        return DiasRutas::where('ruta_id',$this -> id ) -> get();
     }
 
     public function clientes() {

@@ -101,6 +101,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/ruta/{id}','RutaController@show'); //mostrar el tipo de movimiento
     Route::get('/ruta/{id}/edit' , 'RutaController@edit');
     Route::post('/ruta/{id}/edit' , 'RutaController@update');
+    Route::post('/ruta/dia/eliminar' , 'RutaController@deleteDay'); //eliminar un dia de la lista de ruta
 
     //CRUD TIPOS DE MOVIMIENTOS
     Route::get('/tipomovimiento' , 'TipoMovimientoController@index')->name('tipomovimiento');

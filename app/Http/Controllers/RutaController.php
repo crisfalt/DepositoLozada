@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Ruta;
 use App\Zona;
+use App\DiasRutas;
 
 class RutaController extends Controller
 {
@@ -68,7 +69,8 @@ class RutaController extends Controller
 
     public function create( $id ) {
         $zona = Zona::find( $id );
-        return view('admin.ruta.create')->with( compact( 'zona' ) );
+        $diasSemana = Ruta::diasSemana();
+        return view('admin.ruta.create')->with( compact( 'zona','diasSemana' ) );
     }
 
     public function store( Request $request ) {
@@ -76,6 +78,7 @@ class RutaController extends Controller
         // return view(); //almacenar el registro de un producto
         //validar datos con reglas de laravel en documentacion hay mas
         //mensajes personalizados para cada campo
+//        dd($request->input('dias_almacenados'));
         $this->validate($request,Ruta::$rules,Ruta::$messages);
         // dd( $request->input('zona_id') );
         //crear un prodcuto nuevo
@@ -86,6 +89,14 @@ class RutaController extends Controller
         $ruta -> estado = $request->input('estado');
         $ruta -> zona_id = $request->input('zona_id');
         $ruta -> save(); //registrar producto
+        //agregar los dias de esa ruta
+        $arrayDias = explode("," , $request->input('dias_almacenados') );
+        foreach( $arrayDias as $index => $dia ) {
+            $diaRuta = new DiasRutas();
+            $diaRuta -> dia = $dia;
+            $diaRuta -> ruta_id = $ruta -> id;
+            $diaRuta -> save();
+        }
         $notification = 'ruta Agregada Exitosamente';
         return redirect('/zona/'.$request->input('zona_id').'/rutas') -> with( compact( 'notification' ) );
     }
@@ -94,7 +105,8 @@ class RutaController extends Controller
         //$categories = Category::all(); //traer categorias
         // return "Mostrar aqui formulario para producto con id $id";
         $ruta = Ruta::find( $id );
-        return view('admin.ruta.edit')->with(compact('ruta')); //formulario de registro
+        $diasSemana = Ruta::diasSemana();
+        return view('admin.ruta.edit')->with(compact('ruta','diasSemana')); //formulario de registro
     }
 
     public function update( Request $request , $id ) {
@@ -111,9 +123,38 @@ class RutaController extends Controller
         $ruta -> zona_id = $request->input('zona_id');
         $ruta -> estado = $request->input('estado');
         $ruta -> save(); //registrar producto
-
+        //agregar los dias de esa ruta
+        if( !empty( $request->input('dias_almacenados') ) ) {
+            $arrayDias = explode("," , $request->input('dias_almacenados') );
+            foreach( $arrayDias as $index => $dia ) {
+                $diaRuta = new DiasRutas();
+                $diaRuta -> dia = $dia;
+                $diaRuta -> ruta_id = $ruta -> id;
+                $diaRuta -> save();
+            }
+        }
         $notification = 'Ruta ' . $request->input('nombre') . ' Actualizada Exitosamente';
         return redirect('/zona/'.$request->input('zona_id').'/rutas') -> with( compact( 'notification' ) );
+    }
+
+    //funcion para eliminar un dia de la ruta
+    public function deleteDay() {
+        $id = $_POST['id'];
+        $diaRuta = DiasRutas::find($id);
+        if( empty($diaRuta) ) {
+            $response = array(
+                'status' => 'false',
+                'msg' => 'No se pudo Eliminar el Dia',
+            );
+        }
+        else {
+            $diaRuta -> delete();
+            $response = array(
+                'status' => 'true',
+                'msg' => 'Dia Eliminado Correctamente',
+            );
+        }
+        return response()->json($response);
     }
 
     public function destroy( $id ) {
@@ -121,6 +162,7 @@ class RutaController extends Controller
         //$categories = Category::all(); //traer categorias
         // return "Mostrar aqui formulario para producto con id $id";
         $ruta = Ruta::find( $id );
+        //eliminar en cascada
         $ruta -> delete(); //ELIMINAR
         $notification = 'Ruta ' . $ruta -> nombre . ' Eliminada Exitosamente';
         return back() -> with( compact( 'notification' ) ); //nos devuelve a la pagina anterior
