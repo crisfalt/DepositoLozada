@@ -5,21 +5,20 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\Bodega;
 use App\Ruta;
+use App\TipoDocumento;
 
 class Cliente extends Model
 {
-    // 'phone' => 'sometimes|numeric|between:0,99999999999999999999',
-    //     'celular' => 'sometimes|numeric|between:0,99999999999999999999',
-    //     'email' => 'sometimes|string|email|max:255|unique:users',
-    //
+    protected $primaryKey = 'number_id'; //cambiar nombre de llave primaria
+
     public static $messages = [
         'number_id.unique' => 'Ya hay un usuario registrado con el mismo numero de documento',
-        'photo.required' => 'No se ha seleccionado ninguna imagen'
+        'photo.max' => 'la imagen supera el tamaño maximo permitido de 2048 Kb',
+        'photo.mimes' => 'la imagen debe tener un tipo de archivo jpeg,bmp,png o jpg'
     ];
 
     public static $rules = [
         'name' => 'required|string|max:255',
-        'number_id' => 'required|max:30|unique:clientes,number_id',
         'tipo_documento_id' => 'required',
         'address' => 'required|max:150',
         'phone' => '',
@@ -28,11 +27,20 @@ class Cliente extends Model
         'ruta_id' => 'required',
         'bodega_id' => 'required',
         'valor_credito' => 'numeric',
-        'photo' => 'required'
+        'photo' => 'max:2000|mimes:jpeg,bmp,png'
     ];
 
     public function bodega() {
         return Bodega::where('id',$this->bodega_id) -> first();
+    }
+
+    public function tipoDocumento() {
+        return TipoDocumento::where('id',$this->tipo_documento_id) -> first();
+    }
+
+    //obtener el nombre del tipo de documento
+    public function getNombreTipoDocumentoAttribute() {
+        return $this -> tipoDocumento() -> nombre;
     }
 
     public function ruta() {

@@ -2,6 +2,16 @@
 
 @section('title','Clientes')
 
+@section('styles')
+    <style>
+        /* estilo para que la imagen quede bien redonda */
+        .resize-img {
+            height: 80px;
+            width: 80px;
+        }
+    </style>
+@endsection
+
 @section('titulo-contenido','Clientes')
 
 @section('header-class')
@@ -31,6 +41,9 @@
             <div class="card-body">
                 <table class="display nowrap" cellspacing="0" width="100%" id="tableTiposMovimientos">
                     <thead class=" text-primary">
+                        <th>
+                            Foto
+                        </th>
                         <th class="text-left">
                             # Documento
                         </th>
@@ -44,9 +57,6 @@
                             Bodega
                         </th>
                         <th>
-                            Ruta
-                        </th>
-                        <th>
                             Estado
                         </th>
                         <th class="text-center">
@@ -56,11 +66,18 @@
                     <tbody>
                         @foreach( $clientes as $cliente )
                             <tr>
+                                <td class="text-left">
+                                    @if( $cliente -> url_foto )
+                                        <img class="rounded-circle mx-auto d-block resize-img" src="/imagenes/clientes/{{ $cliente -> url_foto }}" alt="">
+                                    @else
+                                        <img class="img-thumbnail mx-auto d-block resize-img" src="/imagenes/default.png" alt="">
+                                    @endif
+                                </td>
                                 <td>{{ $cliente -> number_id }}</td>
                                 <td>{{ $cliente -> name }}</td>
                                 <td>{{ $cliente -> email }}</td>
                                 <td>{{ $cliente -> bodega() -> nombre }}</td>
-                                <td>{{ $cliente -> ruta() -> nombre }}</td>
+                                {{--<td>{{ $cliente -> ruta() -> nombre }}</td>--}}
                                 <td>
                                     @if ( $cliente -> estado == 'A' )
                                         Activo
@@ -73,13 +90,13 @@
                                         {{ csrf_field() }}
                                         {{ method_field('DELETE') }}
 
-                                        <a href="{{ url('/cliente/'.$cliente->codigo) }}" rel="tooltip" title="Ver cliente {{ $cliente -> nombre }}" class="btn btn-info btn-icon btn-sm">
+                                        <a href="{{ url('/cliente/'.$cliente->number_id) }}" rel="tooltip" title="Ver cliente {{ $cliente -> name }}" class="btn btn-info btn-icon btn-sm">
                                             <i class="fa fa-info"></i>
                                         </a>
-                                        <a href="{{ url('/cliente/'.$cliente->codigo.'/edit') }}" rel="tooltip" title="Editar cliente {{ $cliente -> nombre }}" class="btn btn-success btn-icon btn-sm">
+                                        <a href="{{ url('/cliente/'.$cliente->number_id.'/edit') }}" rel="tooltip" title="Editar cliente {{ $cliente -> name }}" class="btn btn-success btn-icon btn-sm">
                                             <i class="fa fa-edit"></i>
                                         </a>
-                                        <a class='btn btn-danger btn-icon btn-sm' rel="tooltip" title="Eliminar cliente {{ $cliente -> nombre }}" onclick="Delete('{{ $cliente -> nombre }}','{{ $cliente -> codigo }}')">
+                                        <a class='btn btn-danger btn-icon btn-sm' rel="tooltip" title="Eliminar cliente {{ $cliente -> name }}" onclick="Delete('{{ $cliente -> name }}','{{ $cliente -> codigo }}')">
                                             <i class='fa fa-times'></i>
                                         </a>
                                         <!-- <button type="submit" rel="tooltip" title="Eliminar" class="btn btn-danger btn-simple btn-xs">

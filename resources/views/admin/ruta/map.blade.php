@@ -1,6 +1,16 @@
 @extends('layouts.app')
 
 @section('title','Rutas')
+<link rel="stylesheet" type="text/css" href="{{ asset('css/shadowbox.css') }}" />
+@section('styles')
+    <style>
+        /* estilo para que la imagen quede bien redonda */
+        .resize-img {
+            height: 80px;
+            width: 80px;
+        }
+    </style>
+@endsection
 
 @section('titulo-contenido','Rutas')
 
@@ -26,7 +36,53 @@
                     <a class="btn btn-info" href="{{ url('/ruta/alls') }}">Regresar</a>
                 </div>
                 <div id="right-panel">
-                    <div id="directions-panel"></div>
+                    {{--<div id="directions-panel"></div>--}}
+                    <table class="table table-responsive" cellspacing="0" width="100%" id="tableTiposMovimientos">
+                        <thead class=" text-primary">
+                        <th class="text-left">
+                            Orden
+                        </th>
+                        <th class="text-left">
+                            Foto
+                        </th>
+                        <th class="text-center">
+                            Cliente
+                        </th>
+                        <th>
+                            Direccion
+                        </th>
+                        <th>
+                            Telefono
+                        </th>
+                        <th>
+                            Celular
+                        </th>
+                        <th>
+                            Acciones
+                        </th>
+                        </thead>
+                        <tbody>
+                        @foreach( $ruta->union() as $index => $rutaCliente )
+                            <tr>
+                                <td>{{ ($index+1)  }}</td>
+                                <td>
+                                    @if( $rutaCliente -> url_foto )
+                                        <a href="/imagenes/clientes/{{ $rutaCliente -> url_foto }}" rel="shadowbox"><img class="rounded-circle mx-auto d-block resize-img" src="/imagenes/clientes/{{ $rutaCliente -> url_foto }}"></a>
+                                    @else
+                                        <img class="img-thumbnail mx-auto d-block resize-img" src="/imagenes/default.png" alt="">
+                                    @endif
+                                </td>
+                                <td>{{ $rutaCliente -> name }}</td>
+                                <td>{{ $rutaCliente -> address }}</td>
+                                <td>{{ $rutaCliente -> phone }}</td>
+                                <td>{{ $rutaCliente -> celular }}</td>
+                                <td class="td-actions text-center">
+                                    <a class="btn btn-warning" href="#">Realizar Venta</a>
+                                </td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>      
@@ -39,8 +95,14 @@
  <!--  Google Maps Plugin    -->
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDS-rmXg8BxyY1KtI2N3s7h86kOhzZQvI8&callback=initMap"></script>
  <!-- script para cargar el mapa de los clientes en una ruta -->
+<script src="{{ asset('/js/shadowbox.js') }}"></script>
 <script>
-      function initMap() {
+    Shadowbox.init({
+        overlayColor: "#000",
+        overlayOpacity: "0.6",
+    });
+
+    function initMap() {
         var directionsService = new google.maps.DirectionsService;
         var directionsDisplay = new google.maps.DirectionsRenderer;
         var map = new google.maps.Map(document.getElementById('map'), {
@@ -50,11 +112,11 @@
             center: {lat: 2.535935, lng: -75.52767}
         });
         directionsDisplay.setMap(map);
-        
-        calculateAndDisplayRoute(directionsService, directionsDisplay);
-      }
 
-      function calculateAndDisplayRoute(directionsService, directionsDisplay) {
+        calculateAndDisplayRoute(directionsService, directionsDisplay);
+        }
+
+        function calculateAndDisplayRoute(directionsService, directionsDisplay) {
         var waypts = [];
         var unidas = <?php echo json_encode($ruta->union());?>; //capturar arreglo de php a javascript
         console.log( unidas );
@@ -78,19 +140,22 @@
             var summaryPanel = document.getElementById('directions-panel');
             summaryPanel.innerHTML = '';
             // For each route, display summary information.
-            for (var i = 0; i < route.legs.length; i++) {
-              var routeSegment = i + 1;
-              summaryPanel.innerHTML += '<b>Segmento de la Ruta: ' + routeSegment +
-                  '</b><br>';
-              summaryPanel.innerHTML += route.legs[i].start_address;
-              summaryPanel.innerHTML += ' => ' + route.legs[i].end_address + '<br>';
-              summaryPanel.innerHTML += ' Distancia => ' + route.legs[i].distance.text + '<br><br>';
-            }
+        //            for (var i = 0; i < ( unidas.length); i++) {
+        ////                var routeSegment = i + 1;
+        ////                summaryPanel.innerHTML += '<b>Segmento de la Ruta: ' + routeSegment +
+        ////                  '</b><br>';
+        ////                summaryPanel.innerHTML += route.legs[i].start_address;
+        ////                summaryPanel.innerHTML += ' => ' + route.legs[i].end_address + '<br>';
+        ////                summaryPanel.innerHTML += ' Distancia => ' + route.legs[i].distance.text + '<br><br>';
+        //                summaryPanel.innerHTML += '<b>Cliente '+ (i+1) + ' : ' + unidas[ i ].name + '</b>';
+        //                summaryPanel.innerHTML += '\t;<b>Direccion : ' + unidas[ i ].address + '</b><br>';
+        //                summaryPanel.innerHTML += '<a class="btn btn-warning" href="#">Realizar Venta</a><br>';
+        //            }
           } else {
             window.alert('Directions request failed due to ' + status);
           }
         });
-      }
+    }
     </script>
 
 @endsection

@@ -34,7 +34,7 @@
                     {{ $ruta -> descripcion }}
                 </p>
                 <div class="text-center">
-                    <a href="{{ url('/zona/'.$ruta -> zona -> id.'/rutas') }}" class="btn btn-info btn-round"><i class="now-ui-icons arrows-1_minimal-left"></i> Volver</a>
+                    <a href="{{ url('/zona/'.$ruta -> zona() -> id.'/rutas') }}" class="btn btn-info btn-round"><i class="now-ui-icons arrows-1_minimal-left"></i> Volver</a>
                 </div>
             </div>
         </div>
