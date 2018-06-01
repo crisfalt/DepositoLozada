@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\DB;
 
 class Venta extends Model
 {
+
+
     public static $messages = [
         'fk_cliente.required' => 'El Cliente es un campo obligatorio',
         // 'fk_vendedor.required' => 'El vendedor es un campo obligatorio',
@@ -39,8 +41,9 @@ class Venta extends Model
     }
 
     public function clientes() {
-        return  Cliente::where( 'number_id' , $this -> fk_cliente) -> first();
-         }
+//        return  Cliente::where( 'number_id' , $this -> fk_cliente) -> first();
+        return $this->belongsTo(Cliente::class);
+    }
 
       public function rutass() 
         {

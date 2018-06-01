@@ -30,19 +30,8 @@
                 <!-- <a href="{{ url('/cliente/create') }}" class="btn btn-warning btn-round">Nuevo Cargue</a> -->
             </div>
             <div class="card-body">
-                <div class="row">
-                    <div class="col-md-3 text-right">
-                        <label for="fecha_inicio">Fecha Inicio:</label>
-                    </div>
-                    <div class="col-md-3">
-                        <input type="date" class="form-control" name="fecha_inicio" id="fecha_inicio" value="<?php echo date("Y-m-d");?>">
-                    </div>
-                    <div class="col-md-2 text-right">
-                        <label for="fecha_final" class="control-label">Fecha Final:</label>
-                    </div>
-                    <div class="col-md-3">
-                        <input type="date" class="form-control" name="fecha_final" id="fecha_final" value="<?php echo date("Y-m-d");?>">
-                    </div>
+                <div class="text-center">
+                    <h5 class="title text-center">{{ $diaActual }}</h5>
                 </div>
                 <div class="row">
                     <div class="col-md-6 text-right">
@@ -52,31 +41,77 @@
                         <button class="btn btn-round btn-info" id="btn_guardar">Guardar Cargue</button>
                     </div>
                 </div>
-                <table class="display nowrap" cellspacing="0" width="100%" id="tableTiposMovimientos">
-                    <thead class=" text-primary">
-                        <th class="text-left">
-                                Cliente
-                            </th>
-                             <th class="text-left">
-                                N°Venta
-                            </th>
-                            <th class="text-left">
-                                Fecha
-                            </th>
-                            <th class="text-left">
-                                Estado venta
-                            </th>                            
-                            <th class="text-left">
-                                Total
-                            </th>                            
-                            <th class="text-left">
-                                Opciones
-                        </th>
-                    </thead>
-                    <tbody>
-                        
-                    </tbody>
-                </table>
+                <?php $contador = 0; $zonasRecorridas = array(); $recorri = false;?>
+                @foreach( $zonasPorDia as $zona )
+                    @if( $contador == 0 )
+                        <?php array_push( $zonasRecorridas , $zona->id ); ?>
+                        <?php $contador++; ?>
+                    @else
+                        @for( $i = 0 ; $i < count($zonasRecorridas) ; $i++ )
+                            @if( $zonasRecorridas[ $i ] == $zona->id )
+                                <?php $recorri=true;?>
+                                @continue;
+                            @endif
+                        @endfor
+                    @endif
+                    @if( !$recorri )
+                        <div class="text-center">
+                            <h7 class="title text-center">Zona : {{ $zona->nombre  }}</h7>
+                        </div>
+                        <?php array_push( $zonasRecorridas , $zona->id );?>
+                        @foreach( $zona->rutasDelDia($diaActual) as $ruta )
+                            <div class="text-left">
+                                <h7 class="title text-center">Ruta : {{ $ruta->ruta_nombre.' '.$ruta->ruta_id  }}</h7>
+                            </div>
+                            <?php $facturasDeRuta = $ruta->facturasPorRuta($ruta->ruta_id);?>
+                            @if( count($facturasDeRuta) > 0 )
+                                <table class="display nowrap" cellspacing="0" width="100%" id="">
+                                    <thead class=" text-primary">
+                                        <th class="text-left">
+                                            Cliente
+                                        </th>
+                                        <th class="text-left">
+                                            N°Venta
+                                        </th>
+                                        <th class="text-left">
+                                            Fecha
+                                        </th>
+                                        <th class="text-left">
+                                            Estado venta
+                                        </th>
+                                        <th class="text-left">
+                                            Total
+                                        </th>
+                                        <th class="text-left">
+                                            Accion
+                                        </th>
+                                    </thead>
+                                    <tbody>
+                                        @foreach( $facturasDeRuta as $factura )
+                                            <tr>
+                                                <td>{{ $factura->name }}</td>
+                                                <td>{{ $factura->factura_id }}</td>
+                                                <td>{{ $factura->fecha_entrega }}</td>
+                                                <td>{{ $factura->estadoVentas() -> nombre }}</td>
+                                                <td>{{ $factura->total }}</td>
+                                                <td>
+                                                    <a href='/venta/{{ $factura->factura_id }}' rel='tooltip' title='Ver Venta' class='btn btn-info btn-icon btn-sm'><i class='fa fa-info'></i></a>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                                <br>
+                            @else
+                                <div class="text-left">
+                                    <h7 class="title text-center">No hay Ventas para esta Ruta</h7>
+                                </div>
+                            @endif
+                        @endforeach
+                        <hr>
+                    @endif
+                    <?php $recorri=false; ?>
+                @endforeach
             </div>
         </div>
     </div>

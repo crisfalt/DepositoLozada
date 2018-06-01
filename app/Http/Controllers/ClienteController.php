@@ -135,14 +135,16 @@ class ClienteController extends Controller
         if( $request->input('celular') != "" ) {
             $reglas['celular'] .= 'numeric|between:0,99999999999999999999';
         }
-        if( $request->input('email') != "" ) {
+
+        //consultar el cliente a editar
+        $cliente = Cliente::where( 'number_id' , $id )->first();
+        if( $request->input('email') != "" && $cliente -> email != $request->input('email') ) {
             $reglas['email'] .= 'string|email|max:255|unique:clientes,email';
         }
         //validar datos con reglas de laravel en documentacion hay mas
         //mensajes personalizados para cada campo
         $this->validate($request,$reglas,Cliente::$messages);
-        //consultar el cliente a editar
-        $cliente = Cliente::where( 'number_id' , $id )->first();
+        //luego de validar se procede a almacenar
         $cliente -> name = $request->input('name');
         $cliente -> tipo_documento_id = $request->input('tipo_documento_id');
         $cliente -> phone = $request->input('phone');

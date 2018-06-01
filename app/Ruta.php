@@ -40,6 +40,10 @@ class Ruta extends Model
         return DiasRutas::where('ruta_id',$this -> id ) -> get();
     }
 
+    public function dias_rutas() {
+        return $this->hasMany(DiasRutas::class);
+    }
+
     public function clientes() {
         return Cliente::where('ruta_id',$this -> id ) -> get();
     }
@@ -52,6 +56,19 @@ class Ruta extends Model
                             ->distinct()
                             ->get();
         return $unidas;
+    }
+
+    public function facturasPorRuta($idRuta) {
+        return Venta::with('clientes')
+                            ->join('clientes as c','ventas.fk_cliente','=','c.number_id')
+                            ->join('rutas as r','r.id','=','c.ruta_id')
+                            ->where('ventas.fk_estado_venta','=',2)
+                            ->where('r.id','=',$idRuta)
+                            ->where('ventas.fecha_entrega', date("Y-m-d") )
+                            ->select("c.*","r.*","ventas.id as factura_id","ventas.fk_cliente as fk_cliente","ventas.fk_vendedor as fk_vendedor","ventas.fk_estado_venta as fk_estado_venta","ventas.fk_bodega as fk_bodega","ventas.fk_forma_de_pago as fk_forma_de_pago","ventas.total as total","ventas.fecha_entrega as fecha_entrega")
+                            ->orderBy('r.nombre')
+                            ->distinct()
+                            ->get();
     }
 
     public function listaOrdenada() {

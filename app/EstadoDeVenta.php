@@ -20,4 +20,6 @@ class EstadoDeVenta extends Model
             'descripcion' => 'max:300',
             'estado' => 'required'
     ];
+
+
 }

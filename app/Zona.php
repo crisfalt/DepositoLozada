@@ -5,6 +5,8 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\Bodega;
 use App\Ruta;
+use App\DiasRutas;
+use DB;
 
 class Zona extends Model
 {
@@ -35,6 +37,18 @@ class Zona extends Model
 
     public function rutas() {
         return $this->hasMany(Ruta::class); //1 zona tiene muchas rutas
+    }
+
+    public function rutasDelDia($diaActual) {
+        return Ruta::with('dias_rutas')
+                            ->join('dias_rutas as dr','rutas.id','=','dr.ruta_id')
+                            ->where('dr.dia','=',$diaActual)
+                            ->where('rutas.estado','=','A')
+                            ->where('rutas.zona_id','=',$this->id)
+                            ->select("dr.id as dias_rutas_id","dr.dia as dia","dr.ruta_id as dias_rutas_ruta_id","rutas.id as ruta_id","rutas.nombre as ruta_nombre","rutas.zona_id as ruta_zona_id")
+                            ->orderBy('rutas.nombre')
+                            ->distinct()
+                            ->get();
     }
 
 }

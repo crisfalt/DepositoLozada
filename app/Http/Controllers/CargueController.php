@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\DiasRutas;
+use App\Zona;
 use Illuminate\Http\Request;
 use DB;
 use App\Cargue;
 use Carbon\Carbon;
 use App\CargueFactura; //relacion de cargue con ventas
 use App\Venta;
+use App\Ruta;
 
 class CargueController extends Controller
 {
@@ -17,7 +20,20 @@ class CargueController extends Controller
     }
 
     public function create() {
-        return view('admin.cargue.create');
+        setlocale(LC_ALL,"es_ES");
+        $diaActual = strtoupper(strftime("%A"));
+        $zonasPorDia = Zona::with('rutas')
+                            ->leftJoin('rutas as r','r.zona_id','=','zonas.id')
+                            ->leftJoin('dias_rutas as dr','r.id','=','dr.ruta_id')
+                            ->where('dr.dia','=',$diaActual)
+                            ->where('r.estado','=','A')
+                            ->select("zonas.*","r.id as ruta_id","r.nombre as ruta_nombre","r.zona_id as ruta_zona_id","dr.id as dias_rutas_id","dr.dia as dia","dr.ruta_id as dias_rutas_ruta_id")
+                            ->orderBy('zonas.id')
+                            ->distinct('zonas.id','r.zona_id')
+                            ->get();
+        $primerId = $zonasPorDia[0]->id;
+//        dd($zonasPorDia);
+        return view('admin.cargue.create')->with(compact('diaActual','zonasPorDia','primerId'));
     }
 
     //metodo para filtrar los cargues por medio de fecha_inicio y fecha_fin
