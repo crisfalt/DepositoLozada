@@ -261,8 +261,8 @@
                 <input type="checkbox"  class="fantasma" />
                 desea ingresar la fecha y hora de lo contario el sistema le asiganara una fecha de entrega
               </label>
-                 <div class="row text-center" id="dvOcultar" style="display:none">                            
-                            <div class="col-md-3 col-sm-12">
+                 <div class="row" id="dvOcultar" style="display:none">                            
+                            <div class="col-md-2 col-sm-12">
                                  <div class="form-group">
                                 <label>fecha entrega</label>
                               <input type="date" name="fecha_entrega" id="datepicker" onchange="validarfecha(this.value);" pattern="[_0-9]{2}/[_0-9]{2}/[_0-9]{4}"class="form-control">
@@ -270,8 +270,8 @@
                             </div>                                    
                             </div>
 
-                           <div class="col-md-3 col-sm-12">
-                                <div class="form-group ">
+                           <div class="col-md-2 col-sm-12">
+                                <div class="form-group">
                                      <label>Hora entrega</label>
                                       <input type="time" name="hora" id="timepicker" onchange="validarhora(this.value);" pattern="[_0-9]{2}/[_0-9]{2}/[_0-9]{4}"class="form-control" >
                                

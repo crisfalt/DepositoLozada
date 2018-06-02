@@ -105,11 +105,11 @@
               <tr>
                 <th>Cliente:</th>
                   @foreach( $Cargarventas as $Cargarventa )
-                <td>{{$Cargarventa ->clientes()->name}}</td>
+                <td>{{$Cargarventa ->cliente()->name}}</td>
                   @endforeach
                 <td><strong>Tel:</strong></td>
                 @foreach( $Cargarventas as $Cargarventa )
-                <td>{{$Cargarventa ->clientes()->phone}}</td>
+                <td>{{$Cargarventa ->cliente()->phone}}</td>
                 @endforeach
 
               </tr>
@@ -122,8 +122,8 @@
                   @endforeach
                   <td><strong>Direccion:</strong></td>
                   @foreach( $Cargarventas as $Cargarventa )
-                  @if($Cargarventa ->clientes()->address==null)
-                  <td>{{$Cargarventa ->clientes()->address}}</td>
+                  @if($Cargarventa ->cliente()->address==null)
+                  <td>{{$Cargarventa ->cliente()->address}}</td>
                   @else
                   <td>No Hay direccion</td>
                   @endif
@@ -164,7 +164,7 @@
 <thead>
   <tr>
 
-    <th>Canastas</th>
+    <th>IdItem</th>
     <!-- <th>TipoPaca</th> -->
     <th>Producto</th>
     <th>Cantidad</th>

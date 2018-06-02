@@ -12,46 +12,49 @@
     document.getElementById("date").innerHTML = m + "/" + d + "/" + y;
 
    
-    function validarhora(tiempoActualizar)
+    function validarhora(tiempoActualizar2)
 {
-var fecha= document.getElementById('datepicker').value;
+var fechaActualizar2= new Date($('#datepicker').val()).toJSON().slice(0,10);
+
+
      n =  new Date();
     y = n.getFullYear();
     m = n.getMonth() + 1;
     d = n.getDate();
-   var fechaActual = y + "-" + m + "-" + d;
-   m = new Date(fecha);
-   y2 = m.getFullYear();
-    m2 = m.getMonth() + 1;
-    d2 = m.getDate() +1;
-var fechaActualizar= y2 + "-" + m2 + "-" + d2;
- tiempoActual =n.getHours()+":"+n.getMinutes();
- 
+   var fechaActual = m + "-" + d + "-" + y;
+var fechaActual2=new Date(fechaActual).toJSON().slice(0,10);
 
+ tiempoActual =n.getHours()+":"+n.getMinutes();
+
+var division= tiempoActualizar2.split(":");
+
+var tiempoActualizar = parseInt((division[0]*3600)+(division[1]*60));
+
+var tiempoActual= parseInt((n.getHours()*3600)+(n.getMinutes()*60));
 
 var id_factura= document.getElementById('id_factura').value;
 
-var tiempoActualizar= document.getElementById('timepicker').value;
-
-var fechaActual2= (new Date(fechaActual).toLocaleString('es-ES',{date_default_timezone_set:'America/Bogota'}));
-var fechaActualizar2=(new Date(fechaActualizar).toLocaleString('es-ES',{date_default_timezone_set:'America/Bogota'}));
-
-   if(fechaActualizar2 >= fechaActual2)
-  {
-
-    if(fechaActualizar2 == fechaActual2 )
-     {
-
-      if(tiempoActualizar>tiempoActual)        
+// var fechaActual2= (new Date(fechaActual).toLocaleString('es-ES',{date_default_timezone_set:'America/Bogota'}));
+// var fechaActualizar2=(new Date(fechaActualizar).toLocaleString('es-ES',{date_default_timezone_set:'America/Bogota'}));
+  
+       if(fechaActualizar2 >= fechaActual2)
       {
-        var ruta2 = '/venta/ActualizarFechaHora/';
+
+
+            if(fechaActualizar2 == fechaActual2 )
+               {
+
+
+                    if(tiempoActualizar>tiempoActual)        
+                    {
+              var ruta2 = '/venta/ActualizarFechaHora/';
               $.ajax({
                 headers: {
                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                   },
                 type: "post",
                 url: ruta2,
-                  data : {'id_factura' : id_factura,'actualizar_hora' :tiempoActualizar },
+                  data : {'id_factura' : id_factura,'actualizar_hora':tiempoActualizar2 },
                 dataType: "json",
                 success: function (items) {
                 
@@ -74,6 +77,8 @@ var fechaActualizar2=(new Date(fechaActualizar).toLocaleString('es-ES',{date_def
 
 
      }
+     else
+     {
     var ruta2 = '/venta/ActualizarFechaHora/';
               $.ajax({
                 headers: {
@@ -81,7 +86,7 @@ var fechaActualizar2=(new Date(fechaActualizar).toLocaleString('es-ES',{date_def
                   },
                 type: "post",
                 url: ruta2,
-                  data : {'id_factura' : id_factura,'actualizar_hora' :tiempoActualizar },
+                  data : {'id_factura' : id_factura,'actualizar_hora':tiempoActualizar2 },
                 dataType: "json",
                 success: function (items) {
                 
@@ -90,7 +95,7 @@ var fechaActualizar2=(new Date(fechaActualizar).toLocaleString('es-ES',{date_def
                   location.reload();
                 }
               }); 
-
+        }
 
   }
     else
@@ -106,7 +111,7 @@ var fechaActualizar2=(new Date(fechaActualizar).toLocaleString('es-ES',{date_def
 function validarfecha(fecha)
 {
 
-    n =  new Date();
+     n =  new Date();
     y = n.getFullYear();
     m = n.getMonth() + 1;
     d = n.getDate();
@@ -119,9 +124,11 @@ var fechaActualizar= y2 + "-" + m2 + "-" + d2;
 var id_factura= document.getElementById('id_factura').value;
 
 
-var fechaActual2= (new Date(fechaActual).toLocaleString('es-ES',{date_default_timezone_set:'America/Bogota'}));
-var fechaActualizar2=(new Date(fechaActualizar).toLocaleString('es-ES',{date_default_timezone_set:'America/Bogota'}));
 
+// var fechaActual2= (new Date(fechaActual).toLocaleString('es-ES',{date_default_timezone_set:'America/Bogota'}));
+// var fechaActualizar2=(new Date(fechaActualizar).toLocaleString('es-ES',{date_default_timezone_set:'America/Bogota'}));
+var fechaActualizar2= new Date($('#datepicker').val()).toJSON().slice(0,10);
+var fechaActual2=new Date(fechaActual).toJSON().slice(0,10);
 if(fechaActualizar2 >= fechaActual2)
 {
   
@@ -145,6 +152,7 @@ if(fechaActualizar2 >= fechaActual2)
           btnClass: 'btn-blue',
           action: function () 
           {
+
             var ruta2 = '/venta/ActualizarFechaEntrega/';
               $.ajax({
                 headers: {

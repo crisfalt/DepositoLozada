@@ -113,9 +113,24 @@
                                     Estado
                                 </th>
                                 <th class="text-center">
+                                    Forma de pago
+                                </th>
+                                <th class="text-center">
+                                    fecha de entrega
+                                </th>
+                                <th class="text-center">
+                                    hora de enterga
+                                </th>
+                                 <th class="text-center">
+                                    Saldo
+                                </th>
+                                <th class="text-center">
                                     Cliente
                                 </th>
-                                
+                                 <th class="text-center">
+                                    Cedula
+                                </th>
+
                                 <th class="text-center">
                                     Total
                                 </th>                            
@@ -133,9 +148,36 @@
                                         @else
                                         <td class="text-center">0</td> 
                                         @endif
+                                         @if( $Cargarventa -> formapagos() != "" ||  $Cargarventa -> formapagos() != null )
+                                        <td class="text-center">{{  $Cargarventa -> formapagos() -> nombre }}</td> 
+                                        @else
+                                        <td class="text-center">no definido</td> 
+                                        @endif
+
+                                        @if( $Cargarventa -> fecha_entrega != "" ||  $Cargarventa -> fecha_entrega != null )
+                                        <td class="text-center">{{  $Cargarventa -> fecha_entrega}}</td> 
+                                        @else
+                                        <td class="text-center">fecha no definida</td> 
+                                        @endif
+                                         @if( $Cargarventa -> hora != "" ||  $Cargarventa -> hora != null )
+                                        <td class="text-center">{{  $Cargarventa -> hora}}</td> 
+                                        @else
+                                        <td class="text-center">hora no definida</td> 
+                                        @endif
+                                        @if( $Cargarventa -> saldo != "" ||  $Cargarventa -> saldo != null )
+                                        <td class="text-center">{{  $Cargarventa -> saldo}}</td> 
+                                        @else
+                                        <td class="text-center">no tiene deuda pendiente</td> 
+                                        @endif
                                           {{-- proveedires esta vacio debe validar eso  --}}
                                         @if( $Cargarventa -> clientes() != "" || $Cargarventa -> clientes() != null )
                                         <td class="text-center">{{ $Cargarventa -> cliente()-> name }}</td>
+                                        @else 
+                                        <td class="text-center">Sin Definir</td>
+                                        @endif
+                                        
+                                         @if( $Cargarventa -> clientes() != "" || $Cargarventa -> clientes() != null )
+                                        <td class="text-center">{{ $Cargarventa -> cliente()-> number_id }}</td>
                                         @else 
                                         <td class="text-center">Sin Definir</td>
                                         @endif
@@ -144,6 +186,7 @@
                                         @else
                                         <td class="text-center">0</td>
                                         @endif
+
                                         
                                     </tr>
                                     @endforeach

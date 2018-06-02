@@ -61,7 +61,7 @@ class Venta extends Model
       public function rutass() 
         {
         
-          return  DB::table('rutas')->where('id', $this -> clientes()->ruta_id)-> first();
+          return  DB::table('rutas')->where('id', $this -> cliente()->ruta_id)-> first();
         }
 
         public function Zonass() 

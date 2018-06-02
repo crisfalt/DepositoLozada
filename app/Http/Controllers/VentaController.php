@@ -82,6 +82,7 @@ class VentaController extends Controller
             $notificacion="";
             $factura_id= $_POST["id_factura"];
             $actualizar_hora= $_POST["actualizar_hora"];
+            
             $ConsultarFacturaVenta=DB::table('ventas')->where('id',$factura_id )->get();
             if(count($ConsultarFacturaVenta) !=0)
             {
@@ -106,6 +107,7 @@ class VentaController extends Controller
             $notificacion="";
             $factura_id= $_POST["id_factura"];
             $actualizar_fecha= $_POST["actualizar_fecha"];
+
             $ConsultarFacturaVenta=DB::table('ventas')->where('id',$factura_id )->get();
             if(count($ConsultarFacturaVenta) !=0)
             {
@@ -1312,8 +1314,7 @@ $consultarProducto= DB::table('productos')->where('codigo',$consultarDetalleVent
 
           
             $marcas = Marca::orderBy('nombre') -> get();
-            $tipocontenidos = TipoContenido::orderBy('nombre') -> get();
-          
+            $tipocontenidos = TipoContenido::orderBy('nombre') -> get();          
             // traigo el nombre del cliente
             $clientes = Cliente::orderBy('name') -> get();
             //traigo el nombre del vendedor
@@ -1336,6 +1337,22 @@ $consultarProducto= DB::table('productos')->where('codigo',$consultarDetalleVent
 
             $PrecioDeVentas=PreciosProducto::orderby('fk_producto')->get();
             $tipopacas=TipoPaca::orderby('id')->get();
+            //consultar los productos mas vendidos
+            //
+            // $fechaActual= Carbon::now()->toDateString();
+            // $fechaatras= new Carbon( $fechaActual )->addDay(-30)->toDateString();
+            // $losmasvendidos =  DB::table(DB::raw('productos','clientes','ventas',
+            //                             'detalles_ventas'))
+            //                     ->where('clientes.number_id',$clientes->number_id) 
+            //                     ->where('ventas.fk_cliente',$clientes->number_id)
+            //                     ->where('detalles_ventas.fk_factura',$CargarVentas->id)
+            //                     ->where('productos.codigo',$Detalles_ventas->fk_producto)
+            //                     ->where('ventas.fk_estado_venta',3)
+            //                     ->whereBetween('ventas.fecha_entrega',[$fechaatras,$CargarVentas->fecha_entrega ])
+            //                     ->groupBy('detalles_ventas.fk_producto')
+            //                     ->get();
+                          
+            
 
            
 
@@ -1372,6 +1389,7 @@ $consultarProducto= DB::table('productos')->where('codigo',$consultarDetalleVent
             $id=$request->session()->get('id');
             $IdFactura= Venta::all()->last()->id;
             Session::put('IdVenta', $IdFactura);
+
             
             $idVenta = Session::get('IdVenta');
             return redirect('/venta/create') -> with( compact( 'notification' ) );
@@ -1720,32 +1738,32 @@ $consultarProducto= DB::table('productos')->where('codigo',$consultarDetalleVent
 
             $ObtenerCantidadActual=DB::table('productos')->where('codigo',$Detalles_venta->fk_producto)->get();
             $BuscarProductos=DB::table('detalles_ventas')->where('fk_producto',$Detalles_venta->fk_producto)->where('fk_factura',$id)->get();
-            if(count($ObtenerCantidadActual)!=0)
-            {
-            foreach( $BuscarProductos as  $BuscarProducto)
-            {
-                $AcomularProducto=$BuscarProducto->cantidad + $AcomularProducto;
+              if(count($ObtenerCantidadActual)!=0)
+              {
+                  foreach( $BuscarProductos as  $BuscarProducto)
+                  {
+                      $AcomularProducto=$BuscarProducto->cantidad + $AcomularProducto;
 
-            }
-            // dd( $ObtenerCantidadActual);
-            $ComprobarDisponibilidadProducto= $ObtenerCantidadActual[0]->cantidad-$AcomularProducto;
-            ////condicion de si existe o falta de productos para le venta
-            if( $ObtenerCantidadActual[0]->cantidad==0)
-            {
-                $CondicionVenta=1;
-                ////mensajes de productos faltantes a la venta
-                $error[$contadorErrores] ='-el producto '.$ObtenerCantidadActual[0]->nombre.' esta agotado';
-            }            
-            elseif( $ComprobarDisponibilidadProducto < 0)
-            {
-                ////mensajes de productos faltantes a la venta
-                $CondicionVenta=1;
-                $error[$contadorErrores]='-el producto '.$ObtenerCantidadActual[0]->nombre.' solo hay '.$ObtenerCantidadActual[0]->cantidad.' disponible';
-                
-            }
-        
-            $contadorErrores=  $contadorErrores+1;
-        }
+                  }
+                    // dd( $ObtenerCantidadActual);
+                  $ComprobarDisponibilidadProducto= $ObtenerCantidadActual[0]->cantidad-$AcomularProducto;
+                   ////condicion de si existe o falta de productos para le venta
+                  if( $ObtenerCantidadActual[0]->cantidad==0)
+                  {
+                      $CondicionVenta=1;
+                      ////mensajes de productos faltantes a la venta
+                      $error[$contadorErrores] ='-el producto '.$ObtenerCantidadActual[0]->nombre.' esta agotado';
+                  }            
+                  elseif( $ComprobarDisponibilidadProducto < 0)
+                  {
+                      ////mensajes de productos faltantes a la venta
+                      $CondicionVenta=1;
+                      $error[$contadorErrores]='-el producto '.$ObtenerCantidadActual[0]->nombre.' solo hay '.$ObtenerCantidadActual[0]->cantidad.' disponible';
+                      
+                  }
+          
+              $contadorErrores=  $contadorErrores+1;
+             }
         $AcomularProducto=0;
 
         }
@@ -1767,9 +1785,9 @@ $consultarProducto= DB::table('productos')->where('codigo',$consultarDetalleVent
             $total=$total+$subtotal;
         ////////comienza a restar del  inventario 
             DB::table('productos')
-            ->where('codigo',$Detalles_venta->fk_producto)
-            
+            ->where('codigo',$Detalles_venta->fk_producto)            
             ->update(['cantidad' =>$ObtenerCantidadActual-$Detalles_venta->cantidad ]);
+
             
 
         }
@@ -1813,6 +1831,7 @@ $consultarProducto= DB::table('productos')->where('codigo',$consultarDetalleVent
                 ->update(['fk_estado_venta' => 2,'fk_forma_de_pago' => 1,'total' => $total,
                 'saldo' => $resta,'fecha_entrega'=>$fechaActual]);
                 $notification = 'la factura fue pagada exitosamente'. $ObtenerEstadoVenta[0]->id;
+                Session::forget('IdVenta');
                 return redirect('venta') -> with( compact( 'notification' ));
             }
             else
@@ -1836,6 +1855,7 @@ $consultarProducto= DB::table('productos')->where('codigo',$consultarDetalleVent
                     'saldo' => $resta,'fecha_entrega'=>$fechaActual]);                  
 
                     $notification = 'la factura fue agregada exitosamente  con su abono'. $ObtenerEstadoVenta[0]->id;
+                    Session::forget('IdVenta');
                     return redirect('venta') -> with( compact( 'notification' ));
 
 
@@ -1864,6 +1884,7 @@ $consultarProducto= DB::table('productos')->where('codigo',$consultarDetalleVent
                     'saldo' => $resta,'fecha_entrega'=>$fechaActual]);                  
 
                     $notification = 'la factura fue agregada exitosamente sin abono'. $ObtenerEstadoVenta[0]->id;
+                    Session::forget('IdVenta');
                     return redirect('venta') -> with( compact( 'notification' ));
 
 
@@ -1924,6 +1945,7 @@ $consultarProducto= DB::table('productos')->where('codigo',$consultarDetalleVent
                 ->update(['fk_estado_venta' => 3,'fk_forma_de_pago' => 1,'total' => $total,
                 'saldo' => $resta,'fecha_entrega'=>$fechaActual2]);
                 $notification = 'la factura fue pagada exitosamente'. $ObtenerEstadoVenta[0]->id;
+                Session::forget('IdVenta');
                 return redirect('venta') -> with( compact( 'notification' ));
             }
             else
@@ -1946,6 +1968,7 @@ $consultarProducto= DB::table('productos')->where('codigo',$consultarDetalleVent
                     'saldo' => $resta,'fecha_entrega'=>$fechaActual2]);                  
 
                     $notification = 'la factura fue agregada exitosamente  con su abono'. $ObtenerEstadoVenta[0]->id;
+                    Session::forget('IdVenta');
                     return redirect('venta') -> with( compact( 'notification' ));
 
 
@@ -1972,6 +1995,7 @@ $consultarProducto= DB::table('productos')->where('codigo',$consultarDetalleVent
                     'saldo' => $resta,'fecha_entrega'=>$fechaActual]);                  
 
                     $notification = 'la factura fue agregada exitosamente sin su abono'. $ObtenerEstadoVenta[0]->id;
+                    Session::forget('IdVenta');
                     return redirect('venta') -> with( compact( 'notification' ));
 
 

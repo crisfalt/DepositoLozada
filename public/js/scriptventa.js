@@ -297,56 +297,65 @@ $(function(){
 
     function validarhora(tiempoActualizar)
 {
-var fecha= document.getElementById('datepicker').value;
+
+
+
+var fechaActualizar2= new Date($('#datepicker').val()).toJSON().slice(0,10);
+
+
      n =  new Date();
     y = n.getFullYear();
     m = n.getMonth() + 1;
     d = n.getDate();
-   var fechaActual = y + "-" + m + "-" + d;
-   m = new Date(fecha);
-   y2 = m.getFullYear();
-    m2 = m.getMonth() + 1;
-    d2 = m.getDate() ;
-var fechaActualizar= y2 + "-" + m2 + "-" + d2;
+   var fechaActual = m + "-" + d + "-" + y;
+var fechaActual2=new Date(fechaActual).toJSON().slice(0,10);
+
  tiempoActual =n.getHours()+":"+n.getMinutes();
- 
-
-var tiempoActualizar= document.getElementById('timepicker').value;
-
-var fechaActual2= (new Date(fechaActual).toLocaleString('es-ES',{date_default_timezone_set:'America/Bogota'}));
-var fechaActualizar2=(new Date(fechaActualizar).toLocaleString('es-ES',{date_default_timezone_set:'America/Bogota'}));
-
-   if(fechaActualizar2 >= fechaActual2)
-  {
 
 
-  if(fechaActualizar2 == fechaActual2 )
-     {
+
+// var tiempoActualizar= document.getElementById('timepicker').value;
+// 
+var division= tiempoActualizar.split(":");
+
+var tiempoActualizar = parseInt((division[0]*3600)+(division[1]*60));
+
+var tiempoActual= parseInt((n.getHours()*3600)+(n.getMinutes()*60));
 
 
-      if(tiempoActualizar>tiempoActual)        
-      {
-    
 
-
-      }
-          
-
-      else
-      {
-
-         alert("la hora tiene que ser mayor a la actual");
-         document.getElementById('timepicker').value="";
-         $("#timepicker").focus();
-        
-      }
-
-
-     }
+// var fechaActual2= (new Date(fechaActual).toLocaleString('es-ES',{date_default_timezone_set:'America/Bogota'}));
+// var fechaActualizar2=(new Date(fechaActualizar).toLocaleString('es-ES',{date_default_timezone_set:'America/Bogota'}));
   
+       if(fechaActualizar2 >= fechaActual2)
+      {
 
 
-  }
+            if(fechaActualizar2 == fechaActual2 )
+               {
+
+
+                    if(tiempoActualizar>tiempoActual)        
+                    {
+                       alert("la hora esta bien");
+
+
+                    } 
+                    else
+                    {
+                      alert("la hora tiene que ser mayor a la actual");
+                       document.getElementById('timepicker').value="";
+                       $("#timepicker").focus();
+
+                    }        
+
+               
+
+               }  
+      
+
+
+      }
     else
     {
 
@@ -371,13 +380,14 @@ var fechaActualizar2=(new Date(fechaActualizar).toLocaleString('es-ES',{date_def
    y2 = m.getFullYear();
     m2 = m.getMonth() + 1;
     d2 = m.getDate() +1;
-var fechaActualizar= y2 + "-" + m2 + "-" + d2;
+  var fechaActualizar= y2 + "-" + m2 + "-" + d2;
 
 
 
-var fechaActual2= (new Date(fechaActual).toLocaleString('es-ES',{date_default_timezone_set:'America/Bogota'}));
-var fechaActualizar2=(new Date(fechaActualizar).toLocaleString('es-ES',{date_default_timezone_set:'America/Bogota'}));
-
+// var fechaActual2= (new Date(fechaActual).toLocaleString('es-ES',{date_default_timezone_set:'America/Bogota'}));
+// var fechaActualizar2=(new Date(fechaActualizar).toLocaleString('es-ES',{date_default_timezone_set:'America/Bogota'}));
+var fechaActualizar2= new Date($('#datepicker').val()).toJSON().slice(0,10);
+var fechaActual2=new Date(fechaActual).toJSON().slice(0,10);
 if(fechaActualizar2 >= fechaActual2)
 {
 
