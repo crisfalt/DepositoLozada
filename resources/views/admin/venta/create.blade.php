@@ -54,7 +54,6 @@
             width: 55%;*/
             opacity: 0;
             margin: auto;
-            background-image: url("../imagenes/madera completa.png");
             background-repeat: no-repeat;
             color: #000000;
             box-shadow: 5px 10px 18px darkred;
@@ -246,12 +245,22 @@
                        <div class="col-md-3 col-sm-12 pr-1">
                             <div class="form-group">
                                 <label>Cliente</label>
+                                @if( isset($id_cliente ) )
+                                    <select class="form-group"  id="combobox2"  name="fk_cliente" readonly="true" required>
+                                    @foreach( $clientes as $cliente )
+                                        @if( $cliente->number_id == $id_cliente )
+                                            <option class="form-control"  value="{{$cliente-> number_id}},{{ $cliente-> name }}">{{$cliente -> name}}</option>
+                                        @endif
+                                    @endforeach
+                                    </select>
+                                @else
                                     <select class="form-group"  id="combobox2"  name="fk_cliente" required>
                                     <option value="I">Nombre Cliente</option>
-                                     @foreach( $clientes as $cliente )
-                                    <option class="form-control"  value="{{$cliente-> number_id}},{{ $cliente-> name }}">{{$cliente -> name}}</option>
-                                     @endforeach
+                                    @foreach( $clientes as $cliente )
+                                        <option class="form-control"  value="{{$cliente-> number_id}},{{ $cliente-> name }}">{{$cliente -> name}}</option>
+                                    @endforeach
                                     </select>
+                                @endif
                             </div>                            
                        </div>
                      
@@ -691,63 +700,8 @@
             </div>
     
         </div>
-    
-</div>
-
-<div id="myModal" class="modal2"  >
-
-        <!-- Modal content -->
-     
-        <span class="close" id="myBtn">&times;</span>
-        <img class="avatar responsive-img" src="~/Imagenes/titulo2_rancho_.png" />
-     
-        <section id="loginForm">
-
-                <from>
-                    {{-- @using (Html.BeginForm("AgregaCarrito", "Carrito", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get, new { @class = "form-horizontal", role = "form" }))
-                    {
-
-                        <img id="ImagenProductoModal" name="Imagen" class="img-responsive" width="100" height="100" alt="NombreProducto" />
-
-                        @Html.HiddenFor(m => m.Url, new { @Value = url })
-                        @Html.HiddenFor(m => m.IDProducto, new { @id = "IdProductoModal" })
-                        <div class="row">
-                            @Html.LabelFor(m => m.Cantidad, "Cantidad", new { @Class = "white-text", @for = " txtUsuario", @Style = "color: white" })
-                            <div class="col-md-10">
-                                @Html.TextBoxFor(m => m.Cantidad, new { @class = "form-control", @TYPE = "NUMBER", @MIN = "1", @MAX = "10", @STEP = "1", @SIZE = "6", @placeholder = "Cantidad ", @id = "CantidadModal", @Style = "background-color: white; ", @Value = "1", @required = "Obligatorio" })
-                            </div>
-                        </div>
-                        @*<INPUT TYPE="NUMBER" MIN="1" id="@Model.Cantidad" MAX="10" STEP="1" SIZE="6" value="@Model.Cantidad">*@
-                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                        <div class="row">
-                            @Html.LabelFor(m => m.Observacion, "Observacion", new { @Class = "white-text", @for = " txtUsuario", @Style = "color: white" })
-                            <div class="col-md-10">
-                                @Html.TextBoxFor(m => m.Observacion, new { @Class = "", @type = "text", @name = "", @placeholder = "Puedes pedirlo sin cebolla , sin tomates, picada o entera? ", @id = "Observacion1", @onChange = "ValidarObservacion(this);", @Value = "", @Style = "background-color: white;" })
-                                @Html.ValidationMessageFor(m => m.Observacion, "", new { @class = "text-danger white-text" })
-                            </div>
-                            <input class="btn waves-effect waves-light orange" type="submit" value="Agregar" onclick="Materialize.toast('se agrego en mi carrito de pedidos')" />
-                        </div>
-
-                    
-                        
-
-                    } --}}
-
-                </from>
-            
-        </section>
-        
-
-
-
     </div>
-
-
-    <!-- The Modal Agregar -->
-
-
-@endsection
-
+</div>
 
 
 @section('scripts')
@@ -812,6 +766,5 @@
     }
    </script>
 
-    
-    
+@endsection
 @endsection

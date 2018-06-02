@@ -32,4 +32,12 @@ class User extends Authenticatable
         return $this -> belongsTo( TipoDocumento::class );
     }
 
+    public function perfil() {
+        return $this->belongsTo(Perfil::class);
+    }
+
+    public function bodega() {
+        return $this->belongsTo(Bodega::class);
+    }
+
 }

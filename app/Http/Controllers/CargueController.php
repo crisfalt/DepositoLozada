@@ -40,20 +40,32 @@ class CargueController extends Controller
     public function filtrar() {
         $fecha_inicio = $_GET['fecha_inicio'];
         $fecha_final = $_GET['fecha_final'];
-        $unidas = DB::table('ventas as v')
-                            ->join('clientes as c','v.fk_cliente','=','c.number_id')
-                            ->join('rutas as r','r.id','=','c.ruta_id')
+        $rutas = Ruta::with('clientes')
+                            ->join('clientes as c','rutas.id','=','c.ruta_id')
+                            ->join('ventas as v','v.fk_cliente','=','c.number_id')
+                            ->where('rutas.estado','=','A')
                             ->where('v.fk_estado_venta','=',2)
                             ->whereBetween('v.fecha_entrega', array($fecha_inicio, $fecha_final))
-                            ->select("c.*","r.*","v.id as factura_id","v.fk_cliente as fk_cliente","v.fk_vendedor as fk_vendedor","v.fk_estado_venta as fk_estado_venta","v.fk_bodega as fk_bodega","v.fk_forma_de_pago as fk_forma_de_pago","v.total as total","v.fecha_entrega as fecha_entrega")
-                            ->orderBy('r.nombre')
+                            ->select("rutas.*")
+                            ->orderBy('rutas.nombre')
                             ->distinct()
                             ->get();
         // $response = array(
         //     'status' => 'success',
         //     'msg' => $fecha_inicio.' '.$fecha_final,
         // );
-        return response()->json($unidas); 
+        $ventas = array();
+        $detallesVentas = array();
+        foreach ( $rutas as $ruta ){
+            array_push( $ventas , $ruta->facturasPorRuta($fecha_inicio,$fecha_final,$ruta->id) );
+            array_push( $detallesVentas , $ruta->detallesPorRuta($fecha_inicio,$fecha_final,$ruta->id) );
+        }
+        $response = array(
+            'rutas' => $rutas,
+            'ventas' => $ventas,
+            'detalles' => $detallesVentas,
+        );
+        return response()->json($response);
     }
 
 

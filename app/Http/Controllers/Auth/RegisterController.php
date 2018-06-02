@@ -88,6 +88,19 @@ class RegisterController extends Controller
         ]);
     }
 
+    public function index() {
+        $empleados = User::where('estado','A')->get();
+        return view('auth.index') -> with( compact('empleados') );
+    }
+
+    public function destroy( $id ) {
+        $empleado = User::find( $id );
+        $empleado->estado = 'I'; //ELIMINAR
+        $empleado->save();
+        $notification = 'Empleado ' . $empleado -> name . ' Eliminado Exitosamente';
+        return back() -> with( compact( 'notification' ) ); //nos devuelve a la pagina anterior
+    }
+
     //sobreescribir metodo de RegisterUsers
     public function showRegistrationForm()
     {

@@ -26,6 +26,9 @@ Route::get('/caja/cajas' , 'CajaController@getCajas'); //todas las cajas disponi
 Route::post('/caja/asignar/{caja}/{valor}' , 'CajaController@asignarCaja'); //asignar caja a la session actual
 
 Route::middleware(['auth', 'admin'])->group(function () {
+    //CRUD Empleados
+    Route::get('empleados' , 'Auth\RegisterController@index')->name('empleados');
+    Route::delete('/empleados/{id}','Auth\RegisterController@destroy'); //vista para eliminar
     //CRUD abonosventa
     Route::get('/abono/searchTotal/{saldoventa}','AbonoController@searchTotal');
     Route::get('abono' , 'AbonoController@index')->name('abono');
@@ -291,7 +294,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('venta/BuscarCliente/' , 'VentaController@BuscarCliente');
     Route::post('/venta/abonar' , 'VentaController@abonar');
     Route::get('venta' , 'VentaController@index')->name('venta');
-    Route::get('/venta/create' , 'VentaController@create');
+    Route::get('/venta/{id_cliente}/create' , 'VentaController@create');
     Route::post('/venta' , 'VentaController@store');
     Route::delete('/venta/{id}','VentaController@destroy'); //vista para eliminar
     Route::get('/venta/{id}','VentaController@show'); //mostrar el tipo de 

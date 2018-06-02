@@ -1308,7 +1308,7 @@ $consultarProducto= DB::table('productos')->where('codigo',$consultarDetalleVent
             return view('admin.venta.show')->with(compact('Detalle_ventas','Cargarventas'));
         }
     
-        public function create() {
+        public function create( $id_cliente ) {
 
           
 
@@ -1357,7 +1357,10 @@ $consultarProducto= DB::table('productos')->where('codigo',$consultarDetalleVent
            
 
             //retorna a al vista create de ventas y envio los valores de la varaiables a las vista
-            return view('admin.venta.create')->with(compact('clientes','estadoEntregaVentas','bodegas','formaPagos','productos','Detalles_ventas','CargarVentas','PrecioDeVentas','Empaques','marcas','tipocontenidos','tipopacas'));
+            if( $id_cliente == 0 )
+                return view('admin.venta.create')->with(compact('clientes','estadoEntregaVentas','bodegas','formaPagos','productos','Detalles_ventas','CargarVentas','PrecioDeVentas','Empaques','marcas','tipocontenidos','tipopacas'));
+            else
+                return view('admin.venta.create')->with(compact('id_cliente','clientes','estadoEntregaVentas','bodegas','formaPagos','productos','Detalles_ventas','CargarVentas','PrecioDeVentas','Empaques','marcas','tipocontenidos','tipopacas'));
         }
     
         public function store( Request $request ) {

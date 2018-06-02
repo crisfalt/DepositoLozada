@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\User;
 
 class Perfil extends Model
 {
@@ -20,5 +21,9 @@ class Perfil extends Model
             'descripcion' => 'max:300',
             'estado' => 'required'
     ];
+
+    public function user() {
+        return $this->hasMany(User::class);
+    }
 
 }

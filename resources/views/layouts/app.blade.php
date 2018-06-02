@@ -149,7 +149,7 @@
                             <div class="collapse" id="componentsExamples9">
                                 <ul class="nav">
                                     <li>
-                                        <a href="{{ url('/venta/create') }}">
+                                        <a href="{{ url('/venta/0/create') }}">
                                             <i class="fa fa-plus-square submenu"></i>
                                             <span class="sidebar-normal"> Nueva Venta </span>
                                         </a>
@@ -276,7 +276,7 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="#">
+                                        <a href="{{ route('empleados') }}">
                                             <i class="fa fa-eye submenu"></i>
                                             <span class="sidebar-normal"> Listar Empleados </span>
                                         </a>

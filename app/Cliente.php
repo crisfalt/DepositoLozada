@@ -51,5 +51,9 @@ class Cliente extends Model
     public function ruta() {
         return Ruta::where('id',$this->ruta_id) -> first();
     }
+
+    public function rutas() {
+        return $this->belongsTo(Ruta::class);
+    }
     
 }

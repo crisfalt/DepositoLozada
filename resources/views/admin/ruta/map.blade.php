@@ -77,7 +77,7 @@
                                 <td>{{ $rutaCliente -> phone }}</td>
                                 <td>{{ $rutaCliente -> celular }}</td>
                                 <td class="td-actions text-center">
-                                    <a class="btn btn-warning" href="#">Realizar Venta</a>
+                                    <a class="btn btn-warning" href="{{ url('/venta/'.$rutaCliente->number_id.'/create') }}" target="_blank">Realizar Venta</a>
                                 </td>
                             </tr>
                         @endforeach

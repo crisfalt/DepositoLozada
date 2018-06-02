@@ -47,7 +47,7 @@ class Ruta extends Model
     }
 
     public function clientes() {
-        return Cliente::where('ruta_id',$this -> id ) -> get();
+        return $this->hasMany(Cliente::class);
     }
 
     public function union() {
@@ -60,29 +60,32 @@ class Ruta extends Model
         return $unidas;
     }
 
-    public function detallesPorRuta($idRuta) {
+    public function detallesPorRuta($fecha_inicio,$fecha_final,$idRuta) {
         setlocale(LC_ALL,"es_ES");
 //        dd(Carbon::now()->format('Y-m-d').' '.$idRuta);
         $tmp = detalles_venta::with('ventas')
             ->join('ventas','detalles_ventas.fk_factura','=','ventas.id')
             ->join('clientes','ventas.fk_cliente','=','clientes.number_id')
             ->join('rutas','rutas.id','=','clientes.ruta_id')
-            ->where('ventas.fecha_entrega','=',Carbon::now()->format('Y-m-d'))
+            ->join('productos as p','p.codigo','=','detalles_ventas.fk_producto')
+            ->join('marcas as m','m.id','=','p.fk_marca')
+            ->join('size_botellas as s','s.id','=','p.fk_size')
+            ->whereBetween('ventas.fecha_entrega', array($fecha_inicio, $fecha_final))
             ->where('rutas.id','=',$idRuta)
-            ->select('detalles_ventas.fk_producto',DB::raw('SUM(detalles_ventas.cantidad) as cantidad'))
+            ->select('detalles_ventas.fk_producto',DB::raw('SUM(detalles_ventas.cantidad) as cantidad'),'p.nombre as producto_nombre','m.nombre as marca_nombre','s.nombre as size_nombre')
             ->groupBy('detalles_ventas.fk_producto')
             ->get();
 //        dd($tmp);
         return $tmp;
     }
 
-    public function facturasPorRuta($idRuta) {
+    public function facturasPorRuta($fecha_inicio,$fecha_final,$idRuta) {
         return Venta::with('clientes')
                             ->join('clientes as c','ventas.fk_cliente','=','c.number_id')
                             ->join('rutas as r','r.id','=','c.ruta_id')
                             ->where('ventas.fk_estado_venta','=',2)
                             ->where('r.id','=',$idRuta)
-                            ->where('ventas.fecha_entrega', date("Y-m-d") )
+                            ->whereBetween('ventas.fecha_entrega', array($fecha_inicio, $fecha_final))
                             ->select("c.*","r.*","ventas.id as factura_id","ventas.fk_cliente as fk_cliente","ventas.fk_vendedor as fk_vendedor","ventas.fk_estado_venta as fk_estado_venta","ventas.fk_bodega as fk_bodega","ventas.fk_forma_de_pago as fk_forma_de_pago","ventas.total as total","ventas.fecha_entrega as fecha_entrega")
                             ->orderBy('r.nombre')
                             ->distinct()
