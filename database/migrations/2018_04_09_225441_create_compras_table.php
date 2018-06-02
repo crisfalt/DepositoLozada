@@ -18,6 +18,7 @@ class CreateComprasTable extends Migration
             $table->date('fecha_compra')->nullable();
             $table->double('total',8,2)->nullable();
 
+
             //foranea a estado_compra
             $table->integer('fk_estado_compra')->unsigned();
             $table->foreign('fk_estado_compra')->references('id')->on('estado_compras');
@@ -34,6 +35,8 @@ class CreateComprasTable extends Migration
             $table->integer('fk_bodega')->unsigned();
             $table->foreign('fk_bodega')->references('id')->on('bodegas');
             //fin foranea
+            $table->string('refcompra',100)->nullable();
+            $table->double('saldo',8,2)->nullable();
 
             $table->timestamps();
         });

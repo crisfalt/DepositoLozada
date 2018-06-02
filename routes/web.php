@@ -26,6 +26,19 @@ Route::get('/caja/cajas' , 'CajaController@getCajas'); //todas las cajas disponi
 Route::post('/caja/asignar/{caja}/{valor}' , 'CajaController@asignarCaja'); //asignar caja a la session actual
 
 Route::middleware(['auth', 'admin'])->group(function () {
+    //CRUD abonosventa
+    Route::get('/abono/searchTotal/{saldoventa}','AbonoController@searchTotal');
+    Route::get('abono' , 'AbonoController@index')->name('abono');
+    Route::get('/abono/create' , 'AbonoController@create');
+    Route::post('/abono' , 'AbonoController@store');
+    Route::delete('/abono/{id}','AbonoController@destroy'); //vista para eliminar
+    //CRUD abonocompra
+    Route::get('/abonocompra/searchTotal/{saldoventa}','AbonoCompraController@searchTotal');
+    Route::get('abonocompra' , 'AbonoCompraController@index')->name('abonocompra');
+    Route::get('/abonocompra/create' , 'AbonoCompraController@create');
+    Route::post('/abonocompra' , 'AbonoCompraController@store');
+    Route::delete('/abonocompra/{id}','AbonoCompraController@destroy'); //vista para eliminar
+
     //Rutas Cargue
     Route::get('/cargue' , 'CargueController@index')->name('cargue');
     Route::get('/cargue/create' , 'CargueController@create');
@@ -258,13 +271,9 @@ Route::middleware(['auth', 'admin'])->group(function () {
     //cabezaeditarcrear
     Route::get('/compracabezacrear/{id}/edit' , 'compraController@editcabezacrear');
     Route::post	('/compracabezacrear/edit/{id}' , 'compraController@updatecabezacrear');
-
-
-    Route::get('/compra/recibo/{id}/{estado}' , 'compraController@recibo');
-    Route::get('/compra/imprimir/{id}/{estado}' , 'compraController@imprimir');
+    Route::get('/compra/recibo/{id}/{estado}/{abono}' , 'compraController@recibo');
     Route::get('/compra/imprimir/{id}/{estado}' , 'compraController@imprimir');
     Route::get('/compra/cerrarSesion/{idSesion}','CompraController@cerrarSesion');
-
     Route::get('/compra/cerrarSesion/{idSesion}','compraController@cerrarSesion');
     ///filtros de compras create
     Route::post('/compra/MostrarMarca/{id}','compraController@marca');
@@ -278,6 +287,9 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/compra/MostrarProductoEditar/{id}','compraController@ProductoEditar');
 
     //CRUD venta
+    ///para hacer en venta abono create y agregar  la cantidad de producto en detalles de venta
+    Route::post('venta/BuscarCliente/' , 'VentaController@BuscarCliente');
+    Route::post('/venta/abonar' , 'VentaController@abonar');
     Route::get('venta' , 'VentaController@index')->name('venta');
     Route::get('/venta/create' , 'VentaController@create');
     Route::post('/venta' , 'VentaController@store');
@@ -286,7 +298,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/venta/{id}/edit' , 'VentaController@edit');
     Route::get('/venta/edit/{id}/{estado}' , 'VentaController@update');	
     Route::post('/venta/agregarCantidad/{cantidad}/{id}' , 'VentaController@agregrarCantidad');
-    Route::post('/venta/agregrarCantidadEditar/{cantidad}/{id}' , 'VentaController@agregrarCantidadEditar');
+    Route::post('/venta/agregarCantidadEditar/{cantidad}/{id}' , 'VentaController@agregrarCantidadEditar');
+    //////consultar y agregar canasta create y edit controlador venta
     Route::post('/venta/MostrarCanastaIndividual/{id}' , 'VentaController@MostrarCanastaIndividual',function($id)
     {
         $PrecioProducto_id = $id;
@@ -295,35 +308,29 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
         return Response::json( $precio);
     });
-    //////consultar y agregar create
+    
     Route::post('/venta/MostrarCanastaIndividualEditar/{id}' , 'VentaController@MostrarCanastaIndividualEditar',function($id)
     {
         $PrecioProducto_id = $id;
-
         $precio =  PreciosProducto:: find ($PrecioProducto_id ) -> fk_producto;
-
         return Response::json( $precio);
     });
     Route::get('/venta/ConsultarCanasta/{tipopaca}' , 'VentaController@ConsultarCanasta');
     Route::post('/venta/AgregarCanasta' , 'VentaController@AgregarCanasta');
-    //////consultar y agregar edit
+    //////consultar y agregar edit controlador venta
     Route::get('/venta/ConsultarCanastaEditar/{tipopaca}' , 'VentaController@ConsultarCanastaEditar');
     Route::post('/venta/AgregarCanastaEditar' , 'VentaController@AgregarCanastaEditar');
-
-    
+    Route::post('/venta/ActualizarFechaEntrega' , 'VentaController@ActualizarFechaEntrega');
+    Route::post('/venta/ActualizarFechaHora' , 'VentaController@ActualizarHoraEntrega');
     Route::get('/ventacabeza/{id}/edit' , 'VentaController@editcabeza');
     Route::post	('/ventacabeza/edit/{id}' , 'VentaController@updatecabeza');
-
-    //cabezaeditarcrear
+    //cabezaeditarcrear en el controlador de venta
     Route::get('/ventacabezacrear/{id}/edit' , 'VentaController@editcabezacrear');
     Route::post	('/ventacabezacrear/edit/{id}' , 'VentaController@updatecabezacrear');
-
-
-    Route::get('/venta/recibo/{id}/{estado}' , 'VentaController@recibo');
+    ////rutas para generar  recibos y cerrar sesion 
+    Route::get('/venta/recibo/{id}/{estado}/{abono}' , 'VentaController@recibo');
     Route::get('/venta/imprimir/{id}/{estado}' , 'VentaController@imprimir');
-    Route::get('/compra/imprimir/{id}/{estado}' , 'compraController@imprimir');
     Route::get('/venta/cerrarSesion/{idSesion}','CompraController@cerrarSesion');
-
     Route::get('/venta/cerrarSesion/{idSesion}','VentaController@cerrarSesion');
     ///filtros de ventas create
     Route::post('/venta/MostrarMarca/{id}','VentaController@marca');

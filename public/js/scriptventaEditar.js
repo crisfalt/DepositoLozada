@@ -1,9 +1,206 @@
+  
+
+ $('#timepicker').timepicker({
+            uiLibrary: 'bootstrap4'
+        });
 
     n =  new Date();
     y = n.getFullYear();
     m = n.getMonth() + 1;
     d = n.getDate();
+   
     document.getElementById("date").innerHTML = m + "/" + d + "/" + y;
+
+   
+    function validarhora(tiempoActualizar)
+{
+var fecha= document.getElementById('datepicker').value;
+     n =  new Date();
+    y = n.getFullYear();
+    m = n.getMonth() + 1;
+    d = n.getDate();
+   var fechaActual = y + "-" + m + "-" + d;
+   m = new Date(fecha);
+   y2 = m.getFullYear();
+    m2 = m.getMonth() + 1;
+    d2 = m.getDate() +1;
+var fechaActualizar= y2 + "-" + m2 + "-" + d2;
+ tiempoActual =n.getHours()+":"+n.getMinutes();
+ 
+
+
+var id_factura= document.getElementById('id_factura').value;
+
+var tiempoActualizar= document.getElementById('timepicker').value;
+
+var fechaActual2= (new Date(fechaActual).toLocaleString('es-ES',{date_default_timezone_set:'America/Bogota'}));
+var fechaActualizar2=(new Date(fechaActualizar).toLocaleString('es-ES',{date_default_timezone_set:'America/Bogota'}));
+
+   if(fechaActualizar2 >= fechaActual2)
+  {
+
+    if(fechaActualizar2 == fechaActual2 )
+     {
+
+      if(tiempoActualizar>tiempoActual)        
+      {
+        var ruta2 = '/venta/ActualizarFechaHora/';
+              $.ajax({
+                headers: {
+                  'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                  },
+                type: "post",
+                url: ruta2,
+                  data : {'id_factura' : id_factura,'actualizar_hora' :tiempoActualizar },
+                dataType: "json",
+                success: function (items) {
+                
+
+                alert(items.items);
+                  location.reload();
+                }
+              }); 
+
+
+      }
+          
+
+      else
+      {
+
+         alert("la hora tiene que ser mayor a la actual");
+         location.reload();
+      }
+
+
+     }
+    var ruta2 = '/venta/ActualizarFechaHora/';
+              $.ajax({
+                headers: {
+                  'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                  },
+                type: "post",
+                url: ruta2,
+                  data : {'id_factura' : id_factura,'actualizar_hora' :tiempoActualizar },
+                dataType: "json",
+                success: function (items) {
+                
+
+                alert(items.items);
+                  location.reload();
+                }
+              }); 
+
+
+  }
+    else
+    {
+
+      alert( "para poder actualizar la hora de entrega, tiene que actualizar la fecha entrega debe ser superior o iguala a la fecha actual");
+      location.reload();
+
+    }
+
+}
+ 
+function validarfecha(fecha)
+{
+
+    n =  new Date();
+    y = n.getFullYear();
+    m = n.getMonth() + 1;
+    d = n.getDate();
+   var fechaActual = y + "-" + m + "-" + d;
+   m = new Date(fecha);
+   y2 = m.getFullYear();
+    m2 = m.getMonth() + 1;
+    d2 = m.getDate() +1;
+var fechaActualizar= y2 + "-" + m2 + "-" + d2;
+var id_factura= document.getElementById('id_factura').value;
+
+
+var fechaActual2= (new Date(fechaActual).toLocaleString('es-ES',{date_default_timezone_set:'America/Bogota'}));
+var fechaActualizar2=(new Date(fechaActualizar).toLocaleString('es-ES',{date_default_timezone_set:'America/Bogota'}));
+
+if(fechaActualizar2 >= fechaActual2)
+{
+  
+
+        var contenido = '<form action="" class="formName" >';
+        contenido += '<hr>';
+      
+        contenido += '<center><div class="row text-center">';
+        contenido += '<br>';
+     
+       contenido += '<div class="col-md-12">desea actualizar la fecha entrega '+ fechaActual + ' por la '+ fechaActualizar+'</div>';
+    
+        contenido += '</div>'+ '</center>'+'</form>';
+        $.confirm({
+      title: 'Cambio de fecha entrega',
+      columnClass : 'col-md-10',
+      content: contenido,
+    buttons: {
+      formSubmit: {
+          text: 'Agregar',
+          btnClass: 'btn-blue',
+          action: function () 
+          {
+            var ruta2 = '/venta/ActualizarFechaEntrega/';
+              $.ajax({
+                headers: {
+                  'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                  },
+                type: "post",
+                url: ruta2,
+                  data : {'id_factura' : id_factura,'actualizar_fecha' :fechaActualizar },
+                dataType: "json",
+                success: function (items) {
+                
+
+                alert(items.items);
+                  location.reload();
+                }
+              }); 
+
+          }
+      },
+      cancel: function () {
+        location.reload();
+          //close
+      },
+  },
+  onContentReady: function () {
+      // bind to events
+      var jc = this;
+      this.$content.find('form').on('submit', function (e) {
+          // if the user submits the form by pressing enter in the field.
+          e.preventDefault();
+          jc.$$formSubmit.trigger('click'); // reference the button and click it
+      });
+  }
+});   
+
+    
+ 
+    
+      }
+
+
+
+
+else
+{
+
+ alert( "tiene que ser superior o iguala a la fecha actual");
+location.reload();
+
+}
+
+
+
+}
+
+
   function validacionAgregar()
 {
 var combo = document.getElementById('combobox').value;
@@ -301,7 +498,7 @@ function AbrirModalCanasta()
                      console.log(response);
                 }
            });
-          
+          location.reload(true);
         }
           function agregarCantidadEditar(valorId,Cantidad) 
         {
@@ -325,7 +522,7 @@ function AbrirModalCanasta()
                      console.log(response);
                 }
            });
-           
+           location.reload(true);
         }
 ////evento change para listar producto
 

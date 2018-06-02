@@ -27,11 +27,18 @@ class AddFieldsToDetalleCompra extends Migration
      */
     public function down()
     {
-        $table ->dropColumn([
-            'Numero_canasta'
-        ]);
-        $table ->dropColumn([
-            'fk_tipo_paca'
-        ]);
+     
+
+        Schema::table('detalle_compras', function($table) {
+            $table ->dropColumn([
+                'Numero_canasta'
+            ]);
+        });
+        Schema::table('detalle_compras', function($table) {
+            $table ->dropColumn([
+                'fk_tipo_paca'
+            ]);
+        });
+
     }
 }

@@ -27,9 +27,11 @@ class AddFieldsToCompra extends Migration
      */
     public function down()
     {
-        $table ->dropColumn([
-            'fk_vendedor'
-        ]);
+        Schema::table('compras', function($table) {
+            $table ->dropColumn([
+                'fk_vendedor'
+            ]);
+        });
        
     }
 }

@@ -303,7 +303,7 @@ function AbrirModalCanasta()
                      console.log(response);
                 }
            });
-          
+           location.reload(true);
         }
           function agregarCantidadEditar(valorId,Cantidad) 
         {
@@ -328,7 +328,7 @@ function AbrirModalCanasta()
                      console.log(response);
                 }
            });
-           
+           location.reload(true);
         }
 ////evento change para listar producto
 

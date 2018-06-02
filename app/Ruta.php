@@ -2,10 +2,12 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use App\Zona;
 use App\OrdenRuta;
 use App\DiasRutas;
+use App\detalles_venta;
 use DB;
 
 class Ruta extends Model
@@ -56,6 +58,22 @@ class Ruta extends Model
                             ->distinct()
                             ->get();
         return $unidas;
+    }
+
+    public function detallesPorRuta($idRuta) {
+        setlocale(LC_ALL,"es_ES");
+//        dd(Carbon::now()->format('Y-m-d').' '.$idRuta);
+        $tmp = detalles_venta::with('ventas')
+            ->join('ventas','detalles_ventas.fk_factura','=','ventas.id')
+            ->join('clientes','ventas.fk_cliente','=','clientes.number_id')
+            ->join('rutas','rutas.id','=','clientes.ruta_id')
+            ->where('ventas.fecha_entrega','=',Carbon::now()->format('Y-m-d'))
+            ->where('rutas.id','=',$idRuta)
+            ->select('detalles_ventas.fk_producto',DB::raw('SUM(detalles_ventas.cantidad) as cantidad'))
+            ->groupBy('detalles_ventas.fk_producto')
+            ->get();
+//        dd($tmp);
+        return $tmp;
     }
 
     public function facturasPorRuta($idRuta) {

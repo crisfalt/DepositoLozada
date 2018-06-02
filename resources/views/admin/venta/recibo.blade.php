@@ -52,7 +52,7 @@
           <tr>
             <th class=""><center>Logo</center></th>
             <th class=""><center>Deposito Los Losadas</center></th>
-            <th class=""><center>Orden Compra #:</center></th>
+            <th class=""><center>Factura de Compra #:</center></th>
             
           </tr>
         </thead>

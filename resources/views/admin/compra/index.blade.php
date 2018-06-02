@@ -32,20 +32,27 @@
                 <div class="table-responsive">
                     <table class="table" cellspacing="0" id="tableCompras">
                         <thead class=" text-primary">
-                            <th class="text-center">
-                                    proveedor
-                            </th>
+                            
                             <th class="text-center">
                                 N°compra
+                            </th>
+                            <th class="text-center">
+                                Referencia compra
+                            </th>
+                            <th class="text-center">
+                                    proveedor
                             </th>
                             <th class="text-center">
                                 Fecha
                             </th>
                             <th class="text-center">
-                                Estado compra
+                                Est compra
                             </th>                            
                             <th class="text-center">
                                 Total
+                            </th>
+                            <th class="text-center">
+                                Saldo
                             </th>                            
                             <th class="text-center">
                                 Opciones
@@ -54,17 +61,35 @@
                         <tbody>
                             @foreach( $compras as $compra )
                                 <tr>
-                                        <td class="text-center">{{ $compra ->proveedors()->name }}</td>
+                                       
                                     <td class="text-center">{{ $compra -> id }}</td>
-                                    @if($compra -> fecha_entrega !=null)
-                                    <td class="text-center">{{ $compra -> fecha_entrega }}</td>
+                                    <!-- ///////////////////numero de ferentecia -->
+                                    @if($compra -> refcompra  !=null ||$compra->refcompra != "")
+                                    <td class="text-center">{{ $compra -> refcompra  }}</td>
+                                    @else
+                                    <td class="text-center">sin numero de referencia</td>
+                                    @endif
 
+
+
+
+                                     <td class="text-center">{{ $compra ->proveedors()->name }}</td>
+                                    @if($compra -> fecha_compra  !=null)
+                                    
+                                    <td class="text-center">{{ $compra ->fecha_compra}}</td>
                                     @else
                                     <td class="text-center">sin fecha factura</td>
                                     @endif
+                                    
                                     <td class="text-center">{{ $compra -> estadoCompras()->nombre}}</td>  
                                     @if($compra->total != null ||$compra->total != "")                                           
                                     <td class="text-center">{{ $compra -> total }}</td>
+                                    @else
+                                    <td class="text-center">0</td>
+                                    @endif
+
+                                     @if($compra->saldo != null ||$compra->saldo != "")                                           
+                                    <td class="text-center">{{ $compra -> saldo }}</td>
                                     @else
                                     <td class="text-center">0</td>
                                     @endif

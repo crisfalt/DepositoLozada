@@ -167,6 +167,14 @@
                                     </div>                            
                </div>
                          
+            </div>
+                    <div class="row text-center">
+                                <div class="col-md-3 col-sm-12 pr-1">
+                                       <div class="form-group text-center">
+                                           <label>Referencia Compra</label>
+                                           <input type="text" class="form-control" name="refcompra" value="{{ old('refcompra') }}">
+                                      </div>
+                                 </div>
                      </div>
                       <div class="row text-center">                            
                                 <div class="col-md-6 col-sm-12">
@@ -429,6 +437,7 @@
     
                                         
                                     ?>
+                                    <input type="text" id="idfac" value="{{$IdCompra}}" name="idfac" hidden="true">
     
     
                                     @if($Detalle_compra->Numero_canasta !=null)
@@ -484,6 +493,37 @@
                         <hr>
                         <h3 class="text-center"><strong>Total:{{$total}}</strong></h3>
                      @if($total !=0)
+                      @foreach($Cargarcompras as $Cargarcompra)
+                       @if($Cargarcompra->fk_forma_pago==2)
+                 <div class="row text-center" >                         
+                                <div class="col-md-2" >
+                                          <div class="form-group">
+                                            <label>Pago Incial</label>
+                                            <input type="numeric" id="numero2" onkeypress="return solo_numeros(event)" onchange="validarmayor()"  class="form-control" name="pinicial" value="{{ old('pinicial') }}" required>
+                                               
+                                          </div>
+                                          
+                                </div>
+                                <div class="col-md-2" >
+                                          <div class="form-group text-center">
+                                            <label>Deuda:</label>
+                                            <input type="text" id="deuda" disabled="true" value="{{$total}}" class="form-control"  required>
+                                               
+                                          </div>
+                                          
+                                </div>
+                                <div class="col-md-2" >
+                                          <div class="form-group">
+                                            
+                                            <input type="text" id="total" value="{{$total}}" class="form-control" hidden="true" required>
+                                               
+                                          </div>
+                                          
+                                </div>
+                  </div>
+                  @endif
+                  @endforeach
+
                        <div class="row text-center">
                             
                              <div class="col-md-4">
@@ -496,7 +536,7 @@
                             <div class="col-md-6">
                                     <div class="form-group">
                                         
-                                    <a href="{{ action('compraController@recibo',['id' => $IdCompra,'estado'=>4]) }}"  class="btn btn-info btn-round" >por recibir</a>
+                                    <a onselect="validarmayor()" id="porrecibir"  href="{{ action('compraController@recibo',['id' => $IdCompra,'estado'=>4,'abono'=>0])}}"   class="btn btn-info btn-round" >por recibir</a>
                                    
                                 </div>
                             </div>
@@ -504,7 +544,8 @@
                              <div class="col-md-4">
                                 <div class="form-group">
                                     
-                                <a href="{{ action('compraController@recibo',['id' =>$IdCompra,'estado'=>0]) }}"  class="btn btn-info btn-round"  >Registrar</a>
+                                <a onselect="validarmayor()" id="recido" href="{{ action('compraController@recibo',['id' =>$IdCompra,'estado'=>0,'abono'=>0]) }}"  class="btn btn-info btn-round">Registrar</a>
+                               
                                 </div>
                             </div>
                         </div>

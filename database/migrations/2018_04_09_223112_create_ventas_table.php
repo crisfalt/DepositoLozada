@@ -29,12 +29,15 @@ class CreateVentasTable extends Migration
              //inicio foreign key
              $table->integer('fk_bodega')->unsigned();//foranea a autoincremental
              $table->foreign('fk_bodega')->references('id')->on('bodegas');//id campo primario de tabla padre categories nombre tabla padre
-               //inicio foreign key
-               $table->integer('fk_forma_de_pago')->unsigned();//foranea a autoincremental
-               $table->foreign('fk_forma_de_pago')->references('id')->on('formapagos');//id campo primario de tabla padre categories nombre tabla padre
+            //inicio foreign key
+            $table->integer('fk_forma_de_pago')->unsigned();//foranea a autoincremental
+            $table->foreign('fk_forma_de_pago')->references('id')->on('formapagos');//id campo primario de tabla padre categories nombre tabla padre
               
             
-             $table->double('total');
+            $table->double('total',8,2)->nullable();
+            $table->double('saldo',8,2)->nullable();
+            $table->date('fecha_vencimiento')->nullable();
+            $table->integer('numeroDias')->default(8);
 
             $table->timestamps();
         });

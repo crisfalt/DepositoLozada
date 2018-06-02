@@ -26,9 +26,10 @@ class AddFieldsToTipoPacas extends Migration
      */
     public function down()
     {
-        //
-        $table ->dropColumn([
-            'precio_envase'
-        ]);
+        Schema::table('tipo_pacas', function($table) {
+            $table ->dropColumn([
+                'precio_envase'
+            ]);
+        });
     }
 }

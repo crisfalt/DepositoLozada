@@ -25,8 +25,11 @@ class AddFieldsToDetallesVentas extends Migration
      */
     public function down()
     {
-        $table ->dropColumn([
-            'Numero_canasta'
-        ]);
+       
+         Schema::table('detalles_ventas', function($table) {
+            $table ->dropColumn([
+                'Numero_canasta'
+            ]);
+        });
     }
 }

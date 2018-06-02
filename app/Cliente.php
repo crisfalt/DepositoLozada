@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\Bodega;
 use App\Ruta;
+use App\Venta;
 use App\TipoDocumento;
 
 class Cliente extends Model
@@ -36,6 +37,10 @@ class Cliente extends Model
 
     public function tipoDocumento() {
         return TipoDocumento::where('id',$this->tipo_documento_id) -> first();
+    }
+
+    public function ventas() {
+        return $this->hasMany(Venta::class);
     }
 
     //obtener el nombre del tipo de documento

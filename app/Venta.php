@@ -8,6 +8,8 @@ use App\User;
 use App\Bodega;
 use App\formapago;
 use App\Producto;
+use App\detalles_venta;
+use App\Cliente;
 use Illuminate\Support\Facades\DB;
 
 class Venta extends Model
@@ -40,9 +42,18 @@ class Venta extends Model
         return EstadoDeVenta::where( 'id' , $this -> fk_estado_venta) -> first();
     }
 
+    public function detalles_ventas() {
+        return $this->hasMany(detalles_venta::class);
+    }
+
+
     public function clientes() {
 //        return  Cliente::where( 'number_id' , $this -> fk_cliente) -> first();
         return $this->belongsTo(Cliente::class);
+    }
+
+    public function cliente() {
+       return  Cliente::where( 'number_id' , $this -> fk_cliente) -> first();
     }
 
       public function rutass() 

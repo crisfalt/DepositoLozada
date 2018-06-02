@@ -1,29 +1,277 @@
-// Get the modal
-var modal = document.getElementById('myModal');
+// // Get the modal
+// var modal = document.getElementById('myModal');
 
-// Get the button that opens the modal
-var btn = document.getElementById("myBtn");
+// // Get the button that opens the modal
+// var btn = document.getElementById("myBtn");
 
-// Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
+// // Get the <span> element that closes the modal
+// var span = document.getElementsByClassName("close")[0];
 
-// When the user clicks the button, open the modal
-btn.onclick = function () {
-    modal.style.display = "none";
-}
+// // When the user clicks the button, open the modal
+// btn.onclick = function () {
+//     modal.style.display = "none";
+// }
 
-// When the user clicks on <span> (x), close the modal
-span.onclick = function () {
-    modal.style.display = "none";
-}
+// // When the user clicks on <span> (x), close the modal
+// span.onclick = function () {
+//     modal.style.display = "none";
+// }
 
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function (event) {
-    if (event.target == modal) {
-        modal.style.display = "none";
+// // When the user clicks anywhere outside of the modal, close it
+// window.onclick = function (event) {
+//     if (event.target == modal) {
+//         modal.style.display = "none";
+//     }
+// }
+// 
+// 
+// 
+
+function hacerAbono(contador,factura,saldo)
+    {
+ 
+    var abono = document.getElementById("fk_abono"+contador).value;
+
+    if(abono > 0 && abono != "")
+    {
+
+    if(abono <=saldo)
+    {
+  var ruta2 = '/venta/abonar';
+              $.ajax({
+                headers: {
+                  'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                  },
+                type: "post",
+                url: ruta2,
+                  data : {'id_factura' : factura,'saldo' : saldo,'abono':abono},
+                dataType: "json",
+                success: function (items) {
+                  alert(items.mensaje);
+                  location.reload();
+                  
+                }
+              });
+
     }
-}
+    else
+    {
 
+      alert("el abono de la factura "+factura+" tiene que ser menor o igual al saldo actual");
+      document.getElementById("fk_abono"+contador).value="";
+     document.getElementById("fk_abono"+contador).focus();
+    }
+
+
+
+    }
+    else
+    {
+       alert("el abono de la factura "+factura+" no debe estar vacion o en cero");
+      document.getElementById("fk_abono"+contador).value="";
+     document.getElementById("fk_abono"+contador).focus();
+
+    }
+    
+
+    // validacion(false);
+
+    }
+
+function validacion()
+    {
+        var contenido="";
+       var valicidacionCliente = document.getElementById("combobox2").value;
+
+      if(valicidacionCliente=="I")
+       {
+        alert("campo cliente es obligatorio");
+        document.getElementById("combobox2").focus();
+        return false;
+       }
+       else
+       {
+
+              var ruta2 = '/venta/BuscarCliente';
+              $.ajax({
+                headers: {
+                  'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                  },
+                type: "post",
+                url: ruta2,
+                  data : {'id_cliente' : valicidacionCliente},
+                dataType: "json",
+                success: function (items) {
+               
+                  
+                contenido = '<div class="card-body">'+'<div class="table-responsive">'+'<table class="table" cellspacing="0" id="tableCompras">';
+                  if(items.items.length !=0 )
+                {
+                 
+                contenido += '<thead class=" text-primary">';
+                contenido +='<th class="text-center"># factura</th>';
+                contenido +='<th class="text-center">saldo</th>';
+                contenido +='<th class="text-center">abonar</th>';
+                contenido +='</thead><tbody>';
+                  
+                var contador=0;
+            items.items.forEach( function( valor , index ) { 
+              
+              if(valor.saldo !=null && valor.saldo !=0 )
+                {
+           
+            contenido+='<tr>';
+            contenido+='<th class="text-center">'+ valor.id+'</td>';
+            contenido+='<th class="text-center">'+ valor.saldo+'</td>';
+            contenido+='<form style="margin: 0; padding: 0;"  action="(url{{"/venta/abonar"}})" method="post">'
+           
+            contenido+='<th class="text-center"><input id="fk_abono'+contador+'" name="'+valor.id+'" type="number" value="" class="number"  MIN="1" STEP="1" SIZE="6"  MAX="'+valor.saldo+'"></th>';
+            contenido+='<input type="text" id="id_factura_abono" name="id_factura_abono"  value="'+valor.id+'" hidden="true" >'
+            contenido+=' <th class="text-center"><button  onclick="hacerAbono('+contador+','+valor.id+','+valor.saldo+');" rel="tooltip" title="abonar" class="btn btn-danger btn-simple btn-xs"> <i class="now-ui-icons arrows-1_share-66"></i></button>';
+            contenido+='</th>'+'</form>';
+            contenido+='</tr>';
+            contador=contador+1;
+               }
+               else
+               {
+                contenido+='<th class="text-center">el cliente no tiene facturas por cobrar</td>';
+               }
+                });
+             }
+             else
+             {
+               contenido+='<th class="text-center">el cliente no tiene facturas por cobrar</td>';
+
+             }
+
+             contenido +='</tbody></table>';
+                 
+            $.confirm({
+                       title: 'Facturas Que estan Por pagar',
+                       columnClass : 'col-md-10',
+                      content: contenido,
+                       buttons: {
+                      formSubmit: {
+                      text: 'Continuar',
+                      btnClass: 'btn-blue',
+                      action: function () 
+                      {
+                        document.getElementById("AgregarCabezeraVenta").submit();
+                      //  document.AgregarCabezeraVenta.submit();
+
+                        // var ruta2 = '/venta/ActualizarFechaEntrega/';
+                        //   $.ajax({
+                        //     headers: {
+                        //       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        //       },
+                        //     type: "post",
+                        //     url: ruta2,
+                        //       data : {'id_factura' : id_factura,'actualizar_fecha' :fechaActualizar },
+                        //     dataType: "json",
+                        //     success: function (items) {
+                            
+
+                        //     alert(items.items);
+                        //       location.reload();
+                        //     }
+                        //   }); 
+
+                     }
+      },
+      cancel: function () {
+        location.reload();
+          //close
+      },
+  },
+  onContentReady: function () {
+      // bind to events
+      var jc = this;
+      this.$content.find('form').on('submit', function (e) {
+          // if the user submits the form by pressing enter in the field.
+          e.preventDefault();
+          jc.$$formSubmit.trigger('click'); // reference the button and click it
+      });
+  }
+});   
+
+
+
+              }
+
+
+
+          }); 
+        
+
+      
+            
+
+       }
+return false;
+
+    }
+
+
+
+
+function validarmayor()
+    { 
+
+
+       var totalfactura = document.getElementById("total").value; 
+       var idfac = document.getElementById("idfac").value; 
+      var abono = document.getElementById("numero2").value; 
+
+      
+             if(document.getElementById("numero2").value == ""||document.getElementById("numero2").value == null)
+              { 
+                alert("campo");
+                var x=document.getElementById("numero2").value=0;
+
+              }
+
+              else
+              {
+                 var abono = document.getElementById("numero2").value;                
+                 if(parseFloat(abono)>parseFloat(totalfactura))
+                {
+                    
+                    alert("usted no puede ingresar una valor mayor al saldo de la factura");
+                     document.getElementById("numero2").value = "";
+                     document.getElementById("numero2").focus();
+                }
+                else
+                {
+               
+                  // var entregar='<a  href="/venta/recibo/"+ idfac +"/4/"  class="btn btn-info btn-round" > registrar y abonar</a>';
+                  // var pentregar='<a  href="{{ action('+'VentaController@recibo'+',['+'id'+' =>'+idfac+','+'estado'+'=>0,'+'abono'+'=>'+abono+']) }}"  class="btn btn-info btn-round" > por entregar y abonar</a>';
+                  var resta=parseFloat(totalfactura)-parseFloat(abono);
+
+                  document.getElementById("deuda").value=resta;
+                  document.getElementById('porentregar').href = "/venta/recibo/"+ idfac +"/4/"+abono;
+                
+                  document.getElementById('entregar').href = "/venta/recibo/"+ idfac +"/0/"+abono;
+                }
+
+              }
+
+                  
+             
+    
+       
+    }
+
+
+
+function solo_numeros(e){
+            var key = window.Event ? e.which : e.keyCode 
+            return ((key >= 48 && key <= 57) || (key==8)) 
+        }
+
+ $('#timepicker').timepicker({
+            uiLibrary: 'bootstrap4'
+        });
+ 
 
 
 
@@ -32,6 +280,119 @@ window.onclick = function (event) {
     m = n.getMonth() + 1;
     d = n.getDate();
     document.getElementById("date").innerHTML = m + "/" + d + "/" + y;
+  
+
+
+$(function(){
+  $('.fantasma').change(function(){
+    if(!$(this).prop('checked')){
+      $('#dvOcultar').hide();
+    }else{
+      $('#dvOcultar').show();
+    }
+  
+  })
+
+})
+
+    function validarhora(tiempoActualizar)
+{
+var fecha= document.getElementById('datepicker').value;
+     n =  new Date();
+    y = n.getFullYear();
+    m = n.getMonth() + 1;
+    d = n.getDate();
+   var fechaActual = y + "-" + m + "-" + d;
+   m = new Date(fecha);
+   y2 = m.getFullYear();
+    m2 = m.getMonth() + 1;
+    d2 = m.getDate() ;
+var fechaActualizar= y2 + "-" + m2 + "-" + d2;
+ tiempoActual =n.getHours()+":"+n.getMinutes();
+ 
+
+var tiempoActualizar= document.getElementById('timepicker').value;
+
+var fechaActual2= (new Date(fechaActual).toLocaleString('es-ES',{date_default_timezone_set:'America/Bogota'}));
+var fechaActualizar2=(new Date(fechaActualizar).toLocaleString('es-ES',{date_default_timezone_set:'America/Bogota'}));
+
+   if(fechaActualizar2 >= fechaActual2)
+  {
+
+
+  if(fechaActualizar2 == fechaActual2 )
+     {
+
+
+      if(tiempoActualizar>tiempoActual)        
+      {
+    
+
+
+      }
+          
+
+      else
+      {
+
+         alert("la hora tiene que ser mayor a la actual");
+         document.getElementById('timepicker').value="";
+         $("#timepicker").focus();
+        
+      }
+
+
+     }
+  
+
+
+  }
+    else
+    {
+
+      alert( "tiene que actualizar la fecha entrega debe ser superior o iguala a la fecha actual");
+      document.getElementById('timepicker').value="";
+     $("#timepicker").focus();
+
+    }
+
+}
+
+
+    function validarfecha(fecha)
+{
+
+    n =  new Date();
+    y = n.getFullYear();
+    m = n.getMonth() + 1;
+    d = n.getDate();
+   var fechaActual = y + "-" + m + "-" + d;
+   m = new Date(fecha);
+   y2 = m.getFullYear();
+    m2 = m.getMonth() + 1;
+    d2 = m.getDate() +1;
+var fechaActualizar= y2 + "-" + m2 + "-" + d2;
+
+
+
+var fechaActual2= (new Date(fechaActual).toLocaleString('es-ES',{date_default_timezone_set:'America/Bogota'}));
+var fechaActualizar2=(new Date(fechaActualizar).toLocaleString('es-ES',{date_default_timezone_set:'America/Bogota'}));
+
+if(fechaActualizar2 >= fechaActual2)
+{
+
+
+}
+else{
+
+alert( "tiene que ser superior o iguala a la fecha actual");
+document.getElementById('datepicker').value="";
+$("#datepicker").focus();
+
+}
+
+}
+
 
 function validacionAgregar()
 {
@@ -63,9 +424,9 @@ function AbrirModalCanasta()
 
   cantidadEnvase=document.getElementById('cantidaenvase').value;
   cantidadPlastico=document.getElementById('cantidadPlastico').value;
-  modal.style.display = "block";
+
   var ruta=window.location.host;
- 
+  
   var tipopaca = document.getElementById('tipopaca').value;
   var ruta2 = '/venta/ConsultarCanasta/'+ tipopaca;
 
@@ -86,7 +447,7 @@ function AbrirModalCanasta()
     // for( var i = 0 ; i < nombres.length ; i++ ) {
     //   $("#tipocontenido").append($("<option />").val(ids[i]).text(nombres[i]));
     // }
-    
+  
     var contador=0;
     var cantidad=0;
    
@@ -326,10 +687,11 @@ function AbrirModalCanasta()
                 contentType: false,
                 processData: false,
                 success:function(response) {
+                  
                      console.log(response);
                 }
            });
-          
+          location.reload(true);
         }
           function agregarCantidadEditar(valorId,Cantidad) 
         {
@@ -350,9 +712,11 @@ function AbrirModalCanasta()
                 contentType: false,
                 processData: false,
                 success:function(response) {
+                    
                      console.log(response);
                 }
            });
+            location.reload(true);
            
         }
 ////evento change para listar producto
@@ -697,6 +1061,7 @@ $("#tipopaca").change(function () {
               _create: function() {
                 this.wrapper = $( "<span>" )
                   .addClass( "custom-combobox" )
+                  .attr( "id", "itemCliente" )
                   .insertAfter( this.element );
          
                 this.element.hide();
@@ -707,11 +1072,9 @@ $("#tipopaca").change(function () {
               _createAutocomplete: function() {
                 var selected = this.element.children( ":selected" ),
                   value = selected.val() ? selected.text() : "";
-         
                 this.input = $( "<input>" )
                   .appendTo( this.wrapper )
                   .val( value )
-                  .attr( "title", "" )
                   .addClass( "custom-combobox-input ui-widget ui-widget-content ui-state-default ui-corner-left" )
                   .autocomplete({
                     delay: 0,
@@ -758,7 +1121,7 @@ $("#tipopaca").change(function () {
                     wasOpen = input.autocomplete( "widget" ).is( ":visible" );
                   })
                   .on( "click", function() {
-                    input.trigger( "focus" );
+                    console.log('ouh');
          
                     // Close if already visible
                     if ( wasOpen ) {
@@ -846,9 +1209,11 @@ $("#tipopaca").change(function () {
          
               _createAutocomplete: function() {
                 var selected = this.element.children( ":selected" ),
+
                   value = selected.val() ? selected.text() : "";
          
                 this.input = $( "<input>" )
+
                   .appendTo( this.wrapper )
                   .val( value )
                   .attr( "title", "" )
@@ -912,10 +1277,13 @@ $("#tipopaca").change(function () {
          
               _source: function( request, response ) {
                 var matcher = new RegExp( $.ui.autocomplete.escapeRegex(request.term), "i" );
+
                 response( this.element.children( "option" ).map(function() {
                   var text = $( this ).text();
+
                   if ( this.value && ( !request.term || matcher.test(text) ) )
                     return {
+
                       label: text,
                       value: text,
                       option: this
@@ -966,55 +1334,11 @@ $("#tipopaca").change(function () {
             
             $( "#combobox" ).combobox();
             $( "#toggle" ).on( "click", function() {
+
                 $( "#combobox" ).toggle();
+
             });
     });
 
-        // function Delete( nameProduct , idDel ) {
-        //     var pathname = window.location.pathname; //ruta actual
-        //     $.confirm({
-        //         theme: 'supervan',
-        //         title: 'Eliminar Compra',
-        //         content: 'Seguro(a) que deseas eliminar Producto ' + nameProduct + '. <br> Click Aceptar or Cancelar',
-        //         icon: 'fa fa-question-circle',
-        //         animation: 'scale',
-        //         animationBounce: 2.5,
-        //         closeAnimation: 'scale',
-        //         opacity: 0.5,
-        //         buttons: {
-        //             'confirm': {
-        //                 text: 'Aceptar',
-        //                 btnClass: 'btn-blue',
-        //                 action: function () {
-        //                     $.confirm({
-        //                         theme: 'supervan',
-        //                         title: 'Estas Seguro ?',
-        //                         content: 'Una vez eliminado debes volver agregar el producto',
-        //                         icon: 'fa fa-warning',
-        //                         animation: 'scale',
-        //                         animationBounce: 2.5,
-        //                         closeAnimation: 'zoom',
-        //                         buttons: {
-        //                             confirm: {
-        //                                 text: 'Si, Estoy Seguro!',
-        //                                 btnClass: 'btn-orange',
-        //                                 action: function () {
-        //                                     $('.delete').attr('action' , pathname + '/' + idDel );
-        //                                 }
-        //                             },
-        //                             cancel: {
-        //                                 text: 'No, Cancelar',
-        //                                 //$.alert('you clicked on <strong>cancel</strong>');
-        //                             }
-        //                         }
-        //                     });
-        //                 }
-        //             },
-        //             cancel: {
-        //                 text: 'Cancelar',
-        //                 //$.alert('you clicked on <strong>cancel</strong>');
-        //             },
-        //         }
-        //     });
-        // }
+   
    

@@ -43,9 +43,9 @@
                     <!-- <li class="active"> para que quede como activo -->
                     @if( Auth::user() -> perfil_id == 1 )
                         <li>
-                            <a class="nav-link" href="">
+                            <a class="nav-link" href="{{ route('home') }}">
                                 <i class="now-ui-icons design_app"></i>
-                                <p>Dashboard</p>
+                                <p>alertas de entrega</p>
                             </a>
                         </li>
                         <li>

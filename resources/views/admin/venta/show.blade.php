@@ -135,7 +135,7 @@
                                         @endif
                                           {{-- proveedires esta vacio debe validar eso  --}}
                                         @if( $Cargarventa -> clientes() != "" || $Cargarventa -> clientes() != null )
-                                        <td class="text-center">{{ $Cargarventa -> clientes() -> name }}</td>
+                                        <td class="text-center">{{ $Cargarventa -> cliente()-> name }}</td>
                                         @else 
                                         <td class="text-center">Sin Definir</td>
                                         @endif

@@ -1,10 +1,14 @@
-<?php
-use Illuminate\Support\Facades\DB;
 
-?>
 @extends('layouts.app')
 
 @section('title','Venta')
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<link href="https://cdn.jsdelivr.net/npm/gijgo@1.9.6/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+
+<link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap-datetimepicker.min.css') }}" />
+<link href="css/bootstrap.css" rel="stylesheet">
+<link href="css/bootstrap-responsive.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" media="screen" href="css/layout.css">
 
 
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
@@ -204,7 +208,7 @@ use Illuminate\Support\Facades\DB;
              
             <!--     fin errores -->
             @if(!Session::get('IdVenta'))
-          <form  id="AgregarCabezeraVenta" action="{{url('/venta')}}" method="post">
+          <form  id="AgregarCabezeraVenta" action="{{url('/venta')}}" method="post"  onsubmit="return validacion()">
                   {{ csrf_field() }}
                  <div class="row">
                         <div class="col-md-3 col-sm-12 pr-1">
@@ -242,21 +246,45 @@ use Illuminate\Support\Facades\DB;
                        <div class="col-md-3 col-sm-12 pr-1">
                             <div class="form-group">
                                 <label>Cliente</label>
-                                    <select class="form-group" id="combobox2" name="fk_cliente">
-                                    <option>Nombre Cliente</option>
+                                    <select class="form-group"  id="combobox2"  name="fk_cliente" required>
+                                    <option value="I">Nombre Cliente</option>
                                      @foreach( $clientes as $cliente )
-                                    <option class="form-control" value="{{$cliente-> number_id}},{{ $cliente-> name }}">{{$cliente -> name}}</option>
+                                    <option class="form-control"  value="{{$cliente-> number_id}},{{ $cliente-> name }}">{{$cliente -> name}}</option>
                                      @endforeach
                                     </select>
                             </div>                            
                        </div>
                      
                  </div>
+
+              <label for="cbmostrar">
+                <input type="checkbox"  class="fantasma" />
+                desea ingresar la fecha y hora de lo contario el sistema le asiganara una fecha de entrega
+              </label>
+                 <div class="row text-center" id="dvOcultar" style="display:none">                            
+                            <div class="col-md-3 col-sm-12">
+                                 <div class="form-group">
+                                <label>fecha entrega</label>
+                              <input type="date" name="fecha_entrega" id="datepicker" onchange="validarfecha(this.value);" pattern="[_0-9]{2}/[_0-9]{2}/[_0-9]{4}"class="form-control">
+                                    
+                            </div>                                    
+                            </div>
+
+                           <div class="col-md-3 col-sm-12">
+                                <div class="form-group ">
+                                     <label>Hora entrega</label>
+                                      <input type="time" name="hora" id="timepicker" onchange="validarhora(this.value);" pattern="[_0-9]{2}/[_0-9]{2}/[_0-9]{4}"class="form-control" >
+                               
+                                 </div>
+                                      
+                           </div>
+                              
+                  </div>
+
                   <div class="row text-center">                            
                             <div class="col-md-6 col-sm-12">
                                 <div class="form-group ">                                          
-                                    <button type="submit" class="btn btn-info btn-round"  onclick="Mostrar();">Agregar
-                                   </button>
+                                    <button  type="submit" class="btn btn-info btn-round" >Agregar</button>
                                </div>                                      
                             </div>
 
@@ -308,7 +336,7 @@ use Illuminate\Support\Facades\DB;
                                     @else
                                     <td class="text-center">0</td> 
                                     @endif
-                                    <td class="text-center">{{  $CargarVenta -> clientes() -> name }}</td> 
+                                    <td class="text-center">{{  $CargarVenta -> cliente() -> name }}</td> 
 
 
                                     {{-- proveedires esta vacio debe validar eso  --}}
@@ -535,6 +563,7 @@ use Illuminate\Support\Facades\DB;
 
                                     
                                 ?>
+                                <input type="text" id="idfac" value="{{$IdVenta}}" name="idfac" hidden="true">
 
 
                                 @if($Detalles_venta->Numero_canasta !=null)
@@ -588,8 +617,41 @@ use Illuminate\Support\Facades\DB;
                         
                     </table>
                     <hr>
-                    <h3 class="text-center"><strong>Total:{{$total}}</strong></h3>
+                    <h3 class="text-center" ><strong>Total:{{$total}}</strong></h3>
                  @if($total !=0)
+
+
+                    @foreach($CargarVentas as $CargarVenta)
+                @if($CargarVenta->fk_forma_de_pago==2)
+                 <div class="row text-center" >                         
+                                <div class="col-md-2" >
+                                          <div class="form-group">
+                                            <label>Pago Incial</label>
+                                            <input type="numeric" id="numero2" onkeypress="return solo_numeros(event)" onchange="validarmayor()"  class="form-control" name="pinicial" value="{{ old('pinicial') }}" required>
+                                               
+                                          </div>
+                                          
+                                </div>
+                                <div class="col-md-2" >
+                                          <div class="form-group text-center">
+                                            <label>Deuda:</label>
+                                            <input type="text" id="deuda" disabled="true" value="{{$total}}" class="form-control"  required>
+                                               
+                                          </div>
+                                          
+                                </div>
+                                <div class="col-md-2" >
+                                          <div class="form-group">
+                                            
+                                            <input type="text" id="total" value="{{$total}}" class="form-control" hidden="true" required>
+                                               
+                                          </div>
+                                          
+                                </div>
+                  </div>
+                  @endif
+                  @endforeach
+
                    <div class="row text-center">
                         
                          <div class="col-md-4">
@@ -600,9 +662,9 @@ use Illuminate\Support\Facades\DB;
                         </div>
 
                         <div class="col-md-6">
-                                <div class="form-group">
+                                <div class="form-group" >
                                     
-                                <a href="{{ action('VentaController@recibo',['id' => $IdVenta,'estado'=>4]) }}"  class="btn btn-info btn-round" >por entregar</a>
+                                <a onselect="validarmayor()" id="porentregar" href="{{ action('VentaController@recibo',['id' => $IdVenta,'estado'=>4,'abono'=>0]) }}"  class="btn btn-info btn-round" id="porentregar">por entregar</a>
                                
                             </div>
                         </div>
@@ -610,13 +672,13 @@ use Illuminate\Support\Facades\DB;
                          <div class="col-md-4">
                             <div class="form-group">
                                 
-                            <a href="{{ action('VentaController@recibo',['id' =>$IdVenta,'estado'=>0]) }}"  class="btn btn-info btn-round"  >Registrar</a>
+                            <a onselect="validarmayor()" id="entregar" href="{{ action('VentaController@recibo',['id' =>$IdVenta,'estado'=>0,'abono'=>0]) }}"  class="btn btn-info btn-round" >Registrar</a>
                             </div>
                         </div>
                     </div>
                     @else
                     <div class="col-md-4">
-                            <div class="form-group">
+                            <div class="form-group" >
                                
                                <a href="{{ action('VentaController@cerrarSesion',['idSession' => 3]) }}"  class="btn btn-success btn-round">pendiente</a>
                            </div>
@@ -689,6 +751,12 @@ use Illuminate\Support\Facades\DB;
 
 
 @section('scripts')
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gijgo@1.9.6/js/gijgo.min.js" type="text/javascript"></script>
+
+<!-- <script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.1.0/respond.min.js"></script> -->
+<script src="js/bootstrap-datetimepicker.min.js"></script>
+<script src="{{asset('/js/bootstrap-datetimepicker.min.js')}}"></script>
 
      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.0/jquery-confirm.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.0/jquery-confirm.min.js"></script>
@@ -700,7 +768,49 @@ use Illuminate\Support\Facades\DB;
      <script src="{{asset('/js/scriptventa.js')}}"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
-   
+   <script type="text/javascript">
+
+      function buscarDeudas(cedula)
+    {
+      alert(cedula);
+      return 0;
+        var idcliente = document.getElementById('combobox2').value;
+        $("#numero2 option").remove();
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                type: "GET",
+                url: "/abono/searchTotal/"+idcliente,
+                dataType: 'json',
+                success: function( data ){
+                    console.log(data);
+                    $.each(data, function (key, saldventa) {
+                        
+                        if(saldventa.saldo==null ||saldventa.saldo==0)
+                        {
+                            alert("entre por ull");
+                            $("#numero2").append("<option value=" + saldventa.id + ">" +saldventa.total+ "</option>");
+                            $("#saldo2").val( saldventa.total );
+
+                        }
+                        else
+                        {
+                            alert("entre al else");
+                            $("#numero2").append("<option value=" + saldventa.id + ">" +saldventa.saldo+ "</option>");
+                            $("#saldo2").val( saldventa.saldo );
+                        }
+                        
+                   
+                       
+                    });
+                }
+            });
+
+            
+
+    }
+   </script>
 
     
     

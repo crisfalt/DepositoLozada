@@ -1,9 +1,16 @@
 @extends('layouts.app')
 
 @section('title','Venta')
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<link href="https://cdn.jsdelivr.net/npm/gijgo@1.9.6/css/gijgo.min.css" rel="stylesheet" type="text/css" />
 
-
+<link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap-datetimepicker.min.css') }}" />
+<link href="css/bootstrap.css" rel="stylesheet">
+<link href="css/bootstrap-responsive.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" media="screen" href="css/layout.css">
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap-datetimepicker.css">
+
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
 @section('titulo-contenido','Compra')
@@ -69,7 +76,7 @@
                 <div class="row text-center">
                      <div class="col-md-6 pr-1">
                             <div class="form-group">
-                               <h5 class="title">Crear venta</h5>
+                               <h5 class="title">Editar  venta</h5>
                               
                             </div>
                      </div>
@@ -126,18 +133,19 @@
                         @foreach( $CargarVentas as $CargarVenta )
                         <?php
                             $nombreEstadoVenta =  $CargarVenta -> estadoVentas();
-                            $nombreProveedor = $CargarVenta -> clientes();
+                            $nombreProveedor = $CargarVenta -> cliente();
                         ?>
                             <tr>
+                        <input type="hidden" name="" value="{{ $CargarVenta -> id }}" id="id_factura"/>
                                     <td class="text-center">{{ $CargarVenta -> id }}</td>
                                     @if( $CargarVenta -> estadoVentas() != "" ||  $CargarVenta -> estadoVentas() != null )
                                     <td class="text-center">{{  $CargarVenta -> estadoVentas() -> nombre }}</td> 
                                     @else
                                     <td class="text-center">0</td> 
                                     @endif
-                                      {{-- proveedires esta vacio debe validar eso  --}}
-                                    @if( $CargarVenta -> clientes()!= "" || $CargarVenta -> clientes()!= null )
-                                    <td class="text-center">{{ $CargarVenta -> clientes()-> name }}</td>
+                                      {{-- proveedores esta vacio debe validar eso  --}}
+                                    @if( $CargarVenta -> cliente()!= "" || $CargarVenta -> cliente()!= null )
+                                    <td class="text-center">{{ $CargarVenta -> cliente()-> name }}</td>
                                     @else 
                                     <td class="text-center">Sin Definir</td>
                                     @endif
@@ -159,8 +167,48 @@
                                             @endif
                                         </form>
                                     </td>
+
+                             <div class="col-md-3 col-sm-12">
+                                 <div class="form-group">
+                                <label>fecha entrega</label>
+                              <input type="date" name="fecha_entrega" id="datepicker" value="{{$CargarVenta->fecha_entrega}}" onchange="validarfecha(this.value);" pattern="[_0-9]{2}/[_0-9]{2}/[_0-9]{4}"class="form-control" required>
+                                    
+                            </div>                                    
+                            </div>
+
+                              <!--   <div class="col-md-3 col-sm-12">
+                                 <div class="form-group">
+                                <label>hora entrega</label>
+                              <input type="time" name="hora" id="#input_starttime" value="{{$CargarVenta->hora}}" onchange="validarhora(this.value);" pattern="[_0-9]{2}/[_0-9]{2}/[_0-9]{4}"class="form-control" >
+                                    
+                            </div>                                    
+                            </div> -->
+
+                          <!--  <div class="row"> -->
+                          <!--  <div class='col-sm-6'>
+                         <div class="form-group">
+                           <div class='input-group date' id='datetimepicker3'>
+                           <input type='text' class="form-control" />
+                              <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-time"></span>
+                         </span>
+                            </div>
+                            </div>
+                          </div> -->
+                        </br>
+                             <div class="col-md-3 col-sm-12">
+                                 <div class="form-group">
+                                <label>hora entrega</label>
+                                <input id="timepicker" width="270" value="{{$CargarVenta->hora}}"  onchange="validarhora(this.value)" />
+                                  </div>                                    
+                            </div>
+</br>
+                                
                                 </tr>
+                             
                                 @endforeach
+                              
+
         @if($CargarVentas[0]->fk_estado_venta ==1)
 
                 <form style="margin: 0; padding: 0;" id="AgregarVenta" action="{{url('/AgregarVentaEditar')}}" method="post" onsubmit="return validacionAgregar()">
@@ -496,23 +544,29 @@
 
 @endsection
 
-
-
 @section('scripts')
 
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gijgo@1.9.6/js/gijgo.min.js" type="text/javascript"></script>
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.0/jquery-confirm.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.0/jquery-confirm.min.js"></script>
-<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script> 
-<script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
-<script src="https://cdn.datatables.net/responsive/2.2.1/js/dataTables.responsive.min.js"></script>
-<script src="https://cdn.datatables.net/responsive/2.2.1/js/responsive.bootstrap4.min.js"></script>
-<script src="{{asset('/js/typeahead.bundle.min.js')}}"></script>
- <script src="{{asset('/js/scriptventaEditar.js')}}"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-
+<!-- <script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.1.0/respond.min.js"></script> -->
+<script src="js/bootstrap-datetimepicker.min.js"></script>
+<script src="{{asset('/js/bootstrap-datetimepicker.min.js')}}"></script>
+ 
    
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.0/jquery-confirm.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.0/jquery-confirm.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script> 
+    <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.1/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.1/js/responsive.bootstrap4.min.js"></script>
+    <script src="{{asset('/js/typeahead.bundle.min.js')}}"></script>
+     <script src="{{asset('/js/scriptventaEditar.js')}}"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
 
     
     
 @endsection
+

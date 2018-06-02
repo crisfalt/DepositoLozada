@@ -18,8 +18,8 @@ use App\PreciosProducto;
 use App\TipoPaca;
 use App\Marca; 
 use App\TipoContenido;
-
-
+use App\abonoCompra;
+use Carbon\Carbon;
 use Auth;
 
 
@@ -1580,80 +1580,271 @@ public function imprimir($id,$estado)
   }
 
 
-///////////////////////////////////////////////
-        public function recibo($id,$estado)
+    public function recibo($id,$estado,$abono)
     {
             
-            $ObtenerEstadoCompra=compra::where('id',$id)->get();
-            if($ObtenerEstadoCompra[0]->fk_estado_compra==1)
+        $ObtenerEstadoCompra=compra::where('id',$id)->get();
+        if($ObtenerEstadoCompra[0]->fk_estado_compra==1)
         {
-            
-         $Detalle_compras=detalle_compra::where('fk_compra',$id)->get();
 
-         $cantidad=0;
-         $subtotal=0;
-         $total=0;
-         $Condicioncompra=0;
-         $AcomularProducto=0;
-         $error = array(); 
-         $contadorErrores=0;
-       
-////////condicon de compra si falta productos no genere factura
-        //  if( $Condicioncompra==0)
-        //  {
-////////se cumple la condicon de compra comienza hacer el recorrido             
-         foreach( $Detalle_compras as  $Detalle_compra)
-         {
-          $ObtenerCantidadActual=DB::table('productos')->where('codigo',$Detalle_compra->fk_producto)->value('cantidad');
- 
-             $subtotal=$Detalle_compra->precio * $Detalle_compra->cantidad;
-             $total=$total+$subtotal;
- ////////estado cero recbido su al inventario
-         if($estado==0)
+        $Detalle_compras=detalle_compra::where('fk_compra',$id)->get();
+        $cantidad=0;
+        $subtotal=0;
+        $total=0;
+        $Condicioncompra=0;
+        $AcomularProducto=0;
+        $error = array(); 
+        $contadorErrores=0;
+        
+            ////////condicon de compra si falta productos no genere factura
+                //  if( $Condicioncompra==0)
+                //  {
+            ////////se cumple la condicon de compra comienza hacer el recorrido             
+        foreach( $Detalle_compras as  $Detalle_compra)
         {
-             DB::table('productos')
-             ->where('codigo',$Detalle_compra->fk_producto)
+            $ObtenerCantidadActual=DB::table('productos')->where('codigo',$Detalle_compra->fk_producto)->value('cantidad');
+
+            $subtotal=$Detalle_compra->precio * $Detalle_compra->cantidad;
+            $total=$total+$subtotal;
+            ////////estado cero recbido su al inventario
+            if($estado==0)
+            {
+                DB::table('productos')
+                ->where('codigo',$Detalle_compra->fk_producto)
+                
+                ->update(['cantidad' =>$ObtenerCantidadActual+$Detalle_compra->cantidad ]);
+            }
             
-             ->update(['cantidad' =>$ObtenerCantidadActual+$Detalle_compra->cantidad ]);
+
         }
-             
- 
-         }
-         // dd($id);
-         
-         $fechaActual= new DateTime();
-////////se actualiza la compra cambiando el estado y total de la factura
-///la condicon estado==4 hacer referencia al estado (por rcebir) fk_estado_compra # 2
-//////si no cumple llega al else (0) donde se cambia estado  (recbido) Fk_estado_compra #3
-if($estado==0)
-{
-    DB::table('compras')
-    ->where('id',$id)      
-    ->update(['fk_estado_compra' => 3,'total' => $total,'fecha_compra'=>$fechaActual]);
-    Session::forget('IdCompra');
-    $notification = 'ya se registro con el estado recibido la compra # ' . $id ;
-    return back() -> with( compact( 'notification' ) );
+        
+        $fechaActual= new DateTime();
+        $fechaAbono= Carbon::now()->toDateString();
+            ////////se actualiza la compra cambiando el estado y total de la factura
+            ///la condicon estado==4 hacer referencia al estado (por rcebir) fk_estado_compra # 2
+            //////si no cumple llega al else (0) donde se cambia estado  (recbido) Fk_estado_compra #3
+            if($estado==0)
+            {
+                if($abono !=0)
+                {
+                    if($abono >$total)
+                    {
 
-}           
+                        $notification = 'el abono no puede ser mayor al saldo de la compra'; 
+                        return redirect('compra/create') -> with( compact( 'notification' ) );
+                
+                    }
+                    else
+                    {
+                    if($total == $abono && $ObtenerEstadoCompra[0] -> fk_forma_pago==2)
+                    {
+
+                        $objAbono = new abonoCompra();
+                        $objAbono -> valor = (float)$abono; 
+                        $objAbono -> fecha = $fechaAbono;                  
+                        $objAbono -> fk_compra = $id;
+                        $objAbono->save();
+                        //inicio de la factura
+
+                        $resta= floatval($total -$abono);
 
 
-if($estado==4)
-          {
-            DB::table('compras')
-            ->where('id',$id)      
-            ->update(['fk_estado_compra' => 2,'total' => $total,'fecha_compra'=>$fechaActual]);
-            Session::forget('IdCompra');
-            $notification = 'ya se registro con el estado por recibir la compra # ' . $id ;
-            return back() -> with( compact( 'notification' ) );
-         }
 
+                        DB::table('compras')
+                        ->where('id',$id)      
+                        ->update(['fk_estado_compra' => 3,'fk_forma_pago' => 1,'total' => $total,
+                        'saldo' => $resta,'fecha_compra'=>$fechaAbono]);
+                        Session::forget('IdCompra');                            
+                        $notification = 'la compra fue pagada exitosamente'. $ObtenerEstadoCompra[0]->id;
+                        return redirect('compra') -> with( compact( 'notification' ));
+                    }
+                    else
+                    {
+                        if($ObtenerEstadoCompra[0] -> fk_forma_pago==2)
+                        {
+
+
+                            $objAbono = new abonoCompra();
+                            $objAbono -> valor = (float)$abono; 
+                            $objAbono -> fecha = $fechaAbono;     
+                        
+                            $objAbono -> fk_compra = $id;
+                            $objAbono->save();
+
+                            $resta= floatval($total -$abono);
+
+                            DB::table('compras')
+                        ->where('id',$id)      
+                        ->update(['fk_estado_compra' => 3,'fk_forma_pago' => 2,'total' => $total,
+                            'saldo' => $resta,'fecha_compra'=>$fechaAbono]);
+                            Session::forget('IdCompra');     
+
+                            $notification = 'la compra fue agregada exitosamente  con su abono'. $ObtenerEstadoCompra[0]->id;
+                            return redirect('compra') -> with( compact( 'notification' ));
+
+
+
+                            }
+
+                    }
+                    
+
+                    }
+                
+
+                }
+
+                else
+                {
+                
+                if($ObtenerEstadoVenta[0] -> fk_forma_pago==2 && (int)$abono==0)
+                        {
+
+                            $resta= floatval($total -(int)$abono);
+
+                            DB::table('ventas')
+                            ->where('id',$id)      
+                            ->update(['fk_estado_compra' => 3,'fk_forma_pago' => 2,'total' => $total,
+                            'saldo' => $resta,'fecha_compra'=>$fechaAbono]);                  
+                            Session::forget('IdCompra');
+                            $notification = 'la factura fue agregada exitosamente sin abono'. $ObtenerEstadoCompra[0]->id;
+                            return redirect('venta') -> with( compact( 'notification' ));
+
+
+
+                            }
+                
+
+                }
+
+                DB::table('compras')
+                ->where('id',$id)      
+                ->update(['fk_estado_compra' => 3,'total' => $total,'fecha_compra'=>$fechaActual]);
+                Session::forget('IdCompra');
+                $notification = 'ya se registro con el estado recibido la compra # ' . $id ;
+                return back() -> with( compact( 'notification' ) );    
+
+                
+            
+
+            }           
+
+            if($estado==4)
+            {
+                if($abono !=0)
+                {
+
+                    if($abono >$total)
+                    {
+
+                        $notification = 'el abono no puede ser mayor al saldo de la compra'; 
+                        return redirect('compra/create') -> with( compact( 'notification' ) );
+                
+                    }
+                    else
+                    {
+                    if($total == $abono && $ObtenerEstadoCompra[0] -> fk_forma_pago==2)
+                    {
+
+                        $objAbono = new abonoCompra();
+                        $objAbono -> valor = (float)$abono; 
+                        $objAbono -> fecha = $fechaAbono;                  
+                        $objAbono -> fk_compra = $id;
+                        $objAbono->save();
+                        //inicio de la factura
+
+                        $resta= floatval($total -$abono);
+
+
+
+                        DB::table('compras')
+                        ->where('id',$id)      
+                        ->update(['fk_estado_compra' => 2,'fk_forma_pago' => 1,'total' => $total,
+                        'saldo' => $resta,'fecha_compra'=>$fechaAbono]);
+                        Session::forget('IdCompra');
+                        $notification = 'la compra fue pagada exitosamente'. $ObtenerEstadoCompra[0]->id;
+                        return redirect('compra') -> with( compact( 'notification' ));
+                    }
+                    else
+                    {
+                        if($ObtenerEstadoCompra[0] -> fk_forma_pago==2)
+                        {
+
+
+                            $objAbono = new abonoCompra();
+                            $objAbono -> valor = (float)$abono; 
+                            $objAbono -> fecha = $fechaAbono;     
+                        
+                            $objAbono -> fk_compra = $id;
+                            $objAbono->save();
+
+                            $resta= floatval($total -$abono);
+
+                            DB::table('compras')
+                        ->where('id',$id)      
+                        ->update(['fk_estado_compra' => 2,'fk_forma_pago' => 2,'total' => $total,
+                            'saldo' => $resta,'fecha_compra'=>$fechaAbono]);                  
+                            Session::forget('IdCompra');
+                            $notification = 'la compra fue agregada exitosamente  con su abono'. $ObtenerEstadoCompra[0]->id;
+                            return redirect('compra') -> with( compact( 'notification' ));
+
+
+
+                            }
+
+                    }
+                    
+
+                    }
+                
+
+                }
+
+                else
+                {
+                
+                if($ObtenerEstadoVenta[0] -> fk_forma_pago==2 && (int)$abono==0)
+                        {
+
+                            $resta= floatval($total -(int)$abono);
+
+                            DB::table('ventas')
+                            ->where('id',$id)      
+                            ->update(['fk_estado_compra' => 2,'fk_forma_pago' => 2,'total' => $total,
+                            'saldo' => $resta,'fecha_compra'=>$fechaAbono]);                  
+                            Session::forget('IdCompra');
+                            $notification = 'la factura fue agregada exitosamente sin abono'. $ObtenerEstadoCompra[0]->id;
+                            return redirect('venta') -> with( compact( 'notification' ));
+
+
+
+                            }
+                
+
+                }
+
+
+                
+                DB::table('compras')
+                ->where('id',$id)      
+                ->update(['fk_estado_compra' => 2,'total' => $total,'fecha_compra'=>$fechaAbono]);
+                Session::forget('IdCompra');
+                
+                $notification = 'ya se registro con el estado por recibir la compra # ' . $id ;
+                return back() -> with( compact( 'notification' ) );
+                
+
+
+                
+            }
+            
             else
             {
-                 
-               
+                
+                
                 Session::forget('IdCompra');
                 $notification = 'ya se registro la compra # ' . $id ;
-               return back() -> with( compact( 'notification' ) );
+                return back() -> with( compact( 'notification' ) );
             }
         }
         else
@@ -1664,8 +1855,8 @@ if($estado==4)
 
         }
 
-  
-}
+
+    }
     
 
 }

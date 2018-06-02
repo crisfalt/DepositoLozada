@@ -28,7 +28,7 @@ class AlterClientesTable extends Migration
     {
         Schema::table('clientes', function (Blueprint $table) {
             //
-            $table->string('address', 50)->change();
+            $table->string('address', 150)->change();
         });
     }
 }

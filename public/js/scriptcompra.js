@@ -1,4 +1,61 @@
 
+function validarmayor()
+    { 
+
+
+       var totalfactura = document.getElementById("total").value; 
+       var idfac = document.getElementById("idfac").value; 
+      var abono = document.getElementById("numero2").value; 
+
+      
+             if(document.getElementById("numero2").value == ""||document.getElementById("numero2").value == null)
+              { 
+                alert("campo");
+                var x=document.getElementById("numero2").value=0;
+
+              }
+
+              else
+              {
+                 var abono = document.getElementById("numero2").value;                
+                 if(parseFloat(abono)>parseFloat(totalfactura))
+                {
+                    
+                    alert("usted no puede ingresar una valor mayor al saldo de la factura");
+                     document.getElementById("numero2").value = "";
+                     document.getElementById("numero2").focus();
+                }
+                else
+                {
+               
+                  // var entregar='<a  href="/venta/recibo/"+ idfac +"/4/"  class="btn btn-info btn-round" > registrar y abonar</a>';
+                  // var pentregar='<a  href="{{ action('+'VentaController@recibo'+',['+'id'+' =>'+idfac+','+'estado'+'=>0,'+'abono'+'=>'+abono+']) }}"  class="btn btn-info btn-round" > por entregar y abonar</a>';
+                  var resta=parseFloat(totalfactura)-parseFloat(abono);
+
+                  document.getElementById("deuda").value=resta;
+                  document.getElementById('porrecibir').href = "/compra/recibo/"+ idfac +"/4/"+abono;
+                
+                  document.getElementById('recido').href = "/compra/recibo/"+ idfac +"/0/"+abono;
+                }
+
+              }
+
+                  
+             
+    
+       
+    }
+
+
+
+function solo_numeros(e){
+            var key = window.Event ? e.which : e.keyCode 
+            return ((key >= 48 && key <= 57) || (key==8)) 
+        }
+
+
+
+
     n =  new Date();
     y = n.getFullYear();
     m = n.getMonth() + 1;
@@ -310,6 +367,7 @@ return false;
                              console.log(response);
                         }
                    });
+                   location.reload(true);
                   
                 }
                   function agregarCantidadEditar(valorId,Cantidad) 
@@ -334,6 +392,7 @@ return false;
                              console.log(response);
                         }
                    });
+                   location.reload(true);
                    
                 }
         ////evento change para listar producto

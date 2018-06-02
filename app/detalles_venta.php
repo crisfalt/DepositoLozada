@@ -44,4 +44,9 @@ class detalles_venta extends Model
     public function empaque() {
         return TipoPaca::where( 'id' , $this -> fk_tipo_paca  ) -> first();
     }
+
+    //para obtener la factura la cual tiene los detalles
+    public  function ventas() {
+        return $this->belongsTo(Venta::class);
+    }
 }

@@ -18,6 +18,8 @@ use App\PreciosProducto;
 use App\TipoPaca;
 use App\Marca; 
 use App\TipoContenido;
+use Carbon\Carbon;
+use App\abonoVenta;
 
 
 use Auth;
@@ -27,148 +29,223 @@ class VentaController extends Controller
 
     {
 
+        public function abonar() 
+        {
+            $id_factura= $_POST["id_factura"];
+            $saldo= $_POST["saldo"];
+            $abono= $_POST["abono"];
+            $fechaAbono= Carbon::now()->toDateString();
+            $resta=$saldo-$abono;
+            $notification="";
+            if($saldo==$abono)
+            {
+                 DB::table('ventas')
+                ->where('id',$id_factura)      
+                ->update(['fk_forma_de_pago' => 1,'saldo' => $resta]);
+                //inserta tabla abono
+                $objAbono = new abonoVenta();
+                $objAbono -> valor = (float)$abono; 
+                $objAbono -> fecha = $fechaAbono;                  
+                $objAbono -> fk_venta = $id_factura;
+                $objAbono->save();
+                $notification = 'la factura fue pagada exitosamente '. $id_factura;
+            }
+            else
+            {
+                DB::table('ventas')
+                ->where('id',$id_factura)      
+                ->update(['saldo' => $resta]);
+                //inserta tabla abono
+                $objAbono = new abonoVenta();
+                $objAbono -> valor = (float)$abono; 
+                $objAbono -> fecha = $fechaAbono;                  
+                $objAbono -> fk_venta = $id_factura;
+                $objAbono->save();
+                $notification = 'el abono se realizo exitosamente de la factura '. $id_factura;
+            }
+            return response()->json( ['mensaje'=>$notification ] );  
+        }
+    
+        public function BuscarCliente() 
+        {
+           
+            $id_cliente= $_POST["id_cliente"];
+            $CedulaCliente=explode(',',$id_cliente);
+            $ConsultarDeuda=DB::table('ventas')->where('fk_cliente',$CedulaCliente[0] )->where('fk_forma_de_pago',2)->get();
+            // dd( $ConsultarDeuda);
+            return response()->json( ['items'=>$ConsultarDeuda ] );  
+        }
+
+
+        public function ActualizarHoraEntrega() 
+        {
+            $notificacion="";
+            $factura_id= $_POST["id_factura"];
+            $actualizar_hora= $_POST["actualizar_hora"];
+            $ConsultarFacturaVenta=DB::table('ventas')->where('id',$factura_id )->get();
+            if(count($ConsultarFacturaVenta) !=0)
+            {
+                if($ConsultarFacturaVenta[0]->fk_estado_venta ==1 || $ConsultarFacturaVenta[0]->fk_estado_venta == 2)
+                {
+                    DB::table('ventas')
+                        ->where('id',$factura_id)
+                        ->update(['hora' =>$actualizar_hora]);
+                    $notificacion=("se actualizo la hora de entrega de la factura #".$factura_id);
+                }
+                else
+                {
+                    $notificacion=("no se puede editar la hora entrega por que ya se facturo :(");
+                }
+            }
+            return response()->json( ['items'=>$notificacion ] );  
+        }
+
+        ////
+        public function ActualizarFechaEntrega() 
+        {
+            $notificacion="";
+            $factura_id= $_POST["id_factura"];
+            $actualizar_fecha= $_POST["actualizar_fecha"];
+            $ConsultarFacturaVenta=DB::table('ventas')->where('id',$factura_id )->get();
+            if(count($ConsultarFacturaVenta) !=0)
+            {
+                if($ConsultarFacturaVenta[0]->fk_estado_venta ==1 || $ConsultarFacturaVenta[0]->fk_estado_venta == 2)
+                {
+                    DB::table('ventas')
+                        ->where('id',$factura_id)
+                        ->update(['fecha_entrega' =>$actualizar_fecha]);
+                    $notificacion=("se actualizo la fecha de entrega de la factura #".$factura_id);
+                }
+                else
+                {
+                    $notificacion=("no se puede editar la fecha entrega por que ya se facturo :(");
+                }
+            }
+            return response()->json( ['items'=>$notificacion ] );  
+        }
         ////
 
         public function AgregarCanastaEditar() 
-
         {
-       $productoID= $_POST["ids"];
-       $productoCantidad= $_POST["cantidad"];
-       $productoCantidadCanasta= $_POST["cantidadCanasta"];
-       $productoCantidadEnvase= $_POST["cantidadEnvase"];
-       $productoTipoPaca= $_POST["tipoPaca"];
-       $productoCantidadPlastico= $_POST["cantidadPlastico"];
-       $cantidadCanasta=$_POST["cantidadcanasta"];
-       $datos=$_POST["datosCanasta"];
-
-//    dd($productoCantidad,$productoID);
-       $IdVenta= session::get('IdVentaEditar');
-       $ObtenerCombo=DB::table('tipo_pacas')->where('id', $productoTipoPaca)->value('cantidad');
-        $total=0;
-        $tmp=0;
-        $totalCanasta=$productoCantidadCanasta * $ObtenerCombo;
-      
-        $ObteneIDcanasta=DB::table('detalles_ventas')->where('fk_factura','=',$IdVenta)->max('Numero_canasta');
-    //    $ContadorCanasta=0;
-
-        if($ObteneIDcanasta==null)
-        {
-            $ObteneIDcanasta=0; 
-        }
-      
-        for( $j = 0 ; $j < $cantidadCanasta ; $j++ ) {
-            $ObteneIDcanasta=$ObteneIDcanasta + 1;
-           
-            for( $i = 0 ; $i < count($datos) ; $i++ ) 
+            $productoID= $_POST["ids"];
+            $productoCantidad= $_POST["cantidad"];
+            $productoCantidadCanasta= $_POST["cantidadCanasta"];
+            $productoCantidadEnvase= $_POST["cantidadEnvase"];
+            $productoTipoPaca= $_POST["tipoPaca"];
+            $productoCantidadPlastico= $_POST["cantidadPlastico"];
+            $cantidadCanasta=$_POST["cantidadcanasta"];
+            $datos=$_POST["datosCanasta"];
+            $IdVenta= session::get('IdVentaEditar');
+            $ObtenerCombo=DB::table('tipo_pacas')->where('id', $productoTipoPaca)->value('cantidad');
+            $total=0;
+            $tmp=0;
+            $totalCanasta=$productoCantidadCanasta * $ObtenerCombo;
+            $ObteneIDcanasta=DB::table('detalles_ventas')->where('fk_factura','=',$IdVenta)->max('Numero_canasta');
+            if($ObteneIDcanasta==null)
             {
-
-                 if($productoCantidad[$tmp] !=0)
-                 {
-                    $DatoPrecio= DB::table('precios_productos')                        
-                    ->join('productos',
-                        'precios_productos.fk_producto',
-                        '=',
-                        'productos.codigo'
-                       ) 
-                                         
-                   ->where('productos.codigo','=', $productoID[$tmp])
-                                 
-                     ->min('precios_productos.valor');
-               
-         
-                     DB::table('detalles_ventas')->insert([
-                         ['precio' => $DatoPrecio, 'cantidad' =>$productoCantidad[$tmp],'fk_tipo_paca'=>0,'fk_factura'=>$IdVenta,'fk_producto'=>$productoID[$tmp],'Numero_canasta' =>$ObteneIDcanasta]]);
-                     
-         
-                 }
-               
-             
-                 $tmp++; 
-               
+                $ObteneIDcanasta=0; 
             }
-          
-           
-           
-          }
+      
+            for( $j = 0 ; $j < $cantidadCanasta ; $j++ ) {
+                $ObteneIDcanasta=$ObteneIDcanasta + 1;
+            
+                for( $i = 0 ; $i < count($datos) ; $i++ ) 
+                {
 
-      ////canasta y envases Editar
-
-       $consultaTipoPaca=DB::table('productos')->where('codigo',$productoID)->value('fk_tipo_paca');
-      
-      
-       $consultaIDCanasta=DB::table('detalles_ventas')->where('fk_factura', $IdVenta)->where('fk_tipo_paca',$productoTipoPaca)->get();
-
-      
-      
-       if($consultaTipoPaca!=null)
-       {
-           
-           if($productoCantidadEnvase!=null && $productoCantidadEnvase!=0)
-           {
-             
-           $consultarEnvases=DB::table('tipo_pacas')->where('id',$consultaTipoPaca)->get();
-      
-         
-          if(count($consultaIDCanasta)!=0)
-          {
-           // dd($consultaIDCanasta[0]-> cantidad,$productoCantidadEnvase);
-          
-               DB::table('detalles_ventas')
-               ->where('fk_tipo_paca',$consultaTipoPaca)
-               ->where('fk_factura',$IdVenta)
-               ->where('precio',$consultarEnvases[0]->precio_envase)
-               ->update(['cantidad' => (int)$consultaIDCanasta[0]-> cantidad + (int)$productoCantidadEnvase]);
-           
-          }
-           else
-           {
-              
-           //  $TotaEnvases=$DividirPrecio * $precio;
-            DB::table('detalles_ventas')->insert([
-               ['precio' => $consultarEnvases[0]->precio_envase, 'cantidad' =>(int)$productoCantidadEnvase,'fk_tipo_paca'=>(int)$consultaTipoPaca,'fk_factura'=>(int)$IdVenta,'fk_producto'=>0 ]
-             
-           ]);
-            }
-           
-           }
-
-           if($productoCantidadPlastico!=null && $productoCantidadPlastico!=0 )
-           {
-               $consultarEnvases=DB::table('tipo_pacas')->where('id',$consultaTipoPaca)->get();
-               //    foreach($consultarEnvases as $consultarEnvase)
-               //    {
-               //      $DividirPrecio=$consultarEnvase->precio / $consultarEnvase->cantidad;
-                   
-               //    }
-                 
-                  if(count($consultaIDCanasta)!=0)
-                  {
-                   // dd($consultaIDCanasta[0]-> cantidad,$request->input('cantidadEnvases'));
-                  
-                       DB::table('detalles_ventas')
-                       ->where('fk_tipo_paca',$productoTipoPaca)
-                       ->where('fk_factura',$IdVenta)
-                       ->where('precio',$consultarEnvases[0]->precio)
-                       ->update(['cantidad' => (int)$consultaIDCanasta[0]-> cantidad + (int)$productoCantidadPlastico]);
-                   
-                  }
-                   else
-                   {
-                      
-                   //  $TotaEnvases=$DividirPrecio * $precio;
-                    DB::table('detalles_ventas')->insert([
-                       ['precio' => $consultarEnvases[0]->precio , 'cantidad' =>(int)$productoCantidadPlastico,'fk_tipo_paca'=>(int)$consultaTipoPaca,'fk_factura'=>(int)$IdVenta,'fk_producto'=>0 ]
-                     
-                   ]);
+                    if($productoCantidad[$tmp] !=0)
+                    {
+                        $DatoPrecio= DB::table('precios_productos')                        
+                        ->join('productos',
+                            'precios_productos.fk_producto',
+                            '=',
+                            'productos.codigo'
+                        ) 
+                                            
+                    ->where('productos.codigo','=', $productoID[$tmp])
+                                    
+                        ->min('precios_productos.valor');
+                
+            
+                        DB::table('detalles_ventas')->insert([
+                            ['precio' => $DatoPrecio, 'cantidad' =>$productoCantidad[$tmp],'fk_tipo_paca'=>0,'fk_factura'=>$IdVenta,'fk_producto'=>$productoID[$tmp],'Numero_canasta' =>$ObteneIDcanasta]]);
+                        
+            
                     }
+                    $tmp++; 
+                }
+            }
+
+            ////canasta y envases Editar
+
+            $consultaTipoPaca=DB::table('productos')->where('codigo',$productoID)->value('fk_tipo_paca');
+            
+            
+            $consultaIDCanasta=DB::table('detalles_ventas')->where('fk_factura', $IdVenta)->where('fk_tipo_paca',$productoTipoPaca)->get();
+
+            
+            
+            if($consultaTipoPaca!=null)
+            {
+                
+                if($productoCantidadEnvase!=null && $productoCantidadEnvase!=0)
+                {
+                    $consultarEnvases=DB::table('tipo_pacas')->where('id',$consultaTipoPaca)->get(); 
+                    if(count($consultaIDCanasta)!=0)
+                    {
+                    // dd($consultaIDCanasta[0]-> cantidad,$productoCantidadEnvase);
+                    
+                        DB::table('detalles_ventas')
+                        ->where('fk_tipo_paca',$consultaTipoPaca)
+                        ->where('fk_factura',$IdVenta)
+                        ->where('precio',$consultarEnvases[0]->precio_envase)
+                        ->update(['cantidad' => (int)$consultaIDCanasta[0]-> cantidad + (int)$productoCantidadEnvase]);
+                    
+                    }
+                    else
+                    {
+                        DB::table('detalles_ventas')->insert([
+                            ['precio' => $consultarEnvases[0]->precio_envase, 'cantidad' =>(int)$productoCantidadEnvase,'fk_tipo_paca'=>(int)$consultaTipoPaca,'fk_factura'=>(int)$IdVenta,'fk_producto'=>0 ]
+                        ]);
+                    }
+                
+                }
+
+                if($productoCantidadPlastico!=null && $productoCantidadPlastico!=0 )
+                {
+                    $consultarEnvases=DB::table('tipo_pacas')->where('id',$consultaTipoPaca)->get();
+                    //    foreach($consultarEnvases as $consultarEnvase)
+                    //    {
+                    //      $DividirPrecio=$consultarEnvase->precio / $consultarEnvase->cantidad;
+                        
+                    //    }
+                        
+                        if(count($consultaIDCanasta)!=0)
+                        {
+                        // dd($consultaIDCanasta[0]-> cantidad,$request->input('cantidadEnvases'));
+                        
+                            DB::table('detalles_ventas')
+                            ->where('fk_tipo_paca',$productoTipoPaca)
+                            ->where('fk_factura',$IdVenta)
+                            ->where('precio',$consultarEnvases[0]->precio)
+                            ->update(['cantidad' => (int)$consultaIDCanasta[0]-> cantidad + (int)$productoCantidadPlastico]);
+                        
+                        }
+                        else
+                        {
+                            
+                        //  $TotaEnvases=$DividirPrecio * $precio;
+                            DB::table('detalles_ventas')->insert([
+                            ['precio' => $consultarEnvases[0]->precio , 'cantidad' =>(int)$productoCantidadPlastico,'fk_tipo_paca'=>(int)$consultaTipoPaca,'fk_factura'=>(int)$IdVenta,'fk_producto'=>0 ]
+                            
+                        ]);
+                            }
 
 
-           }
+                }
 
-       } 
+            } 
 
-$notificacion=("Se agrego exitosamente");
-
+            $notificacion=("Se agrego exitosamente");
             return response()->json( ['items'=>$notificacion ] );            
         }
 
@@ -255,20 +332,6 @@ $notificacion=("Se agrego exitosamente");
 // dd($ListarTipoPaca);
 
             $ObtenerProductoTipoPaca=DB::table('productos')->where('fk_tipo_contenido',$id)->where('fk_marca',$marca)->get();//obtengo los productos con una marca
-          
-            // $arrayN = array();
-            // $arrayId = array();
-            // foreach($ObtenerProductoTipoPaca as $ObtenerTipoPaca)
-            // {
-
-            //     $agrupar=DB::table('tipo_pacas')->where('id',$ObtenerTipoPaca->fk_tipo_paca)->get();
-            
-            //     array_push($arrayN,$agrupar[0] -> nombre);
-            //     array_push($arrayId,$agrupar[0] -> id);
-
-            // }
-            // $array = array( $arrayN , $arrayId );
-                  
             return response()->json(['items'=> $ListarTipoPaca,'FiltroProducto'=>$ObtenerProductoTipoPaca]);
         }
         public function ProductoEditar($id) 
@@ -1236,8 +1299,11 @@ $consultarProducto= DB::table('productos')->where('codigo',$consultarDetalleVent
     
         //mostrar un tipo de movimiento
         public function show( $id ) {
-            $ventas = Venta::find( $id );
-            return view('admin.venta.show')->with(compact('ventas'));
+
+            $Cargarventas = Venta::where('id',$id )->get();
+            $Detalle_ventas=detalles_venta::where('fk_factura',$id)->get();
+           
+            return view('admin.venta.show')->with(compact('Detalle_ventas','Cargarventas'));
         }
     
         public function create() {
@@ -1631,24 +1697,25 @@ $consultarProducto= DB::table('productos')->where('codigo',$consultarDetalleVent
      
 
  ////////////////////////////////////////777777
-        public function recibo($id,$estado)
+    public function recibo($id,$estado,$abono)
+    {
+     
+        $ObtenerEstadoVenta=venta::where('id',$id)->get();
+        if($ObtenerEstadoVenta[0]->fk_estado_venta==1)
         {
-            
-            $ObtenerEstadoVenta=venta::where('id',$id)->get();
-            if($ObtenerEstadoVenta[0]->fk_estado_venta==1)
-            {
-            
-         $Detalles_ventas=detalles_venta::where('fk_factura',$id)->get();
+     
+        $Detalles_ventas=detalles_venta::where('fk_factura',$id)->get();
 
-         $cantidad=0;
-         $subtotal=0;
-         $total=0;
-         $CondicionVenta=0;
-         $AcomularProducto=0;
-         $error = array(); 
-         $contadorErrores=0;
-         foreach( $Detalles_ventas as  $Detalles_venta)
-         {
+        $cantidad=0;
+        $subtotal=0;
+        $total=0;
+        $CondicionVenta=0;
+        $AcomularProducto=0;
+        $error = array(); 
+        $contadorErrores=0;
+        
+        foreach( $Detalles_ventas as  $Detalles_venta)
+        {
         
 
             $ObtenerCantidadActual=DB::table('productos')->where('codigo',$Detalles_venta->fk_producto)->get();
@@ -1662,7 +1729,7 @@ $consultarProducto= DB::table('productos')->where('codigo',$consultarDetalleVent
             }
             // dd( $ObtenerCantidadActual);
             $ComprobarDisponibilidadProducto= $ObtenerCantidadActual[0]->cantidad-$AcomularProducto;
-           ////condicion de si existe o falta de productos para le venta
+            ////condicion de si existe o falta de productos para le venta
             if( $ObtenerCantidadActual[0]->cantidad==0)
             {
                 $CondicionVenta=1;
@@ -1676,38 +1743,147 @@ $consultarProducto= DB::table('productos')->where('codigo',$consultarDetalleVent
                 $error[$contadorErrores]='-el producto '.$ObtenerCantidadActual[0]->nombre.' solo hay '.$ObtenerCantidadActual[0]->cantidad.' disponible';
                 
             }
-         
+        
             $contadorErrores=  $contadorErrores+1;
         }
         $AcomularProducto=0;
 
-         }
-////////condicon de venta si falta productos no genere factura
-         if( $CondicionVenta==0)
-         {
-////////se cumple la condicon de venta comienza hacer el recorrido             
-         foreach( $Detalles_ventas as  $Detalles_venta)
-         {
-          $ObtenerCantidadActual=DB::table('productos')->where('codigo',$Detalles_venta->fk_producto)->value('cantidad');
- 
-             $subtotal=$Detalles_venta->precio * $Detalles_venta->cantidad;
-             $total=$total+$subtotal;
- ////////comienza a restar del  inventario 
-             DB::table('productos')
-             ->where('codigo',$Detalles_venta->fk_producto)
+        }
+        ////////condicon de venta si falta productos no genere factura
+        if( $CondicionVenta==0)
+        {
+
+
+
+
+        ////////se cumple la condicon de venta comienza hacer el recorrido      
+
+        foreach( $Detalles_ventas as  $Detalles_venta)
+        {
+        $ObtenerCantidadActual=DB::table('productos')->where('codigo',$Detalles_venta->fk_producto)->value('cantidad');
+        $ObtenerIvaProducto=DB::table('ivas_productos')->where('fk_producto',$Detalles_venta->fk_producto)->value('valor');
+
+            $subtotal=$Detalles_venta->precio * $Detalles_venta->cantidad;
+            $total=$total+$subtotal;
+        ////////comienza a restar del  inventario 
+            DB::table('productos')
+            ->where('codigo',$Detalles_venta->fk_producto)
             
-             ->update(['cantidad' =>$ObtenerCantidadActual-$Detalles_venta->cantidad ]);
-             
- 
-         }
-         // dd($id);
-         
-         $fechaActual= new DateTime();
-////////se actualiza la venta cambiando el estado y total de la factura
-///la condicon estado==4 hacer referencia al estado (por entregar) fk_estado_venta # 2
-//////si no cumple llega al else donde se cambia estado  (entregado) Fk_estado_venta #3
-         if($estado==4)
-         {
+            ->update(['cantidad' =>$ObtenerCantidadActual-$Detalles_venta->cantidad ]);
+            
+
+        }
+        // dd($id);
+        $fechaActual= Carbon::now()->addDay(1)->toDateString();
+        $fechaAbono= Carbon::now()->toDateString();
+
+        
+        ////////se actualiza la venta cambiando el estado y total de la factura
+        ///la condicon estado==4 hacer referencia al estado (por entregar) fk_estado_venta # 2
+        //////si no cumple llega al else donde se cambia estado  (entregado) Fk_estado_venta #3
+        if($estado==4)
+        {
+        
+        if($abono !=0)
+        {
+
+            if($abono >$total)
+            {
+
+                $notification = 'el abono no puede ser mayor al saldo de la factura'; 
+                return redirect('venta/create') -> with( compact( 'notification' ) );
+            
+            }
+            else
+            {
+            if($total == $abono && $ObtenerEstadoVenta[0] -> fk_forma_de_pago==2)
+            {
+
+                $objAbono = new abonoVenta();
+                $objAbono -> valor = (float)$abono; 
+                $objAbono -> fecha = $fechaAbono;                  
+                $objAbono -> fk_venta = $id;
+                $objAbono->save();
+                //inicio de la factura
+
+                $resta= floatval($total -$abono);
+
+                DB::table('ventas')
+                ->where('id',$id)      
+                ->update(['fk_estado_venta' => 2,'fk_forma_de_pago' => 1,'total' => $total,
+                'saldo' => $resta,'fecha_entrega'=>$fechaActual]);
+                $notification = 'la factura fue pagada exitosamente'. $ObtenerEstadoVenta[0]->id;
+                return redirect('venta') -> with( compact( 'notification' ));
+            }
+            else
+            {
+                if($ObtenerEstadoVenta[0] -> fk_forma_de_pago==2)
+                    {
+
+
+                    $objAbono = new abonoVenta();
+                    $objAbono -> valor = (float)$abono; 
+                    $objAbono -> fecha = $fechaAbono;     
+                    
+                    $objAbono -> fk_venta = $id;
+                    $objAbono->save();
+
+                    $resta= floatval($total -$abono);
+
+                    DB::table('ventas')
+                    ->where('id',$id)      
+                    ->update(['fk_estado_venta' => 2,'fk_forma_de_pago' => 2,'total' => $total,
+                    'saldo' => $resta,'fecha_entrega'=>$fechaActual]);                  
+
+                    $notification = 'la factura fue agregada exitosamente  con su abono'. $ObtenerEstadoVenta[0]->id;
+                    return redirect('venta') -> with( compact( 'notification' ));
+
+
+
+                    }
+
+            }
+            
+
+            }
+        
+
+        }
+
+        else
+        {
+        
+            if($ObtenerEstadoVenta[0] -> fk_forma_de_pago==2 && (int)$abono==0)
+                    {
+
+                    $resta= floatval($total -(int)$abono);
+
+                    DB::table('ventas')
+                    ->where('id',$id)      
+                    ->update(['fk_estado_venta' => 2,'fk_forma_de_pago' => 2,'total' => $total,
+                    'saldo' => $resta,'fecha_entrega'=>$fechaActual]);                  
+
+                    $notification = 'la factura fue agregada exitosamente sin abono'. $ObtenerEstadoVenta[0]->id;
+                    return redirect('venta') -> with( compact( 'notification' ));
+
+
+
+                    }
+            
+
+        }
+
+        $obtenerFecha=DB::table('ventas')->where('id',$id)->value('fecha_entrega');
+
+        if($obtenerFecha !=null)
+        {
+            $fechaActual=$obtenerFecha; 
+
+
+        }
+        
+
+
             DB::table('ventas')
             ->where('id',$id)      
             ->update(['fk_estado_venta' => 2,'total' => $total,'fecha_entrega'=>$fechaActual]);
@@ -1715,51 +1891,136 @@ $consultarProducto= DB::table('productos')->where('codigo',$consultarDetalleVent
             Session::forget('IdVenta');
             return back() -> with('/venta') -> with( compact( 'notification' ) );
 
-         }
+        }
 
-         else
-         {
+        else
+        {
+            if($abono !=0)
+        {
 
-         DB::table('ventas')
-         ->where('id',$id)      
-        ->update(['fk_estado_venta' => 3,'total' => $total,'fecha_entrega'=>$fechaActual]);
- 
+            if($abono >$total)
+            {
+
+                $notification = 'el abono no puede ser mayor al saldo de la factura'; 
+                return redirect('venta/create') -> with( compact( 'notification' ) );
+            
+            }
+            else
+            {
+            if($total == $abono && $ObtenerEstadoVenta[0] -> fk_forma_de_pago==2)
+            {
+
+                $objAbono = new abonoVenta();
+                $objAbono -> valor = (float)$abono; 
+                $objAbono -> fecha = $fechaAbono;                  
+                $objAbono -> fk_venta = $id;
+                $objAbono->save();
+                //inicio de la factura
+
+                $resta= floatval($total -$abono);
+
+                DB::table('ventas')
+                ->where('id',$id)      
+                ->update(['fk_estado_venta' => 3,'fk_forma_de_pago' => 1,'total' => $total,
+                'saldo' => $resta,'fecha_entrega'=>$fechaActual2]);
+                $notification = 'la factura fue pagada exitosamente'. $ObtenerEstadoVenta[0]->id;
+                return redirect('venta') -> with( compact( 'notification' ));
+            }
+            else
+            {
+                if($ObtenerEstadoVenta[0] -> fk_forma_de_pago==2)
+                    {
+
+                    $objAbono = new abonoVenta();
+                    $objAbono -> valor = (float)$abono; 
+                    $objAbono -> fecha = $fechaAbono;     
+                    
+                    $objAbono -> fk_venta = $id;
+                    $objAbono->save();
+
+                    $resta= floatval($total -$abono);
+
+                    DB::table('ventas')
+                    ->where('id',$id)      
+                    ->update(['fk_estado_venta' => 3,'fk_forma_de_pago' => 2,'total' => $total,
+                    'saldo' => $resta,'fecha_entrega'=>$fechaActual2]);                  
+
+                    $notification = 'la factura fue agregada exitosamente  con su abono'. $ObtenerEstadoVenta[0]->id;
+                    return redirect('venta') -> with( compact( 'notification' ));
+
+
+
+                    }
+
+            }
+            
+
+            }
+            
+
+        }
+        else
+        {
+            if($ObtenerEstadoVenta[0] -> fk_forma_de_pago==2 && (int)$abono==0)
+                    {
+
+                    $resta= floatval($total -(int)$abono);
+
+                    DB::table('ventas')
+                    ->where('id',$id)      
+                    ->update(['fk_estado_venta' => 3,'fk_forma_de_pago' => 2,'total' => $total,
+                    'saldo' => $resta,'fecha_entrega'=>$fechaActual]);                  
+
+                    $notification = 'la factura fue agregada exitosamente sin su abono'. $ObtenerEstadoVenta[0]->id;
+                    return redirect('venta') -> with( compact( 'notification' ));
+
+
+
+                    }
+        }
+        
+
+        $fechaActual2= Carbon::now()->toDateString();
+        DB::table('ventas')
+        ->where('id',$id)      
+        ->update(['fk_estado_venta' => 3,'total' => $total,'fecha_entrega'=>$fechaActual2]);
+
         Session::forget('IdVenta');
- 
+
         // $CargarVentas = Venta::where('id',$id)->get();
         // $DetalleVentas = detalles_venta::where('fk_factura',$id)->get();
         
         // $view=view('admin.venta.recibo',compact('CargarVentas','DetalleVentas'));
         // $pdf=\App::make('dompdf.wrapper');
         // $pdf->loadHTML($view);
-       
+
         // return $pdf->stream();
         // $notification = 'ya se registro la venta # ' . $id ;
         return back() -> with( compact( 'notification' ) );
-       
-         }
+
+        }
         }
         else
         {
-         
-          
+        
+        
             //// muestra los mensajes de los productos faltantes
             return back() -> with( compact( 'error' ) );
 
         }
-     }
-     else
-     {
+        }
+        else
+        {
         //// muestra los mensajes mensaje que se factura para no halla conflicto cuando le unde dos veces
         Session::forget('IdVenta');     
         $notification = 'ya se registro la venta # ' . $id ;
-             return back() -> with( compact( 'notification' ) );
-     
-         
- 
-     }
+        return back() -> with( compact( 'notification' ) );
 
-    }
+        
+
+        }
+
+        }
 }
     
 
