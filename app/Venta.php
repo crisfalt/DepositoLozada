@@ -36,6 +36,7 @@ class Venta extends Model
     
 ];
 
+  //pryeba de github
   public function estadoVentas() {
         //trae es todod el objeto vacio ese 
         // dd( EstadoCompra::where( 'id' , $this -> fk_estado_compra) -> first() );
