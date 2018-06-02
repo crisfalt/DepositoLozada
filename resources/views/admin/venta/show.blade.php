@@ -119,7 +119,7 @@
                                     fecha de entrega
                                 </th>
                                 <th class="text-center">
-                                    hora de enterga
+                                    hora de entrega
                                 </th>
                                  <th class="text-center">
                                     Saldo

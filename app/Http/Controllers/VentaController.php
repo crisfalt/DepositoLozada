@@ -1395,7 +1395,7 @@ $consultarProducto= DB::table('productos')->where('codigo',$consultarDetalleVent
 
             
             $idVenta = Session::get('IdVenta');
-            return redirect('/venta/create') -> with( compact( 'notification' ) );
+            return redirect('/venta/0/create') -> with( compact( 'notification' ) );
         }
     
         public function edit( $id ) {
