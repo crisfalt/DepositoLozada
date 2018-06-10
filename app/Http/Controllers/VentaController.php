@@ -72,7 +72,7 @@ class VentaController extends Controller
             $id_cliente= $_POST["id_cliente"];
             $CedulaCliente=explode(',',$id_cliente);
             $ConsultarDeuda=DB::table('ventas')->where('fk_cliente',$CedulaCliente[0] )->where('fk_forma_de_pago',2)->get();
-            // dd( $ConsultarDeuda);
+        // dd( $ConsultarDeuda);
             return response()->json( ['items'=>$ConsultarDeuda ] );  
         }
 
@@ -1017,7 +1017,7 @@ $consultarProducto= DB::table('productos')->where('codigo',$consultarDetalleVent
     
       
           
-            return redirect('/venta/create') -> with( compact( 'detalle_venta' ) );
+            return redirect('/venta/0/create') -> with( compact( 'detalle_venta' ) );
             
         }
     
@@ -1380,13 +1380,14 @@ $consultarProducto= DB::table('productos')->where('codigo',$consultarDetalleVent
             $venta -> total = $request->input('total');
 
             $Empaques=TipoPaca::orderby('nombre')->get();
-
-
+            $venta-> fecha_entrega=$request->input('fecha_entrega');
+            $venta-> hora=$request->input('hora');
             $venta -> fk_vendedor = $request->input('fk_vendedor');
             $venta -> fk_estado_venta = $request->input('fk_estado_venta');
             $venta -> fk_cliente =  $ObtenerIdCliente[0];
             $venta -> fk_bodega = $request->input('fk_bodega');
             $venta -> fk_forma_de_pago = $request->input('fk_forma_de_pago');
+
             $venta -> save(); //registrar producto
             $notification = 'Venta Agregada Exitosamente';
             $id=$request->session()->get('id');
@@ -1593,8 +1594,7 @@ $consultarProducto= DB::table('productos')->where('codigo',$consultarDetalleVent
            $ventas -> delete(); //ELIMINAR
           }
           
-   
-            }
+        }
            $notification = 'pre venta' . $ventas -> nombre . ' Eliminado Exitosamente';
             
            return back() -> with( compact( 'notification' ) ); //nos devuelve a la pagina anterior //nos devuelve a la pagina anterior
@@ -1656,7 +1656,7 @@ $consultarProducto= DB::table('productos')->where('codigo',$consultarDetalleVent
             $ventas -> save(); //registrar forma pago
          
             
-            return redirect('/venta/create');
+            return redirect('/venta/0/create');
         }
 //////////////////////////////////////////////////////////////////////////////////////////////7
 ///
@@ -1687,16 +1687,14 @@ $consultarProducto= DB::table('productos')->where('codigo',$consultarDetalleVent
 
     foreach ($Detalleventas as $Detalleventa) 
     {
-     
-    
+   
+   
           if($canasta!=$Detalleventa->Numero_canasta && $Detalleventa->Numero_canasta!=null)
           {
           array_push($arrayCanasta,$Detalleventa->Numero_canasta);
           // $canasta=$Detalleventa->Numero_canasta;
           $canasta=$Detalleventa->Numero_canasta;
           }
-
-
      
          if($Detalleventa->Numero_canasta == null)
           {
@@ -1708,20 +1706,20 @@ $consultarProducto= DB::table('productos')->where('codigo',$consultarDetalleVent
 
 
     } 
-
   
     $view=view('admin.venta.recibo',compact('Cargarventas','Detalleventas','arrayCanasta'));
     $pdf=\App::make('dompdf.wrapper');
     $pdf->loadHTML($view);
     return $pdf->stream();
   }
-     
-
+    
  ////////////////////////////////////////777777
     public function recibo($id,$estado,$abono)
     {
-     
+   
         $ObtenerEstadoVenta=venta::where('id',$id)->get();
+        $obtenerFecha=DB::table('ventas')->where('id',$id)->value('fecha_entrega');
+    
         if($ObtenerEstadoVenta[0]->fk_estado_venta==1)
         {
      
@@ -1790,15 +1788,12 @@ $consultarProducto= DB::table('productos')->where('codigo',$consultarDetalleVent
             DB::table('productos')
             ->where('codigo',$Detalles_venta->fk_producto)            
             ->update(['cantidad' =>$ObtenerCantidadActual-$Detalles_venta->cantidad ]);
-
-            
-
+           
         }
         // dd($id);
         $fechaActual= Carbon::now()->addDay(1)->toDateString();
         $fechaAbono= Carbon::now()->toDateString();
-
-        
+       
         ////////se actualiza la venta cambiando el estado y total de la factura
         ///la condicon estado==4 hacer referencia al estado (por entregar) fk_estado_venta # 2
         //////si no cumple llega al else donde se cambia estado  (entregado) Fk_estado_venta #3
@@ -1870,7 +1865,6 @@ $consultarProducto= DB::table('productos')->where('codigo',$consultarDetalleVent
 
             }
         
-
         }
 
         else
@@ -1879,25 +1873,29 @@ $consultarProducto= DB::table('productos')->where('codigo',$consultarDetalleVent
             if($ObtenerEstadoVenta[0] -> fk_forma_de_pago==2 && (int)$abono==0)
                     {
 
-                    $resta= floatval($total -(int)$abono);
+                if($ObtenerEstadoVenta[0]->fecha_entrega!=null)
+                {
 
+                    $fechaActual=$obtenerFecha;
+
+                }
+                    $resta= floatval($total -(int)$abono);
+               
                     DB::table('ventas')
                     ->where('id',$id)      
                     ->update(['fk_estado_venta' => 2,'fk_forma_de_pago' => 2,'total' => $total,
                     'saldo' => $resta,'fecha_entrega'=>$fechaActual]);                  
 
-                    $notification = 'la factura fue agregada exitosamente sin abono'. $ObtenerEstadoVenta[0]->id;
+                    $notification = 'la factura fue agregada exitosamente sin abono '. $ObtenerEstadoVenta[0]->id;
                     Session::forget('IdVenta');
                     return redirect('venta') -> with( compact( 'notification' ));
-
-
 
                     }
             
 
         }
 
-        $obtenerFecha=DB::table('ventas')->where('id',$id)->value('fecha_entrega');
+        
 
         if($obtenerFecha !=null)
         {
@@ -1906,15 +1904,12 @@ $consultarProducto= DB::table('productos')->where('codigo',$consultarDetalleVent
 
         }
         
-
-
             DB::table('ventas')
             ->where('id',$id)      
             ->update(['fk_estado_venta' => 2,'total' => $total,'fecha_entrega'=>$fechaActual]);
             $notification = 'ya se registro con el estado por entregar la compra # ' . $id ;
             Session::forget('IdVenta');
             return back() -> with('/venta') -> with( compact( 'notification' ) );
-
         }
 
         else

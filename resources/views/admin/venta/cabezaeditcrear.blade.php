@@ -14,7 +14,7 @@
     <div class="col-md-6">
         <div class="card">
             <div class="card-header">
-                <h5 class="title">Editar Compra {{ $ventas -> id }}</h5>
+                <h5 class="title">Editar Venta {{ $ventas -> id }}</h5>
             </div>
             <div class="card-body">
                 <!-- Mostrar los errores capturados por validate -->
@@ -73,7 +73,7 @@
                     <div class="text-center">
                         <button type="submit" class="btn btn-warning">Actualizar Venta</button>
 
-                        <a href="{{ url('/compra/create') }}" class="btn btn-default">Cancelar</a>
+                        <a href="{{ url('/venta/0/create') }}" class="btn btn-default">Cancelar</a>
                     </div>
                 </form>
             </div>

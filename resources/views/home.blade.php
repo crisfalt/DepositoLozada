@@ -15,7 +15,7 @@
         <div class="card">
             <div class="card-header">
               <!--   {{-- <h4 class="card-title"> Simple Table</h4> --}} -->
-                <a href="{{ url('/venta/create') }}" class="btn btn-warning btn-round">crear venta</a>
+                <a href="{{ url('/venta/0/create') }}" class="btn btn-warning btn-round">crear venta</a>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -99,9 +99,10 @@
                                             </a>
                                           
                                           @else
-
+                                          @if($venta->fk_estado_venta==3)
                                           <a href="{{ action('VentaController@imprimir',['id' => $venta -> id,'estado'=>0 ]) }}"  class="btn btn-danger btn-xs" target="_blank()">
                                           PDF</a>
+                                          @endif
                             
                                           @endif
                                           @if($venta->fk_estado_venta==2)

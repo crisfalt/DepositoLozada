@@ -26,6 +26,12 @@ Route::get('/caja/cajas' , 'CajaController@getCajas'); //todas las cajas disponi
 Route::post('/caja/asignar/{caja}/{valor}' , 'CajaController@asignarCaja'); //asignar caja a la session actual
 
 Route::middleware(['auth', 'admin'])->group(function () {
+
+
+     //CRUD Clientes
+     Route::get('/cartera' , 'CarteraController@index')->name('cartera');
+    
+
     //CRUD Empleados
     Route::get('empleados' , 'Auth\RegisterController@index')->name('empleados');
     Route::delete('/empleados/{id}','Auth\RegisterController@destroy'); //vista para eliminar

@@ -26,7 +26,7 @@
         <div class="card">
             <div class="card-header">
               <!--   {{-- <h4 class="card-title"> Simple Table</h4> --}} -->
-                <a href="{{ url('/venta/create') }}" class="btn btn-warning btn-round">Nueva Venta</a>
+                <a href="{{ url('/venta/0/create') }}" class="btn btn-warning btn-round">Nueva Venta</a>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -59,8 +59,8 @@
                                 <tr>
                                         <td class="text-center">{{ $venta ->cliente()->name }}</td>
                                     <td class="text-center">{{ $venta -> id }}</td>
-                                    @if($venta -> fecha_entrega !=null)
-                                    <td class="text-center">{{ $venta -> fecha_entrega }}</td>
+                                    @if($venta -> created_at !=null)
+                                    <td class="text-center">{{ $venta -> created_at }}</td>
 
                                     @else
                                     <td class="text-center">sin fecha factura</td>

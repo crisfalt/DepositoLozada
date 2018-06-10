@@ -134,7 +134,7 @@ function validacion()
                }
                else
                {
-                contenido+='<th class="text-center">el cliente no tiene facturas por cobrar</td>';
+                // contenido+='<th class="text-center">el cliente no tiene facturas por cobrar</td>';
                }
                 });
              }
