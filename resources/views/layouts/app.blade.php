@@ -159,7 +159,13 @@
                                             <i class="fa fa-eye submenu"></i>
                                             <span class="sidebar-normal"> Ver Ventas </span>
                                         </a>
-                                    </li>                                
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('abono') }}">
+                                            <i class="fa fa-money submenu"></i>
+                                            <span class="sidebar-normal"> Ver Abonos </span>
+                                        </a>
+                                    </li>                                 
                                 </ul>
                             </div>
                         </li>
@@ -182,7 +188,13 @@
                                             <i class="fa fa-eye submenu"></i>
                                             <span class="sidebar-normal"> Ver Compras </span>
                                         </a>
-                                    </li>                                
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('abonocompra') }}">
+                                            <i class="fa fa-money submenu"></i>
+                                            <span class="sidebar-normal"> Ver Abonos Compras</span>
+                                        </a>
+                                    </li>                                 
                                 </ul>
                             </div>
                         </li>
@@ -388,6 +400,24 @@
                                         </a>
                                     </li>  -->
                               
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            <a data-toggle="collapse" href="#componentsExamples17">
+                                <i class="fa fa-cart-arrow-down"></i>
+                                <p>Cartera<b class="caret"></b>
+                                </p>
+                            </a>
+                            <div class="collapse" id="componentsExamples17">
+                                <ul class="nav">
+                                    
+                                    <li>
+                                        <a href="{{ route('cartera') }}">
+                                            <i class="fa fa-eye submenu"></i>
+                                            <span class="sidebar-normal"> Ver Cartera </span>
+                                        </a>
+                                    </li>
                                 </ul>
                             </div>
                         </li>

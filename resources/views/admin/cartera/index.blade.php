@@ -22,13 +22,66 @@
         <span data-notify="message">{{ session('notification') }}</span>
     </div>
     @endif
-    <div class="col-md-12">
+    <div class="col-md-6">
         <div class="card">
-            <div class="card-header">
-              <!--   {{-- <h4 class="card-title"> Simple Table</h4> --}} -->
-                {{-- <a href="{{ url('/formapago/create') }}" class="btn btn-warning btn-round">Nueva Forma Pago</a> --}}
-            </div>
+          
             <div class="card-body">
+
+                    <div class="row">
+                        <div class="col-md-12 pr-1">
+                            <div class="form-group">
+                                <label>Cedula</label>
+                                <input type="text" class="form-control" id="cc" name="cedula" value="{{ old('cedula') }}">
+                            </div>
+                        </div>
+                    </div>
+                    
+                   
+                    <div class="text-center">
+                        <button class="btn btn-info">Consultar</button>
+                        <a href="{{ url('/formapago') }}" class="btn btn-default">Cancelar</a>
+                    </div>
+               
+
+            </div>
+        </div>
+    </div>
+
+     <div class="col-md-6">
+        <div class="card">
+          
+            <div class="card-body">
+
+                    <div class="row">
+                        <div class="col-md-6 pr-1">
+                            <div class="form-group">
+                             <h3 class="text-center">Total Facturas</h3>
+                            </div>
+                        </div>
+                        <div class="col-md-6 pr-1">
+                            <div class="form-group">
+                                <h3 class="text-center">$1.02560.0</h3>
+                            </div>
+                        </div>
+                    </div>
+             
+
+
+            </div>
+        </div>
+    </div>
+   
+</div>
+<div class="row">
+
+     <div class="col-md-12">
+        <div class="card">
+          
+            <div class="card-body">
+
+               
+
+
                 <div class="table-responsive">
                     <table class="table" cellspacing="0" id="tableCartera">
                         <thead class=" text-primary">
@@ -38,11 +91,12 @@
                             {{-- <th>
                                 Cliente
                             </th> --}}
+                           
                             <th class="text-center">
-                                    Total de ventas
+                               Saldo
                             </th>
                             <th class="text-center">
-                               Total Por pagar
+                               Accion
                             </th>
                          
                         </thead>
@@ -52,13 +106,13 @@
                         
                                 <tr>
                                     <td class="text-center">{{$facTura -> fk_cliente}}</td>
-                                    <td class="text-center">{{$facTura -> total}}</td>
+                                    
                                     @if($facTura -> saldo==null)
                                     <td class="text-center">0</td>
                                     @else
                                     <td class="text-center">{{$facTura -> saldo}}</td>   
                                     @endif
-                                   
+                                    <td class="text-center">Abonar</td>
                             
                                 </tr>
                             @endforeach
@@ -68,6 +122,7 @@
             </div>
         </div>
     </div>
+    
 </div>
 @endsection
 
@@ -104,4 +159,29 @@
             });
         });
     </script>
+
+    <script type="text/javascript">
+         function traerfacturas()
+    {
+        var idcedula = document.getElementById('cc').value;
+        $("#fkVentas option").remove();
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                type: "GET",
+                url: "/cartera/searchVenta"+idcedula,
+                dataType: 'json',
+                success: function( data ){
+                    console.log(data);
+                    $.each(data, function (key, ventas) {
+                        $("#fkVentas").append("<option value=" + ventas.id + ">" + ventas.nombmuni + "</option>");
+                    });
+                }
+            });
+
+    }
+    </script>
+
+
 @endsection

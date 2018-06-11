@@ -28,8 +28,9 @@ Route::post('/caja/asignar/{caja}/{valor}' , 'CajaController@asignarCaja'); //as
 Route::middleware(['auth', 'admin'])->group(function () {
 
 
-     //CRUD Clientes
+     //Cartera
      Route::get('/cartera' , 'CarteraController@index')->name('cartera');
+     Route::get('/cartera/searchVenta/{idDepa}','CarteraController@searchVentas');
     
 
     //CRUD Empleados
