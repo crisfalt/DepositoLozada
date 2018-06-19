@@ -20,7 +20,8 @@ Auth::routes();
 Route::get('/welcome', function () {
     return view('welcome');
 });
-
+Route::get('autocomplete',array('as'=>'autocomplete','uses'=>'AutoCompleteController@index'));
+Route::get('searchajax',array('as'=>'searchajax','uses'=>'AutoCompleteController@autoComplete'));
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/caja/cajas' , 'CajaController@getCajas'); //todas las cajas disponibles
 Route::post('/caja/asignar/{caja}/{valor}' , 'CajaController@asignarCaja'); //asignar caja a la session actual
@@ -111,6 +112,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/zona/{id}','ZonaController@show'); //mostrar el tipo de movimiento
     Route::get('/zona/{id}/edit' , 'ZonaController@edit');
     Route::post('/zona/{id}/edit' , 'ZonaController@update');
+    Route::get('/zona/search/rutas/json',array('as'=>'zona.search.rutas.json','uses'=>'ZonaController@getRutas'));
 
     //CRUD Rutas de las zonas
     Route::get('/zona/{id}/rutas' , 'RutaController@index');

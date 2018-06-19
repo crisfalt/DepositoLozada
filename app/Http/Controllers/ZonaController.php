@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Ruta;
 use Illuminate\Http\Request;
 use App\Zona;
 use App\Bodega;
@@ -12,6 +13,19 @@ class ZonaController extends Controller
     public function index() {
         $zonas = Zona::orderBy('nombre') -> get();
         return view('admin.zona.index')->with(compact('zonas')); //listado de tipos movimientos
+    }
+
+    public function getRutas() {
+        $zona_id = $_GET['zona_id'];
+        $data=array();
+        foreach ( Ruta::where( 'zona_id', $zona_id )->get() as $ruta ) {
+            $data[]=array('name'=>$ruta->nombre,'id'=>$ruta->id);
+        }
+        if(count($data))
+            return $data;
+        else
+            return ['name'=>'No se encontraron resultados','id'=>'I'];
+//        return Ruta::where( 'zona_id', $zona_id )->get();
     }
 
     //mostrar un tipo de movimiento
