@@ -88,6 +88,7 @@ class RutaController extends Controller
         $ruta -> descripcion = $request->input('descripcion');
         $ruta -> estado = $request->input('estado');
         $ruta -> zona_id = $request->input('zona_id');
+        $ruta -> user_id = 0;
         $ruta -> save(); //registrar producto
         //agregar los dias de esa ruta
         $arrayDias = explode("," , $request->input('dias_almacenados') );

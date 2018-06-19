@@ -13,12 +13,14 @@ class Cliente extends Model
     protected $primaryKey = 'number_id'; //cambiar nombre de llave primaria
 
     public static $messages = [
-        'number_id.unique' => 'Ya hay un usuario registrado con el mismo numero de documento',
         'photo.max' => 'la imagen supera el tamaño maximo permitido de 2048 Kb',
-        'photo.mimes' => 'la imagen debe tener un tipo de archivo jpeg,bmp,png o jpg'
+        'photo.mimes' => 'la imagen debe tener un tipo de archivo jpeg,bmp,png o jpg',
+        'photo.required' => '',
+        'number_id.required' => ''
     ];
 
     public static $rules = [
+        'number_id' => '',
         'name' => 'required|string|max:255',
         'tipo_documento_id' => 'required',
         'address' => 'required|max:150',

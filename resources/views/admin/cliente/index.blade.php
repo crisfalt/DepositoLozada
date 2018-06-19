@@ -96,7 +96,7 @@
                                         <a href="{{ url('/cliente/'.$cliente->number_id.'/edit') }}" rel="tooltip" title="Editar cliente {{ $cliente -> name }}" class="btn btn-success btn-icon btn-sm">
                                             <i class="fa fa-edit"></i>
                                         </a>
-                                        <a class='btn btn-danger btn-icon btn-sm' rel="tooltip" title="Eliminar cliente {{ $cliente -> name }}" onclick="Delete('{{ $cliente -> name }}','{{ $cliente -> codigo }}')">
+                                        <a class='btn btn-danger btn-icon btn-sm' rel="tooltip" title="Eliminar cliente {{ $cliente -> name }}" onclick="Delete('{{ $cliente -> name }}','{{ $cliente -> number_id }}')">
                                             <i class='fa fa-times'></i>
                                         </a>
                                         <!-- <button type="submit" rel="tooltip" title="Eliminar" class="btn btn-danger btn-simple btn-xs">

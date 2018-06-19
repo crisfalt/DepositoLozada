@@ -13,7 +13,7 @@ class ClienteController extends Controller
 {
 
     public function index() {
-        $clientes = Cliente::orderBy('name') -> get();
+        $clientes = Cliente::where('estado','A')->orderBy('name') -> get();
         return view('admin.cliente.index')->with(compact('clientes')); //listado de tipos movimientos
     }
 
@@ -44,6 +44,7 @@ class ClienteController extends Controller
             $request['ruta_id'] = null;
         }
         $reglas = Cliente::$rules; //reglas a mi antojo y personalizadas
+        $mensajes = Cliente::$messages; //reglas a mi antojo y personalizadas
         if( $request->input('phone') != "" ) {
             $reglas['phone'] .= 'numeric|between:0,99999999999999999999';
         }
@@ -53,25 +54,29 @@ class ClienteController extends Controller
         if( $request->input('email') != "" ) {
             $reglas['email'] .= 'string|email|max:255|unique:clientes,email';
         }
-        if( empty( $request->file('photo') ) ) {
-            $reglas['photo'] .= 'required';
-        }
+//        dd( $request->input('number_id') );
         //regla de validacion para el numero de identificacion del cliente
         if( empty( $request->input('number_id') ) ) {
             $reglas['number_id'] .= 'required';
+            $mensajes['number_id.required'] .= 'El Campo Numero de Identificacion es Obligatorio';
         }
         else {
             $reglas['number_id'] .= 'max:30|unique:clientes,number_id';
         }
         //validar datos con reglas de laravel en documentacion hay mas
         //mensajes personalizados para cada campo
-        $this->validate($request,$reglas,Cliente::$messages);
+        $this->validate($request,$reglas,$mensajes);
         //inicio subir foto al servidor
         $file = $request->file('photo');
-        $path = public_path() . '/imagenes/clientes'; //concatena public_path la ruta absoluta a public y concatena la carpeta para imagenes
-        $fileName = uniqid() . $file->getClientOriginalName();//crea una imagen asi sea igual no la sobreescribe
-        //fin subir foto al servidor
-        $file->move( $path , $fileName );//dar la orden al archivo para que se guarde en la ruta indicada la sube al servidor
+        if( empty( $file ) ) {
+            $fileName = 'default.png';//crea una imagen asi sea igual no la sobreescribe
+        }
+        else {
+            $path = public_path() . '/imagenes/clientes'; //concatena public_path la ruta absoluta a public y concatena la carpeta para imagenes
+            $fileName = uniqid() . $file->getClientOriginalName();//crea una imagen asi sea igual no la sobreescribe
+            //fin subir foto al servidor
+            $file->move( $path , $fileName );//dar la orden al archivo para que se guarde en la ruta indicada la sube al servidor
+        }
         //crear un cliente nuevo
         $cliente = new Cliente();
         $cliente -> number_id = $request->input('number_id');
@@ -170,8 +175,10 @@ class ClienteController extends Controller
     }
 
     public function destroy( $id ) {
-        
-        $notification = 'El Cliente aun no se elimina por cupla de kevin';
+        $cliente = Cliente::find($id);
+        $cliente->estado = 'I';
+        $cliente->save();
+        $notification = 'Cliente '.$cliente->name.' eliminado correctamente';
         return back() -> with( compact( 'notification' ) ); //nos devuelve a la pagina anterior
     }
 

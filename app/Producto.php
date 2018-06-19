@@ -9,6 +9,7 @@ class Producto extends Model
 {
 
     protected $primaryKey = 'codigo';
+    public $incrementing = false; //para quitar el autoincrement
 
     //
     public static $messages = [

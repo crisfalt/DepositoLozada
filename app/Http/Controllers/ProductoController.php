@@ -96,6 +96,7 @@ class ProductoController extends Controller
         $this->validate($request,Producto::$rules,Producto::$messages);
         //crear un prodcuto nuevo
         $producto = new Producto();
+//        dd($request->input('codigo'));
         $producto -> codigo = $request->input('codigo');
         $producto -> nombre = $request->input('nombre');
         //$product -> description = $request->input('description');
