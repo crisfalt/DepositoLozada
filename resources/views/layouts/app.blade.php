@@ -365,7 +365,7 @@
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="{{ route('autocomplete') }}">
+                                            <a href="{{ route('zona.vendedor.asignar_ruta') }}">
                                                 <i class="fa fa-plus-square submenu"></i>
                                                 <span class="sidebar-normal"> Asignar Vendedores </span>
                                             </a>

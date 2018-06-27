@@ -19,7 +19,7 @@ class CreateIvasProductosTable extends Migration
             $table->string('fk_producto',100);
             $table->foreign('fk_producto')->references('codigo')->on('productos');
             //fin foranea
-            $table->double('valor',8,2);
+            $table->double('valor',12,2);
             $table->timestamps();
         });
     }

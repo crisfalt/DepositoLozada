@@ -20,7 +20,7 @@ class CreateDetalleComprasTable extends Migration
             $table->foreign('fk_producto')->references('codigo')->on('productos');
             //fin foranea
             $table->integer('cantidad')->unsigned();
-            $table->double('precio',8,2);
+            $table->double('precio',12,2);
             //foranea a detalle_compras
             $table->integer('fk_compra')->unsigned();
             $table->foreign('fk_compra')->references('id')->on('compras');

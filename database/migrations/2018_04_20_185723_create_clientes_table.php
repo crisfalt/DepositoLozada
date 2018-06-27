@@ -26,7 +26,7 @@ class CreateClientesTable extends Migration
             $table->string('phone',20)->nullable();
             $table->string('celular',20)->nullable();
             $table->string('email')->unique()->nullable();
-            $table->double('valor_credito',8,2);
+            $table->double('valor_credito',12,2);
             $table->string('url_foto',500);
             //inicio llave foranea a la bodega
             $table->integer('bodega_id')->unsigned();

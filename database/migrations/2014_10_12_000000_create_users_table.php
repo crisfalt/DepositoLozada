@@ -34,7 +34,7 @@ class CreateUsersTable extends Migration
             $table->integer('bodega_id')->unsigned();
             $table->foreign('bodega_id')->references('id')->on('bodegas');
             //fin
-            $table->string('estado',1) -> default('A');
+            $table->string('estado',1)->default('A');
             $table->rememberToken();
             $table->timestamps();
         });

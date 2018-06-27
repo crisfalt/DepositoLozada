@@ -19,7 +19,7 @@ class CreateProductosTable extends Migration
             $table->string('descripcion',300)->nullable();
             $table->integer('cantidad')->unsigned()->nullable();
             $table->integer('cantidad_reserva');
-            $table->double('precio_compra',8,2);
+            $table->double('precio_compra',12,2);
             //inicio atributo foraneo a marca
             $table->integer('fk_marca')->unsigned();
             $table->foreign('fk_marca')->references('id')->on('marcas');

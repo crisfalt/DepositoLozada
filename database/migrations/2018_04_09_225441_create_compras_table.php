@@ -16,7 +16,7 @@ class CreateComprasTable extends Migration
         Schema::create('compras', function (Blueprint $table) {
             $table->increments('id');
             $table->date('fecha_compra')->nullable();
-            $table->double('total',8,2)->nullable();
+            $table->double('total',12,2)->nullable();
 
 
             //foranea a estado_compra
@@ -36,7 +36,7 @@ class CreateComprasTable extends Migration
             $table->foreign('fk_bodega')->references('id')->on('bodegas');
             //fin foranea
             $table->string('refcompra',100)->nullable();
-            $table->double('saldo',8,2)->nullable();
+            $table->double('saldo',12,2)->nullable();
 
             $table->timestamps();
         });

@@ -18,7 +18,7 @@ class CreateTipoPacasTable extends Migration
             $table->string('nombre',100);
             $table->string('descripcion',300)->nullable();
             $table->integer('cantidad');
-            $table->double('precio', 8 , 2)->nullable();
+            $table->double('precio', 12 , 2)->nullable();
             $table->boolean('retornable')->default(false);
             $table->string('estado',1)->default('A');
             $table->timestamps();

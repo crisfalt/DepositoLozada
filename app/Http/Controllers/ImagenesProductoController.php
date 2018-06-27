@@ -34,6 +34,7 @@ class ImagenesProductoController extends Controller
         $this->validate($request,$rules,$messages);
         //crear un prodcuto nuevo
         $file = $request->file('photo');
+        dd($file);
         $path = public_path() . '/imagenes/productos'; //concatena public_path la ruta absoluta a public y concatena la carpeta para imagenes
         $fileName = uniqid() . $file->getClientOriginalName();//crea una imagen asi sea igual no la sobreescribe
         $moved = $file->move( $path , $fileName );//dar la orden al archivo para que se guarde en la ruta indicada la sube al servidor

@@ -6,13 +6,51 @@ use App\Ruta;
 use Illuminate\Http\Request;
 use App\Zona;
 use App\Bodega;
+use App\User;
 
 class ZonaController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     //
     public function index() {
         $zonas = Zona::orderBy('nombre') -> get();
         return view('admin.zona.index')->with(compact('zonas')); //listado de tipos movimientos
+    }
+
+    public function asignarZona(){
+        $zonas = Zona::where('estado' , 'A')->get();
+        return view('admin.zona.asign_rutas')->with( compact('zonas') );
+    }
+
+    public function actualizarAsginacion() {
+        $user_id = $_POST['vendedor_id'];
+        $rutas_id = $_POST['rutas_id'];
+        foreach ($rutas_id as $ruta_id) {
+            $ruta = Ruta::find($ruta_id);
+            $ruta->user_id = $user_id;
+            $ruta->save();
+        }
+        $response = array(
+            'status' => true,
+            'msg' => 'Rutas asginadas al Vendedor Correctamente'
+        );
+        return response()->json($response);
+    }
+
+    public function autoComplete(Request $request) {
+        $query = $request->get('term','');
+        $vendedores=User::where('name','LIKE','%'.$query.'%')->orWhere('number_id','LIKE','%'.$query.'%')->where('perfil_id','=','2')->get();//autocompletar para vendedore
+        $data=array();
+        foreach ($vendedores as $vendedor) {
+            $data[]=array('value'=>$vendedor->name,'id'=>$vendedor->id);
+        }
+        if(count($data))
+            return $data;
+        else
+            return ['value'=>'No se encontraron resultados','id'=>''];
     }
 
     public function getRutas() {

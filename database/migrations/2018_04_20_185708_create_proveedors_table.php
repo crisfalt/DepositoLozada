@@ -27,7 +27,7 @@ class CreateProveedorsTable extends Migration
             $table->string('phone',20);
             $table->string('celular',20)->nullable();
             $table->string('email')->unique()->nullable();
-            $table->string('estado',1) -> default('A');
+            $table->string('estado',1)->default('A');
             $table->timestamps();
         });
     }

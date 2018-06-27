@@ -8,11 +8,17 @@ use App\Bodega;
 use App\Ruta;
 use App\TipoDocumento;
 use App\OrdenRuta;
+use LynX39\LaraPdfMerger;
 
 class ClienteController extends Controller
 {
 
     public function index() {
+//        $pdf = new LaraPdfMerger\PdfManage();
+//        $pdf->addPDF(public_path().'/3.pdf', 'all');
+//        $pdf->addPDF(public_path().'/3.pdf', 'all');
+////        $pdf->addPDF(public_path().'/106034043.pdf', 'all');
+//        $pdf->merge('download', "mergedpdf.pdf");
         $clientes = Cliente::where('estado','A')->orderBy('name') -> get();
         return view('admin.cliente.index')->with(compact('clientes')); //listado de tipos movimientos
     }

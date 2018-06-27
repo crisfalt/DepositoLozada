@@ -34,8 +34,8 @@ class CreateVentasTable extends Migration
             $table->foreign('fk_forma_de_pago')->references('id')->on('formapagos');//id campo primario de tabla padre categories nombre tabla padre
               
             
-            $table->double('total',8,2)->nullable();
-            $table->double('saldo',8,2)->nullable();
+            $table->double('total',12,2)->nullable();
+            $table->double('saldo',12,2)->nullable();
             $table->date('fecha_vencimiento')->nullable();
             $table->integer('numeroDias')->default(8);
 

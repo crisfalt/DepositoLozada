@@ -91,7 +91,7 @@
                     <div class="row text-center">
                         {{-- <div class="col-md-12">
                             <div class="form-group"> --}}
-                                <div class="upload"><input type="file" class="form-control" title="Imagen a subir" name="photo" id="photo"></div>
+                                <div class="upload"><input type="file" class="form-control" title="Imagen a subir" accept=".jpg,.jpeg,.png" name="photo" id="photo"></div>
                             {{-- </div>
                         </div> --}}
                     </div>

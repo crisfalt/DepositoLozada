@@ -17,7 +17,7 @@ class CreateAbonoComprasTable extends Migration
            
 
             $table->increments('id');
-            $table->double('valor',8,2)->nullable();
+            $table->double('valor',12,2)->nullable();
             $table->date('fecha')->nullable();
             $table->string('estado',1)->default('A');
             //inicio foreign abonos->compra

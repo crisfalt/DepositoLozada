@@ -24,7 +24,7 @@ class CreateDetallesVentasTable extends Migration
             $table->integer('fk_tipo_paca')->unsigned();//foranea a autoincremental
             $table->foreign('fk_tipo_paca')->references('id')->on('tipo_pacas');                     
             $table->integer('cantidad');
-            $table->double('precio',8,2);
+            $table->double('precio',12,2);
            $table->timestamps();
         });
     }
