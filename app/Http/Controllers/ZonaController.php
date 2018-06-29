@@ -47,17 +47,33 @@ class ZonaController extends Controller
         foreach ($vendedores as $vendedor) {
             $data[]=array('value'=>$vendedor->name,'id'=>$vendedor->id);
         }
-        if(count($data))
-            return $data;
-        else
-            return ['value'=>'No se encontraron resultados','id'=>''];
+        if(count($data)) {
+            $response = array(
+                'status' => true,
+                'data' => $data
+            );
+            return response()->json($response);
+        }
+        else {
+            $data = ['value'=>'No se encontraron resultados','id'=>''];
+            $response = array(
+                'status' => false,
+                'data' => $data
+            );
+            return response()->json($response);
+        }
     }
 
     public function getRutas() {
         $zona_id = $_GET['zona_id'];
+        $vendedor_id = $_GET['vendedor_id'];
         $data=array();
-        foreach ( Ruta::where( 'zona_id', $zona_id )->get() as $ruta ) {
-            $data[]=array('name'=>$ruta->nombre,'id'=>$ruta->id);
+        foreach ( Ruta::where( 'zona_id', $zona_id )->where('estado','A')->get() as $ruta ) {
+            $isChecked = false;
+            if( $ruta->user_id == $vendedor_id ) {
+                $isChecked = true;
+            }
+            $data[]=array('name'=>$ruta->nombre,'id'=>$ruta->id,'is_checked'=>$isChecked);
         }
         if(count($data))
             return $data;

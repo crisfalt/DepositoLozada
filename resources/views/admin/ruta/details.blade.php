@@ -65,15 +65,17 @@
                         </th>
                     </thead>
                     <tbody>
-                        @foreach( $ruta -> listaOrdenada() as $index=>$itemLista )
-                            <tr id="{{ $index }}">
-                                <td>{{ $itemLista -> id }}</td>
-                                <td>{{ $itemLista -> orden }}</td>
-                                <td>{{ $itemLista -> cliente() -> number_id }}</td>
-                                <td>{{ $itemLista -> cliente() -> name }}</td>
-                                <td>{{ $itemLista -> cliente() -> address }}</td>
-                            </tr>
-                        @endforeach
+                        @if( isset($ruta) )
+                            @foreach( $ruta -> listaOrdenada() as $index=>$itemLista )
+                                <tr id="{{ $index }}">
+                                    <td>{{ $itemLista -> id }}</td>
+                                    <td>{{ $itemLista -> orden }}</td>
+                                    <td>{{ $itemLista -> cliente() -> number_id }}</td>
+                                    <td>{{ $itemLista -> cliente() -> name }}</td>
+                                    <td>{{ $itemLista -> cliente() -> address }}</td>
+                                </tr>
+                            @endforeach
+                        @endif
                     </tbody>
                 </table>
                 <div class="result">Started dragging row 2.1</div>

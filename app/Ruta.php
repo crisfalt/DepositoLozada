@@ -8,6 +8,7 @@ use App\Zona;
 use App\OrdenRuta;
 use App\DiasRutas;
 use App\detalles_venta;
+use App\User;
 use DB;
 
 class Ruta extends Model
@@ -35,7 +36,8 @@ class Ruta extends Model
     }
 
     public function zona() {
-        return Zona::where('id',$this -> zona_id) -> first(); //1 pdoducto pertene a una categoria
+        return $this->belongsTo(Zona::class);
+//        return Zona::where('id',$this -> zona_id) -> first(); //1 pdoducto pertene a una categoria
     }
 
     public function diasCargados() {
@@ -48,6 +50,10 @@ class Ruta extends Model
 
     public function clientes() {
         return $this->hasMany(Cliente::class);
+    }
+
+    public function vendedor() {
+        return $this->belongsTo(User::class);
     }
 
     public function union() {
@@ -94,6 +100,7 @@ class Ruta extends Model
 
     public function listaOrdenada() {
         $users = OrdenRuta::where('ruta_id',$this -> id ) ->orderBy('orden' , 'ASC') -> get();
+//        dd($users);
         return $users;
     }
 

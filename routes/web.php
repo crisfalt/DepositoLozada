@@ -73,6 +73,9 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/proveedor/{id}/edit' , 'ProveedorController@edit');
     Route::post('/proveedor/{id}/edit' , 'ProveedorController@update');
 
+    //VEndedor
+    Route::post('vendedor/show',array('as'=>'vendedor.show','uses'=>'UserController@getVendedor'));
+
     //CRUD cajas
     Route::get('/caja' , 'CajaController@index')->name('caja');
     Route::get('/caja/create' , 'CajaController@create');

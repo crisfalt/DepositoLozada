@@ -77,13 +77,13 @@
                                         {{ csrf_field() }}
                                         {{ method_field('DELETE') }}
 
-                                        <a href="{{ url('/proveedor/'.$proveedor->codigo) }}" rel="tooltip" title="Ver proveedor {{ $proveedor -> nombre }}" class="btn btn-info btn-icon btn-xs">
+                                        <a href="{{ url('/proveedor/'.$proveedor->number_id) }}" rel="tooltip" title="Ver proveedor {{ $proveedor -> nombre }}" class="btn btn-info btn-icon btn-xs">
                                             <i class="fa fa-info"></i>
                                         </a>
-                                        <a href="{{ url('/proveedor/'.$proveedor->codigo.'/edit') }}" rel="tooltip" title="Editar proveedor {{ $proveedor -> nombre }}" class="btn btn-success btn-icon btn-xs">
+                                        <a href="{{ url('/proveedor/'.$proveedor->number_id.'/edit') }}" rel="tooltip" title="Editar proveedor {{ $proveedor -> nombre }}" class="btn btn-success btn-icon btn-xs">
                                             <i class="fa fa-edit"></i>
                                         </a>
-                                        <a class='btn btn-danger btn-icon btn-xs' rel="tooltip" title="Eliminar proveedor {{ $proveedor -> nombre }}" onclick="Delete('{{ $proveedor -> nombre }}','{{ $proveedor -> codigo }}')">
+                                        <a class='btn btn-danger btn-icon btn-xs' rel="tooltip" title="Eliminar proveedor {{ $proveedor -> nombre }}" onclick="Delete('{{ $proveedor -> nombre }}','{{ $proveedor -> number_id }}')">
                                             <i class='fa fa-times'></i>
                                         </a>
                                         <!-- <button type="submit" rel="tooltip" title="Eliminar" class="btn btn-danger btn-simple btn-xs">
