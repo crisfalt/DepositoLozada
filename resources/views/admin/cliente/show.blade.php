@@ -68,9 +68,9 @@
                         <h5 class="title text-danger">Bodega a la cual pertenece el Cliente</h5>
                         <h6 class="title">{{ $cliente -> bodega() -> nombre }}</h6>
                         <h5 class="title text-danger">Zona a la cual pertenece el Cliente</h5>
-                        <h6 class="title">{{ $cliente -> ruta() -> zona() -> nombre }}</h6>
+                        <h6 class="title">{{ $cliente -> ruta -> zona -> nombre }}</h6>
                         <h5 class="title text-danger">Ruta a la cual pertenece el Cliente</h5>
-                        <h6 class="title">{{ $cliente -> ruta() -> nombre }}</h6>
+                        <h6 class="title">{{ $cliente -> ruta -> nombre }}</h6>
                     </div>
                     <div class="text-center">
                         <a href="{{ url('/cliente') }}" class="btn btn-info btn-round"><i class="now-ui-icons arrows-1_minimal-left"></i> Volver</a>

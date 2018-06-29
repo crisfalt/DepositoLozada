@@ -39,9 +39,6 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-header">
-                <!-- <div class="row">
-                    <div class="col-md-6 text-right"><a href="{{ url('/zona') }}" class="btn btn-info btn-round">Volver</a></div>
-                </div> -->
                 <h4 class="card-title text-center"> Clientes en la Ruta {{ $ruta -> nombre }}</h4>
             </div>
             <div class="card-body">
@@ -65,7 +62,7 @@
                         </th>
                     </thead>
                     <tbody>
-                        @if( isset($ruta) )
+                        @if( $count > 0 )
                             @foreach( $ruta -> listaOrdenada() as $index=>$itemLista )
                                 <tr id="{{ $index }}">
                                     <td>{{ $itemLista -> id }}</td>

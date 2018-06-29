@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Cliente;
 use Illuminate\Http\Request;
 use App\Ruta;
 use App\Zona;
@@ -11,8 +12,10 @@ class RutaController extends Controller
 {
 
     public function details( $id )  {
-        $ruta = Ruta::find($id);
-        return view('admin.ruta.details')->with(compact('ruta')); //listado de tipos movimientos
+        $ruta = Ruta::where('id',$id)->where('estado','A')->first();
+//        dd($ruta);
+        $count = Cliente::where('ruta_id',$id)->where('estado','A')->count();
+        return view('admin.ruta.details')->with(compact('ruta','count')); //listado de tipos movimientos
     }
 
     //metodo para reordenar la lista de la ruta
@@ -43,7 +46,7 @@ class RutaController extends Controller
 
     //cargar todas las rutas existentes
     public function allRutas() {
-        $rutas = Ruta::orderBy('nombre') -> get();
+        $rutas = Ruta::where('estado','A')->orderBy('nombre') -> get();
         return view('admin.ruta.alls')->with(compact('rutas')); //listado de tipos movimientos
     }
 
@@ -163,8 +166,9 @@ class RutaController extends Controller
         //$categories = Category::all(); //traer categorias
         // return "Mostrar aqui formulario para producto con id $id";
         $ruta = Ruta::find( $id );
+        $ruta->estado = 'I';
         //eliminar en cascada
-        $ruta -> delete(); //ELIMINAR
+        $ruta -> save(); //ELIMINAR
         $notification = 'Ruta ' . $ruta -> nombre . ' Eliminada Exitosamente';
         return back() -> with( compact( 'notification' ) ); //nos devuelve a la pagina anterior
     }
