@@ -30,7 +30,7 @@
                 @endif
                 <form method="post" action="{{ url('/ruta/'.$ruta->id.'/edit') }}">
                     {{ csrf_field() }}
-                    <input type="hidden" name="zona_id" value="{{ $ruta->zona()->id }}">
+                    <input type="hidden" name="zona_id" value="{{ $ruta->zona->id }}">
                     <div class="row">
                         <div class="col-md-12 pr-1">
                             <div class="form-group">
@@ -65,7 +65,7 @@
                     </div>
                     <div class="text-center">
                         <button class="btn btn-warning">Actualizar Ruta</button>
-                        <a href="{{ url('/zona/'.$ruta -> zona() -> id.'/rutas') }}" class="btn btn-default">Cancelar</a>
+                        <a href="{{ url('/zona/'.$ruta -> zona-> id.'/rutas') }}" class="btn btn-default">Cancelar</a>
                     </div>
                 {{--</form>--}}
             </div>

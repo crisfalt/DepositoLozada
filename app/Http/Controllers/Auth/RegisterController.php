@@ -90,6 +90,7 @@ class RegisterController extends Controller
 
     public function index() {
         $empleados = User::where('estado','A')->get();
+        dd($empleados);
         return view('auth.index') -> with( compact('empleados') );
     }
 
