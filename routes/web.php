@@ -30,6 +30,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
      //Cartera
      Route::get('/cartera' , 'CarteraController@index')->name('cartera');
      Route::get('/cartera/searchVenta/{idDepa}','CarteraController@searchVentas');
+    //  Route::get('/cartera/searchVenta/{idDepa}','CarteraController@searchSaldo');
     
 
     //CRUD Empleados
@@ -38,7 +39,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     //CRUD abonosventa
     Route::get('/abono/searchTotal/{saldoventa}','AbonoController@searchTotal');
     Route::get('abono' , 'AbonoController@index')->name('abono');
-    Route::get('/abono/create' , 'AbonoController@create');
+    Route::get('/abono/create/{id}' , 'AbonoController@create');
     Route::post('/abono' , 'AbonoController@store');
     Route::delete('/abono/{id}','AbonoController@destroy'); //vista para eliminar
     //CRUD abonocompra

@@ -31,15 +31,16 @@
                         <div class="col-md-12 pr-1">
                             <div class="form-group">
                                 <label>Cedula</label>
-                                <input type="text" class="form-control" id="cc" name="cedula" value="{{ old('cedula') }}">
+                                <input type="text" onkeypress="return solo_numeros(event)" class="form-control" id="cc" name="cedula" value="{{ old('cedula') }}">
                             </div>
                         </div>
                     </div>
                     
                    
                     <div class="text-center">
-                        <button class="btn btn-info">Consultar</button>
-                        <a href="{{ url('/formapago') }}" class="btn btn-default">Cancelar</a>
+                        <button  onclick="vacio()" name="activador" id="btnconsultar" class="btn btn-info">Consultar</button>
+
+                        <a href="{{ url('/cartera') }}" class="btn btn-default">Cancelar</a>
                     </div>
                
 
@@ -55,12 +56,25 @@
                     <div class="row">
                         <div class="col-md-6 pr-1">
                             <div class="form-group">
-                             <h3 class="text-center">Total Facturas</h3>
+                             <h3 class="text-center">Total Facturas Pagadas</h3>
                             </div>
                         </div>
                         <div class="col-md-6 pr-1">
                             <div class="form-group">
-                                <h3 class="text-center">$1.02560.0</h3>
+                                <h3 class="text-center"> <p id="show_total">0</p></h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 pr-1">
+                            <div class="form-group">
+                             <h3 class="text-center">Total Saldos</h3>
+                            </div>
+                        </div>
+                        <div class="col-md-6 pr-1">
+                            <div class="form-group">
+                                <h3 class="text-center"> <p id="show_saldo">0</p></h3>
                             </div>
                         </div>
                     </div>
@@ -72,57 +86,41 @@
     </div>
    
 </div>
-<div class="row">
 
-     <div class="col-md-12">
+ 
+ <div class="col-md-12">
         <div class="card">
-          
+            <div class="card-header">
+              <!--   {{-- <h4 class="card-title"> Simple Table</h4> --}} -->
+            </div>
             <div class="card-body">
-
-               
-
-
                 <div class="table-responsive">
-                    <table class="table" cellspacing="0" id="tableCartera">
+                    <table class="table" cellspacing="0" id="tableCarteras">
                         <thead class=" text-primary">
                             <th class="text-center">
                                 Cedula
                             </th>
-                            {{-- <th>
-                                Cliente
-                            </th> --}}
-                           
                             <th class="text-center">
-                               Saldo
+                                #Factura
                             </th>
                             <th class="text-center">
-                               Accion
+                                Total
                             </th>
-                         
-                        </thead>
-                        <tbody>
-                               
-                            @foreach( $facTuras as $facTura )
+                            <th class="text-center">
+                                Saldo
+                            </th>
+                            <th class="text-center">
+                                Abonar
+                            </th>
                         
-                                <tr>
-                                    <td class="text-center">{{$facTura -> fk_cliente}}</td>
-                                    
-                                    @if($facTura -> saldo==null)
-                                    <td class="text-center">0</td>
-                                    @else
-                                    <td class="text-center">{{$facTura -> saldo}}</td>   
-                                    @endif
-                                    <td class="text-center">Abonar</td>
-                            
-                                </tr>
-                            @endforeach
+                        </thead>
+                        <tbody id="tableCartera">
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
     </div>
-    
 </div>
 @endsection
 
@@ -134,22 +132,71 @@
     <script src="https://cdn.datatables.net/responsive/2.2.1/js/responsive.bootstrap4.min.js"></script>
 
     {{-- metodo jquery para usar la libreria de confirmar para eliminar --}}
-   
-    <script>
+    <!-- <script>
+        function Delete( nameProduct , idDel ) {
+            var pathname = window.location.pathname; //ruta actual
+			$.confirm({
+				theme: 'supervan',
+				title: 'Eliminar Forma Pago',
+				content: 'Seguro(a) que deseas eliminar la Forma Pago' + nameProduct +'.<br> Click Aceptar or Cancelar',
+				icon: 'fa fa-question-circle',
+				animation: 'scale',
+				animationBounce: 2.5,
+				closeAnimation: 'scale',
+				opacity: 0.5,
+				buttons: {
+					'confirm': {
+						text: 'Aceptar',
+						btnClass: 'btn-blue',
+						action: function () {
+							$.confirm({
+								theme: 'supervan',
+								title: 'Estas Seguro ?',
+								content: 'Una vez eliminado debes volver a crear la forma pago',
+								icon: 'fa fa-warning',
+								animation: 'scale',
+								animationBounce: 2.5,
+								closeAnimation: 'zoom',
+								buttons: {
+									confirm: {
+										text: 'Si, Estoy Seguro!',
+										btnClass: 'btn-orange',
+										action: function () {
+                                            $('.delete').attr('action' , pathname + '/' + idDel );
+											$('.delete').submit();
+										}
+									},
+									cancel: {
+										text: 'No, Cancelar',
+										//$.alert('you clicked on <strong>cancel</strong>');
+									}
+								}
+							});
+						}
+					},
+					cancel: {
+						text: 'Cancelar',
+						//$.alert('you clicked on <strong>cancel</strong>');
+					},
+				}
+			});
+		}
+    </script> -->
+    <!-- <script>
         $(document).ready(function() {
             $('#tableCartera').DataTable({
                 "language": {
 
-                    "emptyTable": "No hay Carteras  , click en el boton <b>Buscar</b> con el numero de cedula nombre",
+                    "emptyTable": "No hay Carterao registradas",
                     "paginate": {
                         "first": "Primero",
                         "last": "Ultimo",
                         "previous": "Anterior",
                         "next": "Siguiente",
                     },
-                    "search": "Buscar: ",
+                    "search": "Buscar:",
                     "info": "Mostrando del _START_ al _END_, de un total de _TOTAL_ entradas",
-                    "lengthMenu": "Mostrar _MENU_ Catera por Página",
+                    "lengthMenu": "Mostrar _MENU_ Cartera por Página",
                     "zeroRecords": "No se encontro ningun resultado",
                     "loadingRecords": "Cargando...",
                     "processing": "Procesando...",
@@ -158,25 +205,86 @@
                 "autoWidth": "true"
             });
         });
+    </script> -->
+
+    <script>
+     btnconsultar.disabled = true;
+      function solo_numeros(e){
+            var key = window.Event ? e.which : e.keyCode 
+            btnconsultar.disabled = false; 
+            return ((key >= 48 && key <= 57) || (key==8))
+            
+        }
+        
+        function vacio(){
+            var formulario = document.getElementById("cc");
+            if(document.getElementById("cc").value == "")
+            {
+                alert("el campo debe tener el numero de cedula del cliente");
+                document.getElementById("cc").value="";
+                document.getElementById("cc").focus();            
+                btnconsultar.disabled = true;
+
+            }
+            else{
+                traerfacturas();
+                btnconsultar.disabled = true;
+            }
+            
+        }
     </script>
+
+
 
     <script type="text/javascript">
          function traerfacturas()
     {
         var idcedula = document.getElementById('cc').value;
-        $("#fkVentas option").remove();
+        // $("#fkVentas option").remove();
+            
             $.ajax({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 type: "GET",
-                url: "/cartera/searchVenta"+idcedula,
+                url: "/cartera/searchVenta/"+idcedula,
                 dataType: 'json',
                 success: function( data ){
-                    console.log(data);
-                    $.each(data, function (key, ventas) {
-                        $("#fkVentas").append("<option value=" + ventas.id + ">" + ventas.nombmuni + "</option>");
-                    });
+                    
+                    var addTotal = 0;
+                    var addSaldo =0; 
+                    // console.log(data);
+
+                    if(data.status) {
+
+                     $('#tableCartera').empty();  
+  
+                        $.each(data.consulta, function (key, ventas) {
+                            
+                            if (ventas.fk_forma_de_pago == 1 ) {
+                                addTotal += ventas.total;
+                            }
+                            if (ventas.fk_forma_de_pago == 2 ) {
+                                addSaldo += ventas.saldo;                               
+                          
+                                $('#tableCartera').append('<tr><td class="text-center">' + ventas.fk_cliente + '</td> <td class="text-center">'+ ventas.id + '</td> <td class="text-center">' + ventas.total  + '</td><td class="text-center">' + ventas.saldo + '</td>'+ '</td> <td class="text-center"> <form style="margin: 0; padding: 0;" method="post" action="{{ url("/abono/create") }}"> {{ csrf_field() }} <a href="{{ url("/abono/create")}}'+'/'+ventas.id+'" class="btn btn-warning">Abonar</a> </form> </td>');  
+                                            
+                            }                      
+                            
+                        });
+
+                    }
+                    else {
+                        // $('#tableCartera').remove();   
+                        alert(data.msg);
+                       
+
+                    }                    
+                   
+                    $("#show_total").text(addTotal);
+                    $("#show_saldo").text(addSaldo);
+                    document.getElementById('cc').value="";
+                    
                 }
             });
 

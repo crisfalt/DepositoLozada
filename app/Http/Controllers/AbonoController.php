@@ -19,9 +19,19 @@ class AbonoController extends Controller
     }
 
 
-    public function create() {
-    	$ventas = Venta::orderBy('id','desc')->where('fk_forma_de_pago',2) -> get();
-        return view('admin.abonoventa.create')->with(compact('ventas'));
+    public function create($IdAbono="") {
+
+    //    $ventas = Venta::orderBy('id','desc')->where('fk_forma_de_pago',2) -> get();
+
+
+        if($IdAbono == 0)
+        {
+        $ventas = Venta::orderBy('id','desc')->where('fk_forma_de_pago',2) -> get();
+        }
+        else{
+        $ventas = Venta::orderBy('id','desc')->where('fk_forma_de_pago',2)->where('id',$IdAbono)-> get();
+        }
+        return view('admin.abonoventa.create')->with(compact('ventas','IdAbono'));
     }
 
     public function store( Request $request ) {
