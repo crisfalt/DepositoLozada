@@ -39,9 +39,6 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-header">
-                <!-- <div class="row">
-                    <div class="col-md-6 text-right"><a href="{{ url('/zona') }}" class="btn btn-info btn-round">Volver</a></div>
-                </div> -->
                 <h4 class="card-title text-center"> Clientes en la Ruta {{ $ruta -> nombre }}</h4>
             </div>
             <div class="card-body">
@@ -65,15 +62,17 @@
                         </th>
                     </thead>
                     <tbody>
-                        @foreach( $ruta -> listaOrdenada() as $index=>$itemLista )
-                            <tr id="{{ $index }}">
-                                <td>{{ $itemLista -> id }}</td>
-                                <td>{{ $itemLista -> orden }}</td>
-                                <td>{{ $itemLista -> cliente() -> number_id }}</td>
-                                <td>{{ $itemLista -> cliente() -> name }}</td>
-                                <td>{{ $itemLista -> cliente() -> address }}</td>
-                            </tr>
-                        @endforeach
+                        @if( $count > 0 )
+                            @foreach( $ruta -> listaOrdenada() as $index=>$itemLista )
+                                <tr id="{{ $index }}">
+                                    <td>{{ $itemLista -> id }}</td>
+                                    <td>{{ $itemLista -> orden }}</td>
+                                    <td>{{ $itemLista -> cliente() -> number_id }}</td>
+                                    <td>{{ $itemLista -> cliente() -> name }}</td>
+                                    <td>{{ $itemLista -> cliente() -> address }}</td>
+                                </tr>
+                            @endforeach
+                        @endif
                     </tbody>
                 </table>
                 <div class="result">Started dragging row 2.1</div>

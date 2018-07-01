@@ -71,7 +71,7 @@
                                 <td>{{ $ruta -> id }}</td>
                                 <td>{{ $ruta -> nombre }}</td>
                                 <td>{{ $ruta -> descripcion }}</td>
-                                <td>{{ $ruta -> zona() -> nombre }}</td>
+                                <td>{{ $ruta -> zona -> nombre }}</td>
                                 <td>
                                     @if ( $ruta -> estado == 'A' )
                                         Activo

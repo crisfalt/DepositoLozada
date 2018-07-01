@@ -26,6 +26,7 @@ class ClienteController extends Controller
     public function show($id)
     {
         $cliente = Cliente::where( 'number_id' , $id )->first();
+//        dd($cliente);
         return view('admin.cliente.show')->with(compact('cliente'));
     }
 
@@ -104,15 +105,15 @@ class ClienteController extends Controller
         if( !empty( $ultimoOrdenRuta ) ) { //si existe ya un orden 
             $ordenRuta = new OrdenRuta();
             $ordenRuta -> orden = $ultimoOrdenRuta -> orden + 1; //agregamos un orden al que se lleva
-            $ordenRuta -> cliente_id = $cliente -> number_id;
-            $ordenRuta -> ruta_id = $cliente -> ruta_id;
+            $ordenRuta -> cliente_id = $request->input('number_id');
+            $ordenRuta -> ruta_id = $request->input('ruta_id');
             $ordenRuta -> save();//guardamos la ordenruta
         }
         else {//no hay ningun orden se crea uno nuevo con el orden 1
             $ordenRuta = new OrdenRuta();
             $ordenRuta -> orden = 1; //agregamos un orden al que se lleva
-            $ordenRuta -> cliente_id = $cliente -> number_id;
-            $ordenRuta -> ruta_id = $cliente -> ruta_id;
+            $ordenRuta -> cliente_id = $request->input('number_id');
+            $ordenRuta -> ruta_id = $request->input('ruta_id');
             $ordenRuta -> save();//guardamos la ordenruta
         }
         $notification = 'Cliente Registrado Exitosamente';
@@ -176,6 +177,10 @@ class ClienteController extends Controller
         }
         $cliente -> url_foto = $fileName;
         $cliente -> save(); //registrar producto
+        //actualizar el cliente en el orden de la ruta
+        $ordenRuta = OrdenRuta::where('cliente_id',$id)->first();
+        $ordenRuta->ruta_id = $request->input('ruta_id');
+        $ordenRuta->save();
         $notification = 'Cliente Actualizado Exitosamente';
         return redirect('/cliente') -> with( compact( 'notification' ) );
     }

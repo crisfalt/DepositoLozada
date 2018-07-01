@@ -9,7 +9,9 @@ class OrdenRuta extends Model
 {
     //obtener los valores del cliente
     public function cliente() {
-        return Cliente::where('number_id',$this -> cliente_id ) -> first();
+        $cliente = Cliente::where('number_id',$this -> cliente_id ) -> first();
+//        dd( $cliente );
+        return $cliente;
     }
 
 }
