@@ -55,6 +55,11 @@
                             </div>
                         </div>
                     </div>
+                    <script>
+                            alert('ok');
+                            document.getElementById("fk_venta").selectedIndex ='<?php echo $IdAbono ?>';
+
+                    </script>
                     <div class="row">
                         <div class="col-md-12 pr-1">
                             <div class="form-group">
@@ -102,8 +107,7 @@
 @script 
 
 <script type="text/javascript">
-
-
+    
 
     function validarfecha()
     {
@@ -164,6 +168,7 @@
                    
                        
                     });
+
                 }
             });
 

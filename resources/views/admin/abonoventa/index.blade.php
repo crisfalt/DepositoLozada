@@ -26,7 +26,7 @@
         <div class="card">
             <div class="card-header">
               <!--   {{-- <h4 class="card-title"> Simple Table</h4> --}} -->
-                <a href="{{ url('/abono/create') }}" class="btn btn-warning btn-round">Nuevo Abono</a>
+                <a href="{{ url('/abono/create/0') }}" class="btn btn-warning btn-round">Nuevo Abono</a>
             </div>
             <div class="card-body">
                 <div class="table-responsive">

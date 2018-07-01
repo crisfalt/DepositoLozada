@@ -186,7 +186,7 @@
                         <input type="hidden" name="input_descripcion_precio" id="input_descripcion_precio" value="{{ old('input_descripcion_precio') }}">
                         <input type="hidden" name="input_nombre_precio" id="input_nombre_precio" value="{{ old('input_nombre_precio') }}">
                         <div class="input-field col s4">
-                            <input type="text" class="form-control" id="precio" onkeypress="return solo_numeros(event)">
+                            <input type="text" class="form-control" id="precio" onkeypress="return solo_numeros(event)" required>
                             <label>Precio</label>
                         </div>
                         {{-- <div class="input-field col s4">

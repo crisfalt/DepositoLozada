@@ -83,12 +83,12 @@ function validacion()
         var contenido="";
        var valicidacionCliente = document.getElementById("combobox2").value;
 
-      if(valicidacionCliente=="I")
-       {
-        alert("campo cliente es obligatorio");
-        document.getElementById("combobox2").focus();
-        return false;
-       }
+        if(valicidacionCliente=="I")
+        {
+          alert("campo cliente es obligatorio");
+          document.getElementById("combobox2").focus();
+          return false;
+        }
        else
        {
 
@@ -183,16 +183,16 @@ function validacion()
           //close
       },
   },
-  onContentReady: function () {
-      // bind to events
-      var jc = this;
-      this.$content.find('form').on('submit', function (e) {
-          // if the user submits the form by pressing enter in the field.
-          e.preventDefault();
-          jc.$$formSubmit.trigger('click'); // reference the button and click it
-      });
-  }
-});   
+        onContentReady: function () {
+            // bind to events
+            var jc = this;
+            this.$content.find('form').on('submit', function (e) {
+                // if the user submits the form by pressing enter in the field.
+                e.preventDefault();
+                jc.$$formSubmit.trigger('click'); // reference the button and click it
+            });
+        }
+      });   
 
 
 

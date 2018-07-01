@@ -393,6 +393,24 @@
                                 </div>
                             </li>
                             <li>
+                            <a data-toggle="collapse" href="#componentsExamples17">
+                                <i class="fa fa-cart-arrow-down"></i>
+                                <p>Cartera<b class="caret"></b>
+                                </p>
+                            </a>
+                                <div class="collapse" id="componentsExamples17">
+                                    <ul class="nav">
+                                        
+                                        <li>
+                                            <a href="{{ route('cartera') }}">
+                                                <i class="fa fa-eye submenu"></i>
+                                                <span class="sidebar-normal"> Ver Cartera </span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li>
                                 <a href="">
                                     <i class="now-ui-icons business_chart-bar-32"></i>
                                     <p>Reportes</p>

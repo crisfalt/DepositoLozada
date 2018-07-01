@@ -138,7 +138,7 @@ class VentaController extends Controller
             $cantidadCanasta=$_POST["cantidadcanasta"];
             $datos=$_POST["datosCanasta"];
             $IdVenta= session::get('IdVentaEditar');
-            $ObtenerCombo=DB::table('tipo_pacas')->where('id', $productoTipoPaca)->value('cantidad');
+            $ObtenerCombo=DB::table('tipo_pacas')->where('estado','A')->where('id', $productoTipoPaca)->value('cantidad');
             $total=0;
             $tmp=0;
             $totalCanasta=$productoCantidadCanasta * $ObtenerCombo;
@@ -179,7 +179,7 @@ class VentaController extends Controller
 
             ////canasta y envases Editar
 
-            $consultaTipoPaca=DB::table('productos')->where('codigo',$productoID)->value('fk_tipo_paca');
+            $consultaTipoPaca=DB::table('productos')->where('estado','A')->where('codigo',$productoID)->value('fk_tipo_paca');
             
             
             $consultaIDCanasta=DB::table('detalles_ventas')->where('fk_factura', $IdVenta)->where('fk_tipo_paca',$productoTipoPaca)->get();
@@ -191,7 +191,7 @@ class VentaController extends Controller
                 
                 if($productoCantidadEnvase!=null && $productoCantidadEnvase!=0)
                 {
-                    $consultarEnvases=DB::table('tipo_pacas')->where('id',$consultaTipoPaca)->get(); 
+                    $consultarEnvases=DB::table('tipo_pacas')->where('estado','A')->where('id',$consultaTipoPaca)->get(); 
                     if(count($consultaIDCanasta)!=0)
                     {
                     // dd($consultaIDCanasta[0]-> cantidad,$productoCantidadEnvase);
@@ -214,7 +214,7 @@ class VentaController extends Controller
 
                 if($productoCantidadPlastico!=null && $productoCantidadPlastico!=0 )
                 {
-                    $consultarEnvases=DB::table('tipo_pacas')->where('id',$consultaTipoPaca)->get();
+                    $consultarEnvases=DB::table('tipo_pacas')->where('estado','A')->where('id',$consultaTipoPaca)->get();
                     //    foreach($consultarEnvases as $consultarEnvase)
                     //    {
                     //      $DividirPrecio=$consultarEnvase->precio / $consultarEnvase->cantidad;
@@ -265,8 +265,8 @@ class VentaController extends Controller
             if($tipopaca!=0)
             {
          
-            $ObtenerProductos=DB::table('productos')->where('fk_tipo_paca',$tipopaca)->where('fk_marca',$marca)->where('fk_tipo_contenido',$contenido)->get();//obtengo los productos con una marca,tipo cotenido,tipo empaque
-            $cantidadCanasta=DB::table('tipo_pacas')->where('id',$tipopaca)->value('cantidad');
+            $ObtenerProductos=DB::table('productos')->where('fk_tipo_paca',$tipopaca)->where('fk_marca',$marca)->where('fk_tipo_contenido',$contenido)->where('estado','A')->get();//obtengo los productos con una marca,tipo cotenido,tipo empaque
+            $cantidadCanasta=DB::table('tipo_pacas')->where('estado','A')->where('id',$tipopaca)->value('cantidad');
         
             }
             else
@@ -289,10 +289,11 @@ class VentaController extends Controller
             ->join('tipo_contenidos','productos.fk_tipo_contenido','=','tipo_contenidos.id')
             ->select('tipo_contenidos.id','tipo_contenidos.nombre')                
             ->where('productos.fk_marca','=',$id)
+            ->where('productos.estado','=','A')
             ->groupBy('tipo_contenidos.id')
             ->get();
             Session::put('IdMarcaEditar',$id);
-            $ListarMarcas=DB::table('productos')->where('fk_marca',$id)->select('codigo','nombre')->get(); 
+            $ListarMarcas=DB::table('productos')->where('estado','A')->where('fk_marca',$id)->select('codigo','nombre')->get(); 
            
             $array = Array();
             $array[ 0 ] = $ListarTipoContenido;
@@ -327,13 +328,14 @@ class VentaController extends Controller
                     ) 
             ->where([
                 ['fk_marca', '=',$marca],
-                ['fk_tipo_contenido', '=', $id]
+                ['fk_tipo_contenido', '=', $id],
+                ['estado', '=', 'A']
             ])
             ->groupBy('tipo_pacas.id')                       
             ->get();
 // dd($ListarTipoPaca);
 
-            $ObtenerProductoTipoPaca=DB::table('productos')->where('fk_tipo_contenido',$id)->where('fk_marca',$marca)->get();//obtengo los productos con una marca
+            $ObtenerProductoTipoPaca=DB::table('productos')->where('estado','A')->where('fk_tipo_contenido',$id)->where('fk_marca',$marca)->get();//obtengo los productos con una marca
             return response()->json(['items'=> $ListarTipoPaca,'FiltroProducto'=>$ObtenerProductoTipoPaca]);
         }
         public function ProductoEditar($id) 
@@ -350,11 +352,11 @@ class VentaController extends Controller
             if($id!=0)
             {
          
-            $ObtenerProductos=DB::table('productos')->where('fk_tipo_paca',$id)->where('fk_marca',$marca)->where('fk_tipo_contenido',$contenido)->get();//obtengo los productos con una marca,tipo cotenido,tipo empaque
+            $ObtenerProductos=DB::table('productos')->where('estado','A')->where('fk_tipo_paca',$id)->where('fk_marca',$marca)->where('fk_tipo_contenido',$contenido)->get();//obtengo los productos con una marca,tipo cotenido,tipo empaque
             }
             else
             {
-                $ObtenerProductos=DB::table('productos')->where('fk_marca',$marca)->where('fk_tipo_contenido',$contenido)->get();
+                $ObtenerProductos=DB::table('productos')->where('estado','A')->where('fk_marca',$marca)->where('fk_tipo_contenido',$contenido)->get();
             }
 
             
@@ -380,7 +382,7 @@ class VentaController extends Controller
             }
             else
             {
-                $retornable=DB::table('tipo_pacas')->where('id',$id)->select('retornable')->get(); 
+                $retornable=DB::table('tipo_pacas')->where('estado','A')->where('id',$id)->select('retornable')->get(); 
                 $ObtenerIdCanastaRetornable=$retornable[0]->retornable;
             }
 
@@ -405,7 +407,7 @@ class VentaController extends Controller
 
 //    dd($productoCantidad,$productoID);
        $IdVenta= session::get('IdVenta');
-       $ObtenerCombo=DB::table('tipo_pacas')->where('id', $productoTipoPaca)->value('cantidad');
+       $ObtenerCombo=DB::table('tipo_pacas')->where('estado','A')->where('id', $productoTipoPaca)->value('cantidad');
         $total=0;
         $tmp=0;
         $totalCanasta=$productoCantidadCanasta * $ObtenerCombo;
@@ -455,7 +457,7 @@ class VentaController extends Controller
 
       ////canasta y envases
 
-       $consultaTipoPaca=DB::table('productos')->where('codigo',$productoID)->value('fk_tipo_paca');
+       $consultaTipoPaca=DB::table('productos')->where('estado','A')->where('codigo',$productoID)->value('fk_tipo_paca');
       
       
        $consultaIDCanasta=DB::table('detalles_ventas')->where('fk_factura', $IdVenta)->where('fk_tipo_paca',$productoTipoPaca)->get();
@@ -468,7 +470,7 @@ class VentaController extends Controller
            if($productoCantidadEnvase!=null && $productoCantidadEnvase!=0)
            {
              
-           $consultarEnvases=DB::table('tipo_pacas')->where('id',$consultaTipoPaca)->get();
+           $consultarEnvases=DB::table('tipo_pacas')->where('estado','A')->where('id',$consultaTipoPaca)->get();
       
          
           if(count($consultaIDCanasta)!=0)
@@ -496,7 +498,7 @@ class VentaController extends Controller
 
            if($productoCantidadPlastico!=null && $productoCantidadPlastico!=0 )
            {
-               $consultarEnvases=DB::table('tipo_pacas')->where('id',$consultaTipoPaca)->get();
+               $consultarEnvases=DB::table('tipo_pacas')->where('estado','A')->where('id',$consultaTipoPaca)->get();
                //    foreach($consultarEnvases as $consultarEnvase)
                //    {
                //      $DividirPrecio=$consultarEnvase->precio / $consultarEnvase->cantidad;
@@ -548,8 +550,8 @@ $notificacion=("Se agrego exitosamente");
             if($tipopaca!=0)
             {
          
-            $ObtenerProductos=DB::table('productos')->where('fk_tipo_paca',$tipopaca)->where('fk_marca',$marca)->where('fk_tipo_contenido',$contenido)->get();//obtengo los productos con una marca,tipo cotenido,tipo empaque
-            $cantidadCanasta=DB::table('tipo_pacas')->where('id',$tipopaca)->value('cantidad');
+            $ObtenerProductos=DB::table('productos')->where('estado','A')->where('fk_tipo_paca',$tipopaca)->where('fk_marca',$marca)->where('fk_tipo_contenido',$contenido)->get();//obtengo los productos con una marca,tipo cotenido,tipo empaque
+            $cantidadCanasta=DB::table('tipo_pacas')->where('estado','A')->where('id',$tipopaca)->value('cantidad');
         
             }
             else
@@ -572,10 +574,11 @@ $notificacion=("Se agrego exitosamente");
             ->join('tipo_contenidos','productos.fk_tipo_contenido','=','tipo_contenidos.id')
             ->select('tipo_contenidos.id','tipo_contenidos.nombre')                
             ->where('productos.fk_marca','=',$id)
+            ->where('productos.estado','=','A')
             ->groupBy('tipo_contenidos.id')
             ->get();
             Session::put('IdMarca',$id);
-            $ListarMarcas=DB::table('productos')->where('fk_marca',$id)->select('codigo','nombre')->get(); 
+            $ListarMarcas=DB::table('productos')->where('estado','A')->where('fk_marca',$id)->select('codigo','nombre')->get(); 
 
             
             // console.log( $ListarMarcas );
@@ -637,13 +640,14 @@ $notificacion=("Se agrego exitosamente");
                     ) 
             ->where([
                 ['fk_marca', '=',$marca],
-                ['fk_tipo_contenido', '=', $id]
+                ['fk_tipo_contenido', '=', $id],
+                ['productos.estado', '=', 'A']
             ])
             ->groupBy('tipo_pacas.id')                       
             ->get();
 // dd($ListarTipoPaca);
 
-            $ObtenerProductoTipoPaca=DB::table('productos')->where('fk_tipo_contenido',$id)->where('fk_marca',$marca)->get();//obtengo los productos con una marca
+            $ObtenerProductoTipoPaca=DB::table('productos')->where('estado','A')->where('fk_tipo_contenido',$id)->where('fk_marca',$marca)->get();//obtengo los productos con una marca
           
             // $arrayN = array();
             // $arrayId = array();
@@ -674,11 +678,11 @@ $notificacion=("Se agrego exitosamente");
             if($id!=0)
             {
          
-            $ObtenerProductos=DB::table('productos')->where('fk_tipo_paca',$id)->where('fk_marca',$marca)->where('fk_tipo_contenido',$contenido)->get();//obtengo los productos con una marca,tipo cotenido,tipo empaque
+            $ObtenerProductos=DB::table('productos')->where('estado','A')->where('fk_tipo_paca',$id)->where('fk_marca',$marca)->where('fk_tipo_contenido',$contenido)->get();//obtengo los productos con una marca,tipo cotenido,tipo empaque
             }
             else
             {
-                $ObtenerProductos=DB::table('productos')->where('fk_marca',$marca)->where('fk_tipo_contenido',$contenido)->get();
+                $ObtenerProductos=DB::table('productos')->where('estado','A')->where('fk_marca',$marca)->where('fk_tipo_contenido',$contenido)->get();
             }
 
             
@@ -704,7 +708,7 @@ $notificacion=("Se agrego exitosamente");
             }
             else
             {
-                $retornable=DB::table('tipo_pacas')->where('id',$id)->select('retornable')->get(); 
+                $retornable=DB::table('tipo_pacas')->where('estado','A')->where('id',$id)->select('retornable')->get(); 
                 $ObtenerIdCanastaRetornable=$retornable[0]->retornable;
             }
 
@@ -760,7 +764,7 @@ $notificacion=("Se agrego exitosamente");
     
      // dd("aqui responde laravel " . $cantidad . " la id : " . $id ."Id compra ".$ObtenerIdProducto);
 $consultarDetalleVenta= DB::table('detalles_ventas')->where('id',(int)$request->input('id'))->where('fk_factura',$ObtenerIdProducto)->get();
-$consultarProducto= DB::table('productos')->where('codigo',$consultarDetalleVenta[0]->fk_producto)->get();
+$consultarProducto= DB::table('productos')->where('estado','A')->where('codigo',$consultarDetalleVenta[0]->fk_producto)->get();
 // dd($consultarDetalleVenta);
 
      if(count($consultarDetalleVenta) !=0)
@@ -872,9 +876,9 @@ $consultarProducto= DB::table('productos')->where('codigo',$consultarDetalleVent
                         //    dd($ObtenerPrecio);
     
     
-            $productos=DB::table('productos')->where('codigo',$ObtenerIdProdcuto[0])->value('fk_tipo_paca');
+            $productos=DB::table('productos')->where('estado','A')->where('codigo',$ObtenerIdProdcuto[0])->value('fk_tipo_paca');
         
-            $ObtenerPaca=DB::table('tipo_pacas')->where('id',$productos)->value('retornable');
+            $ObtenerPaca=DB::table('tipo_pacas')->where('estado','A')->where('id',$productos)->value('retornable');
 
             
       
@@ -911,12 +915,12 @@ $consultarProducto= DB::table('productos')->where('codigo',$consultarDetalleVent
             // dd($ConsultarIDProducto);
             // $consultarPrecioProducto=DB::table('precios_productos')->where('fk_producto', $ObtenerIdProdcuto[0])->value('valor');
 
-            $consultaTipoPaca=DB::table('productos')->where('codigo',$request->input('fk_producto'))->value('fk_tipo_paca');
+            $consultaTipoPaca=DB::table('productos')->where('estado','A')->where('codigo',$request->input('fk_producto'))->value('fk_tipo_paca');
             $consultaPrecioDetalle=DB::table('detalles_ventas')->where('fk_factura', $IdVenta)->where('precio',$precioVenta)->where('fk_producto',$ObtenerIdProdcuto[0])->value('precio');
            
             $consultaIDCanasta=DB::table('detalles_ventas')->where('fk_factura', $IdVenta)->where('fk_tipo_paca',$consultaTipoPaca)->get();
             $DividirPrecio=0;
-            $SaberCombo=DB::table('tipo_pacas')->where('id',$consultaTipoPaca)->get();
+            $SaberCombo=DB::table('tipo_pacas')->where('estado','A')->where('id',$consultaTipoPaca)->get();
             $TotaEnvases=0;
       ////para el envase y canastas
       
@@ -1053,9 +1057,9 @@ $consultarProducto= DB::table('productos')->where('codigo',$consultarDetalleVent
               //    dd($ObtenerPrecio);
 
 
-  $productos=DB::table('productos')->where('codigo',$ObtenerIdProdcuto[0])->value('fk_tipo_paca');
+  $productos=DB::table('productos')->where('estado','A')->where('codigo',$ObtenerIdProdcuto[0])->value('fk_tipo_paca');
 
-  $ObtenerPaca=DB::table('tipo_pacas')->where('id',$productos)->value('retornable');
+  $ObtenerPaca=DB::table('tipo_pacas')->where('estado','A')->where('id',$productos)->value('retornable');
 
   
 
@@ -1094,12 +1098,12 @@ $consultarProducto= DB::table('productos')->where('codigo',$consultarDetalleVent
   // dd($ConsultarIDProducto);
   // $consultarPrecioProducto=DB::table('precios_productos')->where('fk_producto', $ObtenerIdProdcuto[0])->value('valor');
 
-  $consultaTipoPaca=DB::table('productos')->where('codigo',$request->input('fk_producto'))->value('fk_tipo_paca');
+  $consultaTipoPaca=DB::table('productos')->where('estado','A')->where('codigo',$request->input('fk_producto'))->value('fk_tipo_paca');
   $consultaPrecioDetalle=DB::table('detalles_ventas')->where('fk_factura', $IdVenta)->where('precio',$precioVenta)->where('fk_producto',$ObtenerIdProdcuto[0])->value('precio');
  
   $consultaIDCanasta=DB::table('detalles_ventas')->where('fk_factura', $IdVenta)->where('fk_tipo_paca',$consultaTipoPaca)->get();
   $DividirPrecio=0;
-  $SaberCombo=DB::table('tipo_pacas')->where('id',$consultaTipoPaca)->get();
+  $SaberCombo=DB::table('tipo_pacas')->where('estado','A')->where('id',$consultaTipoPaca)->get();
   $TotaEnvases=0;
 ////para el envase y canastas
 
@@ -1110,7 +1114,7 @@ $consultarProducto= DB::table('productos')->where('codigo',$consultarDetalleVent
       if($request->input('cantidadEnvases')!=null && $request->input('cantidadEnvases')!=0)
       {
         
-      $consultarEnvases=DB::table('tipo_pacas')->where('id',$consultaTipoPaca)->get();
+      $consultarEnvases=DB::table('tipo_pacas')->where('estado','A')->where('id',$consultaTipoPaca)->get();
   //    foreach($consultarEnvases as $consultarEnvase)
   //    {
   //      $DividirPrecio=$consultarEnvase->precio / $consultarEnvase->cantidad;
@@ -1142,7 +1146,7 @@ $consultarProducto= DB::table('productos')->where('codigo',$consultarDetalleVent
 
       if($request->input('cantidadPlastico')!=null && $request->input('cantidadPlastico')!=0 )
       {
-          $consultarEnvases=DB::table('tipo_pacas')->where('id',$consultaTipoPaca)->get();
+          $consultarEnvases=DB::table('tipo_pacas')->where('estado','A')->where('id',$consultaTipoPaca)->get();
           //    foreach($consultarEnvases as $consultarEnvase)
           //    {
           //      $DividirPrecio=$consultarEnvase->precio / $consultarEnvase->cantidad;
@@ -1234,9 +1238,9 @@ $consultarProducto= DB::table('productos')->where('codigo',$consultarDetalleVent
                      //    dd($ObtenerPrecio);
  
  
-         $productos=DB::table('productos')->where('codigo',$id)->value('fk_tipo_paca');
+         $productos=DB::table('productos')->where('estado','A')->where('codigo',$id)->value('fk_tipo_paca');
      
-         $ObtenerPaca=DB::table('tipo_pacas')->where('id',$productos)->value('retornable');
+         $ObtenerPaca=DB::table('tipo_pacas')->where('estado','A')->where('id',$productos)->value('retornable');
          
          // dd($ObtenerPaca);
          }
@@ -1276,9 +1280,9 @@ $consultarProducto= DB::table('productos')->where('codigo',$consultarDetalleVent
                     //    dd($ObtenerPrecio);
 
 
-        $productos=DB::table('productos')->where('codigo',$id)->value('fk_tipo_paca');
+        $productos=DB::table('productos')->where('estado','A')->where('codigo',$id)->value('fk_tipo_paca');
     
-        $ObtenerPaca=DB::table('tipo_pacas')->where('id',$productos)->value('retornable');
+        $ObtenerPaca=DB::table('tipo_pacas')->where('estado','A')->where('id',$productos)->value('retornable');
         
         // dd($ObtenerPaca);
         }
@@ -1308,15 +1312,12 @@ $consultarProducto= DB::table('productos')->where('codigo',$consultarDetalleVent
             return view('admin.venta.show')->with(compact('Detalle_ventas','Cargarventas'));
         }
     
-        public function create( $id_cliente ) {
-
-          
-
+        public function create( $id_cliente ) {         
           
             $marcas = Marca::orderBy('nombre') -> get();
             $tipocontenidos = TipoContenido::orderBy('nombre') -> get();          
             // traigo el nombre del cliente
-            $clientes = Cliente::orderBy('name') -> get();
+            $clientes = Cliente::orderBy('name')->where('estado','A')->get();
             //traigo el nombre del vendedor
             // $idUsuario=(auth()->user()->cart->id);
             // $vendedores = User::orderBy('name',$idUsuario) -> get();
@@ -1329,14 +1330,14 @@ $consultarProducto= DB::table('productos')->where('codigo',$consultarDetalleVent
             //traigo el id de la variable sesion
             $value= session::get('IdVenta');
             //traigo todos los productos
-            $productos=producto::all();
+            $productos=Producto::where('estado','A');
             //traigo el id de la venta relacionadas con esas ventas
             $Detalles_ventas=detalles_venta::where('fk_factura',$value)->get();
             //traigo el id de la compra
             $CargarVentas = Venta::where('id',$value)->get();
 
             $PrecioDeVentas=PreciosProducto::orderby('fk_producto')->get();
-            $tipopacas=TipoPaca::orderby('id')->get();
+            $tipopacas=TipoPaca::orderby('id')->where('estado','A')->get();
             //consultar los productos mas vendidos
             //
             // $fechaActual= Carbon::now()->toDateString();
@@ -1379,7 +1380,7 @@ $consultarProducto= DB::table('productos')->where('codigo',$consultarDetalleVent
             $venta = new Venta();
             $venta -> total = $request->input('total');
 
-            $Empaques=TipoPaca::orderby('nombre')->get();
+            $Empaques=TipoPaca::orderby('nombre')->where('estado','A')->get();
             $venta-> fecha_entrega=$request->input('fecha_entrega');
             $venta-> hora=$request->input('hora');
             $venta -> fk_vendedor = $request->input('fk_vendedor');
@@ -1402,12 +1403,12 @@ $consultarProducto= DB::table('productos')->where('codigo',$consultarDetalleVent
         public function edit( $id ) {
             //$categories = Category::all(); //traer categorias
             // return "Mostrar aqui formulario para producto con id $id";
-            $marcas = Marca::orderBy('nombre') -> get();
-            $tipocontenidos = TipoContenido::orderBy('nombre') -> get();
+            $marcas = Marca::orderBy('nombre')->where('estado','A') -> get();
+            $tipocontenidos = TipoContenido::orderBy('nombre')->where('estado','A') -> get();
             $PrecioDeVentas=PreciosProducto::orderby('fk_producto')->get();
 
             $venta = Venta::find( $id );
-            $clientes = Cliente::orderBy('name') -> get();
+            $clientes = Cliente::orderBy('name')->where('estado','A') -> get();
             $idUsuario=(auth()->user()->id);
             $vendedores = $idUsuario;
             
@@ -1416,10 +1417,10 @@ $consultarProducto= DB::table('productos')->where('codigo',$consultarDetalleVent
             $formapagos=FormaPago::orderby('nombre')->get();
 
             Session::put('IdVentaEditar', $id);
-            $productos=producto::all();
+            $productos=producto::where('estado','A');
             $Detalles_ventas=detalles_venta::where('fk_factura',$id)->get();
             $CargarVentas = Venta::where('id',$id)->get();
-            $tipopacas=TipoPaca::orderby('id')->get();
+            $tipopacas=TipoPaca::orderby('id')->where('estado','A')->get();
             
 
             return view('admin.venta.edit')->with(compact('venta','clientes','estadosventa','bodega','formapagos','Detalles_ventas','CargarVentas','productos','marcas','tipocontenidos','tipopacas','PrecioDeVentas')); //formulario de registro
@@ -1445,7 +1446,7 @@ $consultarProducto= DB::table('productos')->where('codigo',$consultarDetalleVent
          {
         
 
-            $ObtenerCantidadActual=DB::table('productos')->where('codigo',$Detalles_venta->fk_producto)->get();
+            $ObtenerCantidadActual=DB::table('productos')->where('estado','A')->where('codigo',$Detalles_venta->fk_producto)->get();
             $BuscarProductos=DB::table('detalles_ventas')->where('fk_producto',$Detalles_venta->fk_producto)->where('fk_factura',$id)->get();
             if(count($ObtenerCantidadActual)!=0)
             {
@@ -1481,7 +1482,7 @@ $consultarProducto= DB::table('productos')->where('codigo',$consultarDetalleVent
 ////////se cumple la condicon de venta comienza hacer el recorrido             
          foreach( $Detalles_ventas as  $Detalles_venta)
          {
-          $ObtenerCantidadActual=DB::table('productos')->where('codigo',$Detalles_venta->fk_producto)->value('cantidad');
+          $ObtenerCantidadActual=DB::table('productos')->where('estado','A')->where('codigo',$Detalles_venta->fk_producto)->value('cantidad');
  
              $subtotal=$Detalles_venta->precio * $Detalles_venta->cantidad;
              $total=$total+$subtotal;
@@ -1608,7 +1609,7 @@ $consultarProducto= DB::table('productos')->where('codigo',$consultarDetalleVent
             $ventas = Venta::find( $id );
             //$estadoCompras = EstadoCompra::orderBy('nombre') -> get();
             $formaPagos = FormaPago::orderBy('nombre',$ventas->fk_forma_pago) -> get();
-            $clientes = Cliente::orderBy('name',$ventas->fk_cliente) -> get();
+            $clientes = Cliente::orderBy('name',$ventas->fk_cliente)->where('estado','A') -> get();
             $bodegas = Bodega::orderBy('nombre',$ventas->fk_bodega) -> get(); 
             //dd($clientes);
             return view('admin.venta.cabezaedit')->with(compact('formaPagos','clientes','bodegas','ventas')); //formulario de editar
@@ -1638,7 +1639,7 @@ $consultarProducto= DB::table('productos')->where('codigo',$consultarDetalleVent
             $ventas = Venta::find( $id );
             //$estadoventas = EstadoCompra::orderBy('nombre') -> get();
             $formaPagos = FormaPago::orderBy('nombre',$ventas->fk_forma_de_pago) -> get();
-            $clientes = Cliente::orderBy('number_id','name',$ventas->fk_cliente) -> get();
+            $clientes = Cliente::orderBy('number_id','name',$ventas->fk_cliente)->where('estado','A') -> get();
             $bodegas = Bodega::orderBy('nombre',$ventas->fk_bodega) -> get(); 
             //dd($clientes);
             return view('admin.venta.cabezaeditcrear')->with(compact('ventas','formaPagos','clientes','bodegas')); //formulario de editar
@@ -1737,7 +1738,7 @@ $consultarProducto= DB::table('productos')->where('codigo',$consultarDetalleVent
         {
         
 
-            $ObtenerCantidadActual=DB::table('productos')->where('codigo',$Detalles_venta->fk_producto)->get();
+            $ObtenerCantidadActual=DB::table('productos')->where('estado','A')->where('codigo',$Detalles_venta->fk_producto)->get();
             $BuscarProductos=DB::table('detalles_ventas')->where('fk_producto',$Detalles_venta->fk_producto)->where('fk_factura',$id)->get();
               if(count($ObtenerCantidadActual)!=0)
               {
@@ -1779,7 +1780,7 @@ $consultarProducto= DB::table('productos')->where('codigo',$consultarDetalleVent
 
         foreach( $Detalles_ventas as  $Detalles_venta)
         {
-        $ObtenerCantidadActual=DB::table('productos')->where('codigo',$Detalles_venta->fk_producto)->value('cantidad');
+        $ObtenerCantidadActual=DB::table('productos')->where('estado','A')->where('codigo',$Detalles_venta->fk_producto)->value('cantidad');
         $ObtenerIvaProducto=DB::table('ivas_productos')->where('fk_producto',$Detalles_venta->fk_producto)->value('valor');
 
             $subtotal=$Detalles_venta->precio * $Detalles_venta->cantidad;
