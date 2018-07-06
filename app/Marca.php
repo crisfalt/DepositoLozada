@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Producto;
 use Illuminate\Database\Eloquent\Model;
 
 class Marca extends Model
@@ -21,4 +22,9 @@ class Marca extends Model
             'estado' => 'required'
     ];
     //
+
+    public function productos() {
+        return $this->hasMany(\App\Producto::class,'codigo');
+    }
+
 }

@@ -1,32 +1,3 @@
-// // Get the modal
-// var modal = document.getElementById('myModal');
-
-// // Get the button that opens the modal
-// var btn = document.getElementById("myBtn");
-
-// // Get the <span> element that closes the modal
-// var span = document.getElementsByClassName("close")[0];
-
-// // When the user clicks the button, open the modal
-// btn.onclick = function () {
-//     modal.style.display = "none";
-// }
-
-// // When the user clicks on <span> (x), close the modal
-// span.onclick = function () {
-//     modal.style.display = "none";
-// }
-
-// // When the user clicks anywhere outside of the modal, close it
-// window.onclick = function (event) {
-//     if (event.target == modal) {
-//         modal.style.display = "none";
-//     }
-// }
-// 
-// 
-// 
-
 function hacerAbono(contador,factura,saldo)
     {
  
@@ -824,8 +795,9 @@ $("#tipopaca").change(function () {
               
             dataType: "json",
             success: function (items) {
-              // console.log(items.items[0]);
+              // console.log(items);
               var datos = items.items[0];
+              // console.log(datos[0].tipo_contenido);
               var datos2= items.items[1];
             
               document.getElementById('cantidadcanastaOcultar').style.display = 'none';
@@ -846,27 +818,14 @@ $("#tipopaca").change(function () {
             
             $("#tipocontenido").empty(); $("#tipocontenido").append($("<option  />").val("0").text("SELECCIONE El TIPO CONTENIDO").addClass("form-control"));
             $("#combobox").empty(); $("#combobox").append($("<option />").val("0").text("SELECCIONE El PRODUCTO"));
-            // var nombres = datos[ 0 ];
-            // var ids = datos[1];
-            // var nombres1 = datos2[ 0 ];
-            // var ids1 = datos2[1];
-            // for( var i = 0 ; i < nombres.length ; i++ ) {
-            //   $("#tipocontenido").append($("<option />").val(ids[i]).text(nombres[i]));
-            // }
-            datos.forEach( function( valor , index ) { 
-              // console.log(valor);
-              $("#tipocontenido").append($("<option />").val(valor.id).text(valor.nombre).addClass("form-control"));
+            $.each(datos, function (index , valor) {
+                    $("#tipocontenido").append($("<option />").val(valor.tipo_contenido.id).text(valor.tipo_contenido.nombre).addClass("form-control"));
+            })
 
-            });
-
-            datos2.forEach( function( valor , index ) { 
-              // console.log(valor);
+            datos2.forEach( function( valor , index ) {
               $("#combobox").append($("<option />").val(valor.codigo).text(valor.nombre));
 
             });
-            //  for( var i = 0 ; i < datos.length ; i++ ) {
-            //   $("#tipocontenido").append($("<option />").val(ids[i]).text(nombres[i]));
-            // }
             
          
             
@@ -877,7 +836,7 @@ $("#tipopaca").change(function () {
 
 //////listar Tipo Pacas
         $("#tipocontenido").change(function () {
-        // alert($(this).val());
+            // alert($(this).val());
           var ruta='http://'+window.location.host;
           $.ajax({
             headers: {
@@ -908,15 +867,9 @@ $("#tipopaca").change(function () {
               // document.getElementById('cantidad4Ocultar').style.display = 'none';
             
               document.getElementById('cantidadcanastaOcultar').style.display = 'none';
-              cantidadcanastaOcultar
-              // var nombres = datosListarTipoContenido[ 0 ];
-              // var ids = datosListarTipoContenido[1];
-              // for( var i = 0 ; i < nombres.length ; i++ ) {
-              //   $("#tipopaca").append($("<option />").val(ids[i]).text(nombres[i]));
-              // }
               datosListarTipoContenido.forEach( function( valor , index ) { 
                 // console.log(valor);
-                $("#tipopaca").append($("<option />").val(valor.id).text(valor.nombre).addClass("form-control"));
+                $("#tipopaca").append($("<option />").val(valor.tipo_paca.id).text(valor.tipo_paca.nombre).addClass("form-control"));
   
               });
 

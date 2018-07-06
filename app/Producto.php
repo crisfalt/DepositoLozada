@@ -102,7 +102,8 @@ class Producto extends Model
     ];
 
     public function marca() {
-        return $marca = Marca::where('id',$this->fk_marca) -> first();
+//        return $marca = Marca::where('id',$this->fk_marca) -> first();
+        return $this->belongsTo('App\Marca','fk_marca');
     }
     
     public function size() {
@@ -114,11 +115,13 @@ class Producto extends Model
     }
 
     public function tipoContenido() {
-        return $tipoContenido = TipoContenido::where('id',$this->fk_tipo_contenido) -> first();
+        return $this->belongsTo(TipoContenido::class,'fk_tipo_contenido');
+//        return $tipoContenido = TipoContenido::where('id',$this->fk_tipo_contenido) -> first();
     }
 
     public function tipoPaca() {
-        return $tipoPaca = TipoPaca::where('id',$this->fk_tipo_paca) -> first();
+        return $this->belongsTo(TipoPaca::class,'fk_tipo_paca');
+//        return $tipoPaca = TipoPaca::where('id',$this->fk_tipo_paca) -> first();
     }
 
     public function bodega() {

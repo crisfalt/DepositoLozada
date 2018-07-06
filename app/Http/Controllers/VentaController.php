@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Proveedor;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Venta;
@@ -39,9 +40,10 @@ class VentaController extends Controller
             $notification="";
             if($saldo==$abono)
             {
-                 DB::table('ventas')
-                ->where('id',$id_factura)      
-                ->update(['fk_forma_de_pago' => 1,'saldo' => $resta]);
+                $venta = Venta::where('id',$id_factura);
+                $venta->fk_forma_de_pago = 1;
+                $venta->saldo = $resta;
+                $venta->save();
                 //inserta tabla abono
                 $objAbono = new abonoVenta();
                 $objAbono -> valor = (float)$abono; 
@@ -52,9 +54,9 @@ class VentaController extends Controller
             }
             else
             {
-                DB::table('ventas')
-                ->where('id',$id_factura)      
-                ->update(['saldo' => $resta]);
+                $venta = Venta::where('id',$id_factura);
+                $venta->saldo = $resta;
+                $venta->save();
                 //inserta tabla abono
                 $objAbono = new abonoVenta();
                 $objAbono -> valor = (float)$abono; 
@@ -71,7 +73,7 @@ class VentaController extends Controller
            
             $id_cliente= $_POST["id_cliente"];
             $CedulaCliente=explode(',',$id_cliente);
-            $ConsultarDeuda=DB::table('ventas')->where('fk_cliente',$CedulaCliente[0] )->where('fk_forma_de_pago',2)->get();
+            $ConsultarDeuda=Venta::where('fk_cliente',$CedulaCliente[0] )->where('fk_forma_de_pago',2)->get();
         // dd( $ConsultarDeuda);
             return response()->json( ['items'=>$ConsultarDeuda ] );  
         }
@@ -82,15 +84,14 @@ class VentaController extends Controller
             $notificacion="";
             $factura_id= $_POST["id_factura"];
             $actualizar_hora= $_POST["actualizar_hora"];
-            
-            $ConsultarFacturaVenta=DB::table('ventas')->where('id',$factura_id )->get();
+            $ConsultarFacturaVenta=Venta::where('id',$factura_id )->get();
             if(count($ConsultarFacturaVenta) !=0)
             {
                 if($ConsultarFacturaVenta[0]->fk_estado_venta ==1 || $ConsultarFacturaVenta[0]->fk_estado_venta == 2)
                 {
-                    DB::table('ventas')
-                        ->where('id',$factura_id)
-                        ->update(['hora' =>$actualizar_hora]);
+                    $venta = Venta::where('id',$factura_id);
+                    $venta->hora = $actualizar_hora;
+                    $venta->save();
                     $notificacion=("se actualizo la hora de entrega de la factura #".$factura_id);
                 }
                 else
@@ -113,9 +114,8 @@ class VentaController extends Controller
             {
                 if($ConsultarFacturaVenta[0]->fk_estado_venta ==1 || $ConsultarFacturaVenta[0]->fk_estado_venta == 2)
                 {
-                    DB::table('ventas')
-                        ->where('id',$factura_id)
-                        ->update(['fecha_entrega' =>$actualizar_fecha]);
+                    $ConsultarFacturaVenta->fecha_entrega = $actualizar_fecha;
+                    $ConsultarFacturaVenta->save();
                     $notificacion=("se actualizo la fecha de entrega de la factura #".$factura_id);
                 }
                 else
@@ -138,11 +138,11 @@ class VentaController extends Controller
             $cantidadCanasta=$_POST["cantidadcanasta"];
             $datos=$_POST["datosCanasta"];
             $IdVenta= session::get('IdVentaEditar');
-            $ObtenerCombo=DB::table('tipo_pacas')->where('estado','A')->where('id', $productoTipoPaca)->value('cantidad');
+            $ObtenerCombo=TipoPaca::where('estado','A')->where('id', $productoTipoPaca)->value('cantidad');
             $total=0;
             $tmp=0;
             $totalCanasta=$productoCantidadCanasta * $ObtenerCombo;
-            $ObteneIDcanasta=DB::table('detalles_ventas')->where('fk_factura','=',$IdVenta)->max('Numero_canasta');
+            $ObteneIDcanasta = detalles_venta::where('fk_factura','=',$IdVenta)->max('Numero_canasta');
             if($ObteneIDcanasta==null)
             {
                 $ObteneIDcanasta=0; 
@@ -283,17 +283,18 @@ class VentaController extends Controller
         public function tipoContenidoEditar($id) 
         {
 
-             
-            $ListarTipoContenido= DB::table('productos')                        
-            ->join('marcas','productos.fk_marca','=','marcas.id')
-            ->join('tipo_contenidos','productos.fk_tipo_contenido','=','tipo_contenidos.id')
-            ->select('tipo_contenidos.id','tipo_contenidos.nombre')                
-            ->where('productos.fk_marca','=',$id)
-            ->where('productos.estado','=','A')
-            ->groupBy('tipo_contenidos.id')
-            ->get();
+            $ListarTipoContenido = Producto::all()->marca;
+            dd($ListarTipoContenido);
+//            $ListarTipoContenido= DB::table('productos')
+//            ->join('marcas','productos.fk_marca','=','marcas.id')
+//            ->join('tipo_contenidos','productos.fk_tipo_contenido','=','tipo_contenidos.id')
+//            ->select('tipo_contenidos.id','tipo_contenidos.nombre')
+//            ->where('productos.fk_marca','=',$id)
+//            ->where('productos.estado','=','A')
+//            ->groupBy('tipo_contenidos.id')
+//            ->get();
             Session::put('IdMarcaEditar',$id);
-            $ListarMarcas=DB::table('productos')->where('estado','A')->where('fk_marca',$id)->select('codigo','nombre')->get(); 
+            $ListarMarcas=Proveedor::where('estado','A')->where('fk_marca',$id)->select('codigo','nombre')->get();
            
             $array = Array();
             $array[ 0 ] = $ListarTipoContenido;
@@ -568,44 +569,9 @@ $notificacion=("Se agrego exitosamente");
         public function tipoContenido($id) 
         {
 
-             
-            $ListarTipoContenido= DB::table('productos')                        
-            ->join('marcas','productos.fk_marca','=','marcas.id')
-            ->join('tipo_contenidos','productos.fk_tipo_contenido','=','tipo_contenidos.id')
-            ->select('tipo_contenidos.id','tipo_contenidos.nombre')                
-            ->where('productos.fk_marca','=',$id)
-            ->where('productos.estado','=','A')
-            ->groupBy('tipo_contenidos.id')
-            ->get();
+            $ListarTipoContenido= Producto::where('estado','A')->where('fk_marca',$id)->with('tipoContenido')->get();
             Session::put('IdMarca',$id);
-            $ListarMarcas=DB::table('productos')->where('estado','A')->where('fk_marca',$id)->select('codigo','nombre')->get(); 
-
-            
-            // console.log( $ListarMarcas );
-            // $ListarComoboPorMarca = json_encode(array('user' => $id));
-            // dd($ListarComoboPorMarca);
-            
-// dd($ListarTipoContenido);
-          
-           
-            // $arrayN = array();
-            // $arrayId = array();
-            // Session::put('IdMarca',$id);
-            
-          
-
-            // foreach($ObtenerTipoContenidos as $ObtenerTipoContenido)
-            // {
-
-            //     $agrupar=DB::table('tipo_contenidos')->where('id',$ObtenerTipoContenido->fk_tipo_contenido)->get();
-            //     array_push($arrayN,$agrupar[0] -> nombre);
-            //     array_push($arrayId,$agrupar[0] -> id);
-
-            // }
-            // $array = array( $arrayN , $arrayId );
-            // foreach( $array as $valor ) {
-            //     dd($valor);
-            // }
+            $ListarMarcas=Producto::where('estado','A')->where('fk_marca',$id)->select('codigo','nombre')->get();
            
             $array = Array();
             $array[ 0 ] = $ListarTipoContenido;
@@ -617,53 +583,13 @@ $notificacion=("Se agrego exitosamente");
         {
             $marca = Session::get('IdMarca');
             Session::put('IdContenido',$id);
-            
 
-     $ListarTipoPaca= DB::table('productos')                        
-            ->join('marcas',
-                   'productos.fk_marca',
-                   '=',
-                   'marcas.id'
-                  )   
-            ->join('tipo_pacas',
-                    'productos.fk_tipo_paca',
-                    '=',
-                    'tipo_pacas.id'
-                   )
-            ->join('tipo_contenidos',
-                    'productos.fk_tipo_contenido',
-                    '=',
-                    'tipo_contenidos.id'
-                   )
-            ->select('tipo_pacas.id',
-                     'tipo_pacas.nombre'
-                    ) 
-            ->where([
-                ['fk_marca', '=',$marca],
-                ['fk_tipo_contenido', '=', $id],
-                ['productos.estado', '=', 'A']
-            ])
-            ->groupBy('tipo_pacas.id')                       
-            ->get();
-// dd($ListarTipoPaca);
+            $ListarTipoPaca = Producto::where('estado','A')->where('fk_marca',$marca)->where('fk_tipo_contenido',$id)->with('tipoPaca')->get();
+            $ObtenerProductoTipoPaca=Producto::where('estado','A')->where('fk_tipo_contenido',$id)->where('fk_marca',$marca)->get();//obtengo los productos con una marca
 
-            $ObtenerProductoTipoPaca=DB::table('productos')->where('estado','A')->where('fk_tipo_contenido',$id)->where('fk_marca',$marca)->get();//obtengo los productos con una marca
-          
-            // $arrayN = array();
-            // $arrayId = array();
-            // foreach($ObtenerProductoTipoPaca as $ObtenerTipoPaca)
-            // {
-
-            //     $agrupar=DB::table('tipo_pacas')->where('id',$ObtenerTipoPaca->fk_tipo_paca)->get();
-            
-            //     array_push($arrayN,$agrupar[0] -> nombre);
-            //     array_push($arrayId,$agrupar[0] -> id);
-
-            // }
-            // $array = array( $arrayN , $arrayId );
-                  
             return response()->json(['items'=> $ListarTipoPaca,'FiltroProducto'=>$ObtenerProductoTipoPaca]);
         }
+
         public function Producto($id) 
         {
          
@@ -1787,7 +1713,7 @@ $consultarProducto= DB::table('productos')->where('estado','A')->where('codigo',
             $total=$total+$subtotal;
         ////////comienza a restar del  inventario 
             DB::table('productos')
-            ->where('codigo',$Detalles_venta->fk_producto)            
+            ->where('codigo',''.$Detalles_venta->fk_producto.'')
             ->update(['cantidad' =>$ObtenerCantidadActual-$Detalles_venta->cantidad ]);
            
         }
@@ -1800,7 +1726,6 @@ $consultarProducto= DB::table('productos')->where('estado','A')->where('codigo',
         //////si no cumple llega al else donde se cambia estado  (entregado) Fk_estado_venta #3
         if($estado==4)
         {
-        
         if($abono !=0)
         {
 

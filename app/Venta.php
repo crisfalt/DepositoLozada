@@ -49,10 +49,10 @@ class Venta extends Model
     }
 
 
-    public function clientes() {
-//        return  Cliente::where( 'number_id' , $this -> fk_cliente) -> first();
-        return $this->belongsTo(Cliente::class);
-    }
+//    public function cliente() {
+////        return  Cliente::where( 'number_id' , $this -> fk_cliente) -> first();
+//        return $this->belongsTo(Cliente::class);
+//    }
 
     public function cliente() {
        return  Cliente::where( 'number_id' , $this -> fk_cliente) -> first();

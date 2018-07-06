@@ -71,7 +71,7 @@
                     </p>
                     <h5 class="title text-danger">Marca</h5>
                     <p class="title text-center">
-                        {{ $Producto -> marca() -> nombre }}
+                        {{ $Producto -> marca -> nombre }}
                     </p>
                     <h5 class="title text-danger">Tamaño de Envasado</h5>
                     <p class="title text-center">
@@ -83,7 +83,7 @@
                     </p>
                     <h5 class="title text-danger">Tipo de Contenido</h5>
                     <p class="title text-center">
-                        {{ $Producto -> tipoContenido() -> nombre }}
+                        {{ $Producto -> tipoContenido -> nombre }}
                     </p>
                     <h5 class="title text-danger">Tipo de Empacado</h5>
                     <p class="title text-center">

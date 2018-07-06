@@ -347,13 +347,6 @@
                                     @endif
                                     <td class="text-center">{{  $CargarVenta -> cliente() -> name }}</td> 
 
-
-                                    {{-- proveedires esta vacio debe validar eso  --}}
-                                    {{-- @if( $CargarVenta -> vendedores() != "" || $CargarVenta -> vendedores() != null )
-                                    <td class="text-center">{{ $CargarVenta -> vendedores() -> nombre }}</td>
-                                    @else 
-                                    <td class="text-center">Sin Definir</td>
-                                    @endif --}}
                                     @if($CargarVenta->total != null ||$CargarVenta->total != "")                                           
                                     <td class="text-center">{{ $CargarVenta -> total }}</td>
                                     @else
@@ -404,6 +397,11 @@
                                     <select class="form-control"  style=" display: none;" name="tipocontenido"  id="tipocontenido" disabled="TRUE" size="4" >
                                             <option class="form-control" value="0" selected>Selecione el Tipo Contenido</option>
                                         @foreach ( $tipocontenidos as $TipoContenido )
+<!--                                            --><?php
+//                                                echo '<script>';
+//                                                echo 'console.log('. json_encode( $TipoContenido ) .')';
+//                                                echo '</script>';
+//                                            ?>
                                                  <option class="form-control" value="{{ $TipoContenido->id}}" @if( $TipoContenido -> fk_producto == old( 'TipoContenido') )  @endif>{{ $TipoContenido->nombre }}</option>
                                           @endforeach
                                     </select>

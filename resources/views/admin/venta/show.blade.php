@@ -14,43 +14,6 @@
 </div>
 @endsection
 
-
-<!-- <style>
-
-
-
-
-.custom-combobox {
-    position: relative;
-    display: inline-block;
-  }
-  .custom-combobox-toggle {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    margin-left: -1px;
-    padding: 0;
-  }
-  .custom-combobox-input {
-    margin: 0;
-    padding-top: 2px;
-    padding-bottom: 5px;
-    padding-right: 5px;
-  }
-
-  .enlace {
-      border: 0;
-      padding: 50px;
-      background-color: transparent;    
-      color: blue;
-      border-bottom: 0px solid blue;
-    }
-
-    .ui-widget {
-
-    font-size: 1.5em;
-    }
-</style> -->
 @section('contenido')
 <div class="row">    
         <!-- mostrar mensaje del controlador -->
@@ -139,7 +102,6 @@
                             @foreach( $Cargarventas as $Cargarventa )
                             <?php
                                 $nombreEstadoCompra =  $Cargarventa -> estadoVentas();
-                                // $nombreVendedor = $Cargarventa -> clientes();
                             ?>
                                 <tr>
                                         <td class="text-center">{{ $Cargarventa -> id }}</td>
@@ -170,13 +132,13 @@
                                         <td class="text-center">no tiene deuda pendiente</td> 
                                         @endif
                                           {{-- proveedires esta vacio debe validar eso  --}}
-                                        @if( $Cargarventa -> clientes() != "" || $Cargarventa -> clientes() != null )
+                                        @if( $Cargarventa -> cliente() != "" || $Cargarventa -> cliente() != null )
                                         <td class="text-center">{{ $Cargarventa -> cliente()-> name }}</td>
                                         @else 
                                         <td class="text-center">Sin Definir</td>
                                         @endif
                                         
-                                         @if( $Cargarventa -> clientes() != "" || $Cargarventa -> clientes() != null )
+                                         @if( $Cargarventa -> cliente() != "" || $Cargarventa -> cliente() != null )
                                         <td class="text-center">{{ $Cargarventa -> cliente()-> number_id }}</td>
                                         @else 
                                         <td class="text-center">Sin Definir</td>
