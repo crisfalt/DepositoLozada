@@ -56,8 +56,9 @@ class BodegaController extends Controller
     public function edit( $id ) {
         //$categories = Category::all(); //traer categorias
         // return "Mostrar aqui formulario para producto con id $id";
-        $tipoContenido = TipoContenido::find( $id );
-        return view('admin.tipocontenido.edit')->with(compact('tipoContenido')); //formulario de registro
+        $bodega = Bodega::find( $id );
+        $municipios = Municipio::where('id',$bodega->fk_municipio)->get();
+        return view('admin.bodega.edit')->with(compact('bodega','municipios')); //formulario de registro
     }
 
     public function update( Request $request , $id ) {
@@ -65,17 +66,35 @@ class BodegaController extends Controller
         // return view(); //almacenar el registro de un producto
         //validar datos con reglas de laravel en documentacion hay mas
         //mensajes personalizados para cada campo
-        $this->validate($request,TipoContenido::$rules,TipoContenido::$messages);
+        // $this->validate($request,TipoContenido::$rules,TipoContenido::$messages);
+        // //crear un prodcuto nuevo
+        // $tipoContenido = TipoContenido::find( $id );
+        // $tipoContenido -> nombre = $request->input('nombre');
+        // //$product -> description = $request->input('description');
+        // $tipoContenido -> descripcion = $request->input('descripcion');
+        // $tipoContenido -> estado = $request->input('estado');
+        // $tipoContenido -> save(); //registrar producto
+        if( $request->input('fk_municipio') == 'I' ) {
+            $request['fk_municipio'] = null;
+        }
+        if( $request->input('celular') == null ) {
+            $request['celular'] = 0;
+        }
+        $this->validate($request,Bodega::$rules,Bodega::$messages);
         //crear un prodcuto nuevo
-        $tipoContenido = TipoContenido::find( $id );
-        $tipoContenido -> nombre = $request->input('nombre');
+        
+        $bodega = Bodega::find( $id );
+        $bodega -> nombre = $request->input('nombre');
         //$product -> description = $request->input('description');
-        $tipoContenido -> descripcion = $request->input('descripcion');
-        $tipoContenido -> estado = $request->input('estado');
-        $tipoContenido -> save(); //registrar producto
+        $bodega -> direccion = $request->input('direccion');
+        $bodega -> telefono = $request->input('telefono');
+        $bodega -> celular = $request->input('celular');
+        $bodega -> fk_municipio = $request->input('fk_municipio');
+        $bodega -> save(); //registrar producto
+        $notification = 'Bodega Modifiada Exitosamente';
 
-        $notification = 'Tipo de Contenido ' . $request->input('nombre') . ' Actualizado Exitosamente';
-        return redirect('/tipocontenido') -> with( compact( 'notification' ) );
+        $notification = 'Bodega ' . $request->input('nombre') . ' Actualizado Exitosamente';
+        return redirect('/bodega') -> with( compact( 'notification' ) );
     }
 
     public function destroy( $id ) {
