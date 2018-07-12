@@ -1240,6 +1240,7 @@ $consultarProducto= DB::table('productos')->where('codigo',$consultarDetallecomp
             $compra -> fk_proveeedors =  $ObtenerIdProveedor[0];
             $compra -> fk_bodega = $request->input('fk_bodega');
             $compra -> fk_forma_pago = $request->input('fk_forma_pago');
+            $compra -> refcompra = $request->input('refcompra');
             $compra -> save(); //registrar producto
             $notification = 'compra Agregada Exitosamente';
             $id=$request->session()->get('id');

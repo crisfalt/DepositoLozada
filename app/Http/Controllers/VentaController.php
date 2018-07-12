@@ -40,7 +40,7 @@ class VentaController extends Controller
             $notification="";
             if($saldo==$abono)
             {
-                $venta = Venta::where('id',$id_factura);
+                $venta = Venta::where('id',$id_factura)->first();
                 $venta->fk_forma_de_pago = 1;
                 $venta->saldo = $resta;
                 $venta->save();
@@ -54,9 +54,11 @@ class VentaController extends Controller
             }
             else
             {
-                $venta = Venta::where('id',$id_factura);
+                
+                $venta = Venta::where('id',$id_factura)->first();
                 $venta->saldo = $resta;
                 $venta->save();
+                
                 //inserta tabla abono
                 $objAbono = new abonoVenta();
                 $objAbono -> valor = (float)$abono; 

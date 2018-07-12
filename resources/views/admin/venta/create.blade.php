@@ -181,8 +181,7 @@
                      </div>                 
                 </div>
           </div>
-        <!--   inicia la conduicion del if -->
-         
+        <!--   inicia la conduicion del if -->         
           <div class="card-body"> <!-- falta cerrar este -->
                 <!-- Mostrar los errores capturados por validate -->
                 @if ($errors->any())
@@ -262,8 +261,7 @@
                                     </select>
                                 @endif
                             </div>                            
-                       </div>
-                     
+                       </div>                     
                  </div>
 
               <label for="cbmostrar">
@@ -369,7 +367,7 @@
                                 @endforeach
                                                                
 
-<form style="margin: 0; padding: 0;"  id="AgregarVenta"  action="{{url('/AgregarVenta')}}"  method="post" onsubmit="return validacionAgregar()">
+        <form style="margin: 0; padding: 0;"  id="AgregarVenta"  action="{{url('/AgregarVenta')}}"  method="post" onsubmit="return validacionAgregar()">
                 {{ csrf_field() }}
                   <?php
                     $cargarProducto= Session::get('producto');
@@ -500,19 +498,16 @@
                                                 <i class="now-ui-icons add">Agregar</i>
                                               </button>
                                                 </center>
-
                                               
                                                 <center>
                                                <button class="btn btn-info btn-round" id="OcultarBotonModal" type="submit" onclick='AbrirModalCanasta();'  style=" display : none">
                                                 <i class="now-ui-icons add">Agregar canasta</i>
                                               </button>
                                              </center>
-                                          </div>
-                                          
+                                          </div>                                          
                                 </div>
                       </div>  
-                </form>
-    
+                </form> 
                
             </div>
      
@@ -575,7 +570,7 @@
 
                                 @if($Detalles_venta->Numero_canasta !=null)
                                 
-                                    <th class="text-center">{{  $Detalles_venta -> Numero_canasta }}</td>
+                                <th class="text-center">{{  $Detalles_venta -> Numero_canasta }}</td>
 
                                 
                                 @else
@@ -648,12 +643,10 @@
                                           
                                 </div>
                                 <div class="col-md-2" >
-                                          <div class="form-group">
-                                            
+                                          <div class="form-group">                                            
                                             <input type="text" id="total" value="{{$total}}" class="form-control" hidden="true" required>
                                                
-                                          </div>
-                                          
+                                          </div>                                         
                                 </div>
                   </div>
                   @endif
@@ -685,12 +678,10 @@
                     </div>
                     @else
                     <div class="col-md-4">
-                            <div class="form-group" >
-                               
+                            <div class="form-group" >                               
                                <a href="{{ action('VentaController@cerrarSesion',['idSession' => 3]) }}"  class="btn btn-success btn-round">pendiente</a>
                            </div>
                        </div>
-
                     @endif 
 
             @endif     

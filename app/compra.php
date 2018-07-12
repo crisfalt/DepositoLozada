@@ -17,7 +17,8 @@ class compra extends Model
         'fk_estado_compra.required' => 'el estado de la compra obligatorio',
         'fk_forma_pago.required' => 'la forma de pago es un campo obligatorio',
         'fk_proveeedors.required' => 'El proveedor es un campo obligatorio',
-        'fk_bodega.required' => 'La Bodega es un campo obligatorio'
+        'fk_bodega.required' => 'La Bodega es un campo obligatorio',
+        'refcompra.required' => 'La referencia de compra es un campo obligatorio'
         
     ];
 
@@ -26,7 +27,8 @@ class compra extends Model
             'fk_estado_compra' => 'required',
             'fk_forma_pago' => 'required',
             'fk_proveeedors' => 'required',
-            'fk_bodega' => 'required'
+            'fk_bodega' => 'required',
+            'refcompra' => 'required'
            
     ];
 

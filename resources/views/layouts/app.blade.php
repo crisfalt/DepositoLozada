@@ -161,6 +161,12 @@
                                                 <span class="sidebar-normal"> Ver Ventas </span>
                                             </a>
                                         </li>
+                                        <li>
+                                            <a href="{{ route('abono') }}">
+                                                <i class="fa fa-eye submenu"></i>
+                                                <span class="sidebar-normal"> Ver Abonos Ventas </span>
+                                            </a>
+                                        </li>
                                     </ul>
                                 </div>
                             </li>
@@ -182,6 +188,12 @@
                                             <a href="{{ route('compra') }}">
                                                 <i class="fa fa-eye submenu"></i>
                                                 <span class="sidebar-normal"> Ver Compras </span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ route('abonocompra') }}">
+                                                <i class="fa fa-eye submenu"></i>
+                                                <span class="sidebar-normal"> Ver Abonos compras </span>
                                             </a>
                                         </li>
                                     </ul>
@@ -569,18 +581,18 @@
                     <nav>
                         <ul>
                             <li>
-                                <a href="#">
-                                    Cristian Trujillo
+                                <a href="www.jumpcorptechnology.net">
+                                   Jump Corp Technology
                                 </a>
                             </li>
                             <li>
                                 <a href="">
-                                    Acerca De
+                                    Contactenos
                                 </a>
                             </li>
                             <li>
                                 <a href="#">
-                                    Mis Proyectos
+                                    Proyectos
                                 </a>
                             </li>
                         </ul>

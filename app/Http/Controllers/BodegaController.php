@@ -30,9 +30,7 @@ class BodegaController extends Controller
 
     public function store( Request $request ) {
         //dd($request->all());//el metodo permite imprimir todos los datos del request
-        // return view(); //almacenar el registro de un producto
-        //validar datos con reglas de laravel en documentacion hay mas
-        //mensajes personalizados para cada campo
+       
         if( $request->input('fk_municipio') == 'I' ) {
             $request['fk_municipio'] = null;
         }
@@ -62,16 +60,7 @@ class BodegaController extends Controller
     }
 
     public function update( Request $request , $id ) {
-        //dd($request->all());//el metodo permite imprimir todos los datos del request
-        // return view(); //almacenar el registro de un producto
-        //validar datos con reglas de laravel en documentacion hay mas
-        //mensajes personalizados para cada campo
-        // $this->validate($request,TipoContenido::$rules,TipoContenido::$messages);
-        // //crear un prodcuto nuevo
-        // $tipoContenido = TipoContenido::find( $id );
-        // $tipoContenido -> nombre = $request->input('nombre');
-        // //$product -> description = $request->input('description');
-        // $tipoContenido -> descripcion = $request->input('descripcion');
+      ion = $request->input('descripcion');
         // $tipoContenido -> estado = $request->input('estado');
         // $tipoContenido -> save(); //registrar producto
         if( $request->input('fk_municipio') == 'I' ) {
