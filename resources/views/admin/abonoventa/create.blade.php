@@ -46,20 +46,39 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label># de Factura</label>
+                              
                                 <select class="form-control" name="fk_venta" id="fk_venta" onchange="recargarValorVenta()">
                                         <option class="form-control" value="">Seleccione la factura</option>
                                         @foreach ( $ventas as $venta )
                                             <option class="form-control" value="{{ $venta->id }}" @if( $venta -> id == old( 'fk_venta') )  selected @endif>{{ $venta->id }}</option>
                                         @endforeach
                                 </select>
+
+                    <script>
+                            //pasamos el valor a la lista para dejar selecionado unaf actura 
+                           var a ='<?php echo $IdAbono ?>';
+                                if( a>0)
+                                {                                   
+                                    document.getElementById("fk_venta").value =a;
+                                    //metodo para carga una funcion apenas se abre la pagina 
+                                    window.onload=function()
+                                     {
+                                         recargarValorVenta();
+                                     }
+
+                                }
+                                else
+                                {                          
+                                     document.getElementById("fk_venta").value ="";
+                                }                
+                    </script>
+
+                              
+                                
                             </div>
                         </div>
                     </div>
-                    <script>
-                            alert('ok');
-                            document.getElementById("fk_venta").selectedIndex ='<?php echo $IdAbono ?>';
-
-                    </script>
+                   
                     <div class="row">
                         <div class="col-md-12 pr-1">
                             <div class="form-group">
@@ -106,8 +125,11 @@
 @endsection
 @script 
 
+
+
+
 <script type="text/javascript">
-    
+   
 
     function validarfecha()
     {

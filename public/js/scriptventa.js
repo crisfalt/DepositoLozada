@@ -818,8 +818,14 @@ $("#tipopaca").change(function () {
             
             $("#tipocontenido").empty(); $("#tipocontenido").append($("<option  />").val("0").text("SELECCIONE El TIPO CONTENIDO").addClass("form-control"));
             $("#combobox").empty(); $("#combobox").append($("<option />").val("0").text("SELECCIONE El PRODUCTO"));
+            var compracion =0;
             $.each(datos, function (index , valor) {
+              if(valor.tipo_contenido.id != compracion)
+                {
                     $("#tipocontenido").append($("<option />").val(valor.tipo_contenido.id).text(valor.tipo_contenido.nombre).addClass("form-control"));
+                    compracion=valor.tipo_contenido.id;
+                }
+
             })
 
             datos2.forEach( function( valor , index ) {
@@ -867,10 +873,15 @@ $("#tipopaca").change(function () {
               // document.getElementById('cantidad4Ocultar').style.display = 'none';
             
               document.getElementById('cantidadcanastaOcultar').style.display = 'none';
+              var compracion =0;
               datosListarTipoContenido.forEach( function( valor , index ) { 
                 // console.log(valor);
-                $("#tipopaca").append($("<option />").val(valor.tipo_paca.id).text(valor.tipo_paca.nombre).addClass("form-control"));
-  
+              
+                if(valor.tipo_paca.id !=compracion)
+                {
+                $("#tipopaca").append($("<option/>").val(valor.tipo_paca.id).text(valor.tipo_paca.nombre).addClass("form-control"));
+                compracion=valor.tipo_paca.id;
+                }
               });
 
               datosFiltro.forEach( function( valor , index ) { 

@@ -60,7 +60,7 @@ class BodegaController extends Controller
     }
 
     public function update( Request $request , $id ) {
-      ion = $request->input('descripcion');
+     
         // $tipoContenido -> estado = $request->input('estado');
         // $tipoContenido -> save(); //registrar producto
         if( $request->input('fk_municipio') == 'I' ) {
@@ -74,7 +74,7 @@ class BodegaController extends Controller
         
         $bodega = Bodega::find( $id );
         $bodega -> nombre = $request->input('nombre');
-        //$product -> description = $request->input('description');
+        // $bodega -> description = $request->input('description');
         $bodega -> direccion = $request->input('direccion');
         $bodega -> telefono = $request->input('telefono');
         $bodega -> celular = $request->input('celular');

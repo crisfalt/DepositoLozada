@@ -41,7 +41,7 @@
             <div class="card-body">
                 <table class="display nowrap" cellspacing="0" width="100%" id="tableTiposMovimientos">
                     <thead class=" text-primary">
-                        <th>
+                        <th class="text-center">
                             Foto
                         </th>
                         <th class="text-left">

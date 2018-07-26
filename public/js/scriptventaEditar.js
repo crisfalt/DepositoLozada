@@ -656,20 +656,20 @@ $("#tipopaca").change(function () {
             // for( var i = 0 ; i < nombres.length ; i++ ) {
             //   $("#tipocontenido").append($("<option />").val(ids[i]).text(nombres[i]));
             // }
-            datos.forEach( function( valor , index ) { 
-              // console.log(valor);
-              $("#tipocontenido").append($("<option />").val(valor.id).text(valor.nombre).addClass("form-control"));
+              var compracion =0;
+            $.each(datos, function (index , valor) {
+              if(valor.tipo_contenido.id != compracion)
+                {
+                    $("#tipocontenido").append($("<option />").val(valor.tipo_contenido.id).text(valor.tipo_contenido.nombre).addClass("form-control"));
+                    compracion=valor.tipo_contenido.id;
+                }
 
-            });
+            })
 
-            datos2.forEach( function( valor , index ) { 
-              // console.log(valor);
+            datos2.forEach( function( valor , index ) {
               $("#combobox").append($("<option />").val(valor.codigo).text(valor.nombre));
 
             });
-            //  for( var i = 0 ; i < datos.length ; i++ ) {
-            //   $("#tipocontenido").append($("<option />").val(ids[i]).text(nombres[i]));
-            // }
             
          
             
@@ -718,10 +718,15 @@ $("#tipopaca").change(function () {
               //   $("#tipopaca").append($("<option />").val(ids[i]).text(nombres[i]));
               // }
             
+             var compracion =0;
               datosListarTipoContenido.forEach( function( valor , index ) { 
                 // console.log(valor);
-                $("#tipopaca").append($("<option />").val(valor.id).text(valor.nombre).addClass("form-control"));
-  
+              
+                if(valor.tipo_paca.id !=compracion)
+                {
+                $("#tipopaca").append($("<option/>").val(valor.tipo_paca.id).text(valor.tipo_paca.nombre).addClass("form-control"));
+                compracion=valor.tipo_paca.id;
+                }
               });
 
               datosFiltro.forEach( function( valor , index ) { 

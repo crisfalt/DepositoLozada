@@ -47,10 +47,11 @@
       
     
       <div class="">
+
       <table  border="0" cellspacing="2" cellpadding="2" style="margin: 0 auto; width:100%">
         <thead>
           <tr>
-            <th class=""><center>Logo</center></th>
+            <th class=""><center></center></th>
             <th class=""><center>Deposito Los Losadas</center></th>
             <th class=""><center>Factura de Compra #:</center></th>
             
@@ -60,7 +61,11 @@
                 @foreach( $Cargarventas as $Cargarventa )
               
                     <tr>
-                            <td class="text-center"><center>Los Losadas</center></td>                           
+                            <td class="text-center"><center>
+                              <div style=" display: block;margin: -50px auto;">
+                              <img src="{{ $imageLogo  }}" width="850%" height="150%" style=""></img>                                
+                              </div>
+                            </center></td>                           
                             <td class="text-center"><center>Nit: 123456</center></td>                            
                             <td class="text-center"><center>{{ $Cargarventa -> id }}</center></td>                
                     </tr>

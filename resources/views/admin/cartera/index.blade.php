@@ -131,81 +131,6 @@
     <script src="https://cdn.datatables.net/responsive/2.2.1/js/dataTables.responsive.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/2.2.1/js/responsive.bootstrap4.min.js"></script>
 
-    {{-- metodo jquery para usar la libreria de confirmar para eliminar --}}
-    <!-- <script>
-        function Delete( nameProduct , idDel ) {
-            var pathname = window.location.pathname; //ruta actual
-			$.confirm({
-				theme: 'supervan',
-				title: 'Eliminar Forma Pago',
-				content: 'Seguro(a) que deseas eliminar la Forma Pago' + nameProduct +'.<br> Click Aceptar or Cancelar',
-				icon: 'fa fa-question-circle',
-				animation: 'scale',
-				animationBounce: 2.5,
-				closeAnimation: 'scale',
-				opacity: 0.5,
-				buttons: {
-					'confirm': {
-						text: 'Aceptar',
-						btnClass: 'btn-blue',
-						action: function () {
-							$.confirm({
-								theme: 'supervan',
-								title: 'Estas Seguro ?',
-								content: 'Una vez eliminado debes volver a crear la forma pago',
-								icon: 'fa fa-warning',
-								animation: 'scale',
-								animationBounce: 2.5,
-								closeAnimation: 'zoom',
-								buttons: {
-									confirm: {
-										text: 'Si, Estoy Seguro!',
-										btnClass: 'btn-orange',
-										action: function () {
-                                            $('.delete').attr('action' , pathname + '/' + idDel );
-											$('.delete').submit();
-										}
-									},
-									cancel: {
-										text: 'No, Cancelar',
-										//$.alert('you clicked on <strong>cancel</strong>');
-									}
-								}
-							});
-						}
-					},
-					cancel: {
-						text: 'Cancelar',
-						//$.alert('you clicked on <strong>cancel</strong>');
-					},
-				}
-			});
-		}
-    </script> -->
-    <!-- <script>
-        $(document).ready(function() {
-            $('#tableCartera').DataTable({
-                "language": {
-
-                    "emptyTable": "No hay Carterao registradas",
-                    "paginate": {
-                        "first": "Primero",
-                        "last": "Ultimo",
-                        "previous": "Anterior",
-                        "next": "Siguiente",
-                    },
-                    "search": "Buscar:",
-                    "info": "Mostrando del _START_ al _END_, de un total de _TOTAL_ entradas",
-                    "lengthMenu": "Mostrar _MENU_ Cartera por Página",
-                    "zeroRecords": "No se encontro ningun resultado",
-                    "loadingRecords": "Cargando...",
-                    "processing": "Procesando...",
-                },
-                "responsive" : "true",
-                "autoWidth": "true"
-            });
-        });
-    </script> -->
 
     <script>
      btnconsultar.disabled = true;
@@ -276,7 +201,7 @@
                     }
                     else {
                         // $('#tableCartera').remove();   
-                        alert(data.msg);
+                        // alert(data.msg);
                        
 
                     }                    
