@@ -40,7 +40,7 @@ class ProductoController extends Controller
 
     //
     public function index() {
-        $Productos = Producto::orderBy('nombre') -> get();
+        $Productos = Producto::where( 'estado', 'A' )->orderBy('nombre')-> get(); // traigo los producto activos
         return view('admin.producto.index')->with(compact('Productos')); //listado de tipos movimientos
     }
 
@@ -229,9 +229,10 @@ class ProductoController extends Controller
         // dd( $request -> input( 'idDelte' ) );
         //$categories = Category::all(); //traer categorias
         // return "Mostrar aqui formulario para producto con id $id";
-        $marca = Marca::find( $id );
-        $marca -> delete(); //ELIMINAR
-        $notification = 'El producto ' . $marca -> nombre . ' Eliminada Exitosamente';
+        $producto = Producto::find( $id );
+        $producto -> estado = 'I'; //Inactivo el estado del producto
+        $producto -> save(); // guardo el producto con el estado inactivo
+        $notification = 'El producto ' . $producto -> nombre . ' Eliminado Exitosamente';
         return back() -> with( compact( 'notification' ) ); //nos devuelve a la pagina anterior
     }
 

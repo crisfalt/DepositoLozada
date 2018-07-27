@@ -73,7 +73,7 @@
                         <div class="col-md-12 pr-1">
                             <div class="form-group">
                                 <label>Precio de Compra</label>
-                                <input type="number" class="form-control" id="precio_compra" name="precio_compra" value="{{ old('precio_compra') }}">
+                                <input type="number" class="form-control" id="precio_compra" name="precio_compra" step="0.01" value="{{ old('precio_compra') }}">
                             </div>
                         </div>
                     </div>
@@ -186,7 +186,7 @@
                         <input type="hidden" name="input_descripcion_precio" id="input_descripcion_precio" value="{{ old('input_descripcion_precio') }}">
                         <input type="hidden" name="input_nombre_precio" id="input_nombre_precio" value="{{ old('input_nombre_precio') }}">
                         <div class="input-field col s4">
-                            <input type="text" class="form-control" id="precio" onkeypress="return solo_numeros(event)">
+                            <input type="text" class="form-control" id="precio" onkeypress="return solo_enteros_o_decimales(event)">
                             <label>Precio</label>
                         </div>
                         {{-- <div class="input-field col s4">
@@ -331,8 +331,14 @@
 
         //validar que se digite solo numeros
         function solo_numeros(e){
-            var key = window.Event ? e.which : e.keyCode 
-            return ((key >= 48 && key <= 57) || (key==8)) 
+            var key = window.Event ? e.which : e.keyCode
+            return ((key >= 48 && key <= 57) || (key==8) );
+        }
+
+        //validar que se digite solo numeros enteros o decimales
+        function solo_enteros_o_decimales(e){
+            var key = window.Event ? e.which : e.keyCode
+            return ( (key >= 48 && key <= 57) || (key==8) || ( key == 46 ) || ( key == 44 ) );
         }
 
         //agregar precios a la tabla
