@@ -129,6 +129,7 @@ class Producto extends Model
     }
 
     public function preciosVenta() {
+//        dd( PreciosProducto::where('fk_producto',$this->codigo)->get() );
         return PreciosProducto::where('fk_producto',$this->codigo)->get();
     }
 

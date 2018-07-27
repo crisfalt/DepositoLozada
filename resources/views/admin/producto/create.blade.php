@@ -73,7 +73,7 @@
                         <div class="col-md-12 pr-1">
                             <div class="form-group">
                                 <label>Precio de Compra</label>
-                                <input type="number" class="form-control" id="precio_compra" name="precio_compra" step="0.01" value="{{ old('precio_compra') }}">
+                                <input type="number" class="form-control" id="precio_compra" name="precio_compra" step="0.0001" onkeypress="return solo_enteros_o_decimales(event)" value="{{ old('precio_compra') }}">
                             </div>
                         </div>
                     </div>
@@ -189,14 +189,10 @@
                             <input type="text" class="form-control" id="precio" onkeypress="return solo_enteros_o_decimales(event)">
                             <label>Precio</label>
                         </div>
-                        {{-- <div class="input-field col s4">
-                            <input type="text" class="form-control" id="descripcion_precio" >
-                            <label>Descripción del precio</label>
-                        </div> --}}
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <select class="form-control" name="fk_descripcion_precio" id="descripcion_precio">
+                                    <select class="form-control sel" name="fk_descripcion_precio" id="descripcion_precio">
                                             <option class="form-control" value="I">Seleccione</option>
                                             @foreach ( $descripcionesPrecio as $descripcionPrecio )
                                                 <option class="form-control" value="{{ $descripcionPrecio->id }}" @if( $descripcionPrecio -> id == old( 'fk_descripcion_precio') )  selected @endif>{{ $descripcionPrecio->nombre }}</option>
@@ -212,7 +208,7 @@
                     </div>
                     <div class="row">
                     <div class="col s8" id="lista_precio"  style="display: none;">
-                        <table class="striped">
+                        <table class="striped table-bordered">
                         <thead>
                             <tr>
                             <th>Precio</th>
@@ -246,7 +242,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <select class="form-control" name="fk_descripcion_iva" id="descripcion_iva">
+                                        <select class="form-control sel" name="fk_descripcion_iva" id="descripcion_iva">
                                                 <option class="form-control" value="I">Seleccione</option>
                                                 @foreach ( $descripcionesIva as $descripcionIva )
                                                     <option class="form-control" value="{{ $descripcionIva->id }}" @if( $descripcionIva -> id == old( 'fk_descripcion_iva') )  selected @endif>{{ $descripcionIva->nombre }}</option>
@@ -262,7 +258,7 @@
                         </div>
                         <div class="row">
                         <div class="col s8" id="lista_iva"  style="display: none;">
-                            <table class="striped">
+                            <table class="striped table-bordered">
                             <thead>
                                 <tr>
                                 <th>Iva</th>
@@ -338,7 +334,7 @@
         //validar que se digite solo numeros enteros o decimales
         function solo_enteros_o_decimales(e){
             var key = window.Event ? e.which : e.keyCode
-            return ( (key >= 48 && key <= 57) || (key==8) || ( key == 46 ) || ( key == 44 ) );
+            return ( (key >= 48 && key <= 57) || (key==8) || ( key == 44 ) );
         }
 
         //agregar precios a la tabla
@@ -388,25 +384,30 @@
                         descripcion_precio.val('I');
                     }
                     else {
-                        if( parseInt(precio.val()) <= parseInt(precioCompra.val()) ) {
-                            alert('El precio de Venta '+precio.val() +'  debe ser mayor al de Compra ' + precioCompra.val() );
+                        var precioTransformado = precio.val();
+                        precioTransformado = precioTransformado.toString().replace(/\,/g,'.'); // cambiar punto por coma
+                        if( parseFloat(precioTransformado) <= parseFloat(precioCompra.val()) ) {
+                            alert('El precio de Venta '+precioTransformado +'  debe ser mayor al de Compra ' + precioCompra.val() );
                         }
                         else {
                             lista_precio.show();
                             registro_precio.append(
                                         '<tr>'+
-                                            '<td>'+precio.val()+'</td>'+
+                                            '<td>'+precioTransformado+'</td>'+
                                             '<td>'+nombre_precio+'</td>'+
                                         '</tr>'
 
                             );
-                            arrayPrecio.push( precio.val() ); //agrego numero al final del arreglo
+                            arrayPrecio.push( precioTransformado ); //agrego numero al final del arreglo
                             arrayDescripcion.push( descripcion_precio.val() );
                             arrayNombre.push( nombre_precio );
                             input_precio.val( arrayPrecio );
                             input_descripcion_precio.val( arrayDescripcion );
                             input_nombre_precio.val( arrayNombre );
                             precio.val('');
+                            $('.sel').each(function(){
+                                $('.sel option[value="'+descripcion_precio.val()+'"]').remove();
+                            });
                             descripcion_precio.val('I');
                         }
                     }
@@ -472,6 +473,9 @@
                     input_descripcion_iva.val( arrayDescripcion );
                     input_nombre_iva.val( arrayNombre );
                     iva.val('');
+                    $('.sel').each(function(){
+                        $('.sel option[value="'+descripcion_iva.val()+'"]').remove();
+                    });
                     descripcion_iva.val('I');
                 }
             }

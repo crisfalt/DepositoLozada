@@ -79,7 +79,7 @@
                     </p>
                     <h5 class="title text-danger">Tipo de Empacado</h5>
                     <p class="title text-center">
-                        {{ $Producto -> tipoPaca() -> nombre }}
+                        {{ $Producto -> tipoPaca -> nombre }}
                     </p>
                     <h5 class="title text-danger">Bodega</h5>
                     <p class="title text-center">
