@@ -11,10 +11,9 @@
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
     <!--     Fonts and icons     -->
     <!-- <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'> -->
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
-    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css"> -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+    <link href="{{ asset('/css/fontMontserrat.css')}}" rel="stylesheet" />
+    <link href="{{ asset('/css/fontawesome.min.css')}}" rel="stylesheet" />
+    <link href="{{ asset('/css/all.css')}}" rel="stylesheet" />
     <!-- CSS Files -->
     <link href="{{ asset('/css/bootstrap.min.css')}}" rel="stylesheet" />
     <link href="{{ asset('/css/now-ui-dashboard.css?v=1.0.1')}}" rel="stylesheet" />
@@ -635,11 +634,9 @@
 <script src="{{ asset('/js/plugins/bootstrap-selectpicker.js') }}"></script>
 <script src="{{ asset('/js/plugins/bootstrap-switch.js') }}"></script>
 <script src="{{ asset('/js/plugins/bootstrap-tagsinput.js') }}"></script>
-<script src="{{ asset('/js/plugins/fullcalendar.min.js') }}"></script>
 <script src="{{ asset('/js/plugins/jasny-bootstrap.min.js') }}"></script>
 <script src="{{ asset('/js/plugins/jquery.bootstrap-wizard.js') }}"></script>
-<script src="{{ asset('/js/plugins/jquery.validate.min.js') }}"></script>
-<script src="{{ asset('/js/plugins/jquery-jvectormap.js') }}"></script>
+<script src="{{ asset('/js/plugins/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('/js/plugins/nouislider.min.js') }}"></script>
 <script src="{{ asset('/js/plugins/perfect-scrollbar.jquery.min.js') }}"></script>
 <script src="{{ asset('/js/plugins/sweetalert2.min.js') }}"></script>

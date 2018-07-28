@@ -15,7 +15,7 @@
         <div class="col-md-6">
                 <div class="card">
                     <div class="card-header">
-                        <h5 class="title">Actualizar Producto {{ $producto -> nombre }}</h5>
+                        <h5 class="title">Actualizar Producto {{ $producto -> nombre }}  <i class="fa fa-sync fa-spin fa-2x"></i> </h5>
                     </div>
                     <div class="card-body">
                         <!-- Mostrar los errores capturados por validate -->
@@ -197,8 +197,12 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-12">
+                                        <?php
+                                            $preciosActuales = Array();
+//                                            $preciosActuales = $producto -> preciosVenta()->toArray();
+                                        ?>
                                         <div class="form-group">
-                                            <select class="form-control sel" name="fk_descripcion_precio" id="descripcion_precio">
+                                            <select class="form-control selPrecio" name="fk_descripcion_precio" id="descripcion_precio">
                                                     <option class="form-control" value="I">Seleccione</option>
                                                     @foreach ( $descripcionesPrecio as $descripcionPrecio )
                                                         <option class="form-control" value="{{ $descripcionPrecio->id }}" @if( $descripcionPrecio -> id == old( 'fk_descripcion_precio') )  selected @endif>{{ $descripcionPrecio->nombre }}</option>
@@ -209,7 +213,7 @@
                                     </div>
                                 </div>
                                 <div class="input-field col s4">
-                                    <a title="Agregar precio" onclick="agregar_precio()" class="btn btn-info btn-floating btn-round"><i class="now-ui-icons ui-1_simple-add"></i></a>                    
+                                    <a title="Agregar precio" onclick="agregar_precio()" class="btn btn-info btn-floating btn-round"><i class="fa fa-plus fa-spin"></i></a>
                                 </div>
                             </div>
                             <div class="row">
@@ -261,7 +265,7 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <select class="form-control" name="fk_descripcion_iva" id="descripcion_iva">
+                                                <select class="form-control selIva" name="fk_descripcion_iva" id="descripcion_iva">
                                                         <option class="form-control" value="I">Seleccione</option>
                                                         @foreach ( $descripcionesIva as $descripcionIva )
                                                             <option class="form-control" value="{{ $descripcionIva->id }}" @if( $descripcionIva -> id == old( 'fk_descripcion_iva') )  selected @endif>{{ $descripcionIva->nombre }}</option>
@@ -272,7 +276,7 @@
                                         </div>
                                     </div>
                                     <div class="input-field col s4">
-                                        <a title="Agregar precio" onclick="agregar_iva()" class="btn btn-info btn-floating btn-round"><i class="now-ui-icons ui-1_simple-add"></i></a>                    
+                                        <a title="Agregar precio" onclick="agregar_iva()" class="btn btn-info btn-floating btn-round"><i class="fa fa-plus fa-spin"></i></a>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -361,7 +365,43 @@
                     );
                 }
             }
+            // ocultar las opciones de los selects si ya traen datos de productos en precios
+            var preciosActuales = <?php echo $producto -> preciosVenta(); ?>; //obtenemos los precios actuales de producto
+            $(".selPrecio option").each(function() { // recorrer todo un select
+                if( estaIdEnPrecio( $(this).attr('value'), preciosActuales ) ) {
+                    $('.selPrecio option[value="'+$(this).attr('value')+'"]').remove();
+                }
+            });
+            // ocultar las opciones de los selects si ya traen datos de productos en ivas
+            var ivasActuales = <?php echo $producto -> ivasProducto(); ?>; //obtenemos los precios actuales de producto
+            console.log( ivasActuales );
+            $(".selIva option").each(function() {
+                if( estaIdEnIva( $(this).attr('value'), ivasActuales ) ) {
+                    console.log( 'si esta' );
+                    $('.selIva option[value="'+$(this).attr('value')+'"]').remove();
+                }
+            });
         });
+
+        // validar si una id se encuentra en el array
+        function estaIdEnPrecio( id, array ) {
+            for( var i = 0 ; i < array.length ; i++ ) {
+                if( id == array[ i ].fk_descripcion_precio ) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        // validar si una id se encuentra en el array
+        function estaIdEnIva( id, array ) {
+            for( var i = 0 ; i < array.length ; i++ ) {
+                if( id == array[ i ].fk_descripcion_iva ) {
+                    return true;
+                }
+            }
+            return false;
+        }
 
         //validar que se digite solo numeros
         function solo_numeros(e){
@@ -443,6 +483,9 @@
                             input_descripcion_precio.val( arrayDescripcion );
                             input_nombre_precio.val( arrayNombre );
                             precio.val('');
+                            $('.selPrecio').each(function(){
+                                $('.selPrecio option[value="'+descripcion_precio.val()+'"]').remove();
+                            });
                             descripcion_precio.val('I');
                         }
                     }
@@ -510,6 +553,9 @@
                     input_descripcion_iva.val( arrayDescripcion );
                     input_nombre_iva.val( arrayNombre );
                     iva.val('');
+                    $('.selIva').each(function(){
+                        $('.selIva option[value="'+descripcion_iva.val()+'"]').remove();
+                    });
                     descripcion_iva.val('I');
                 }
             }

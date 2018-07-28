@@ -149,7 +149,6 @@ class ProductoController extends Controller
         $descripcionesPrecio = DescripcionPrecio::orderBy('nombre') -> get();
         $descripcionesIva = DescripcionIva::orderBy('nombre') -> get();
         $producto = Producto::where( 'codigo' , $id ) -> first();
-        // dd( $producto -> preciosVenta() );
         return view('admin.producto.edit')->with(compact('producto','marcas','sizes','tiposEnvase','tiposContenido','tiposPaca','bodegas','descripcionesPrecio','descripcionesIva')); //formulario de registro
     }
 
