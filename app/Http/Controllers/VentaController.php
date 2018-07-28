@@ -141,11 +141,11 @@ class VentaController extends Controller
             $cantidadCanasta=$_POST["cantidadcanasta"];
             $datos=$_POST["datosCanasta"];
               dd($productoCantidad,$productoID);
-       $IdVenta= session::get('IdVenta');
-       $ObtenerCombo=tipoPaca::where('estado','A')->where('id', $productoTipoPaca)->value('cantidad');
-        $total=0;
-        $tmp=0;
-        $totalCanasta=$productoCantidadCanasta * $ObtenerCombo;
+            $IdVenta= session::get('IdVentaEditar');
+            $ObtenerCombo=tipoPaca::where('estado','A')->where('id', $productoTipoPaca)->value('cantidad');
+            $total=0;
+            $tmp=0;
+            $totalCanasta=$productoCantidadCanasta * $ObtenerCombo;
       
     
 
@@ -156,7 +156,64 @@ class VentaController extends Controller
         {
             $ObteneIDcanasta =0; 
         }
-      
+      //prueba validacion cantidad disponible
+      $disponibilidad=0;
+      $error = array(); 
+      $cantidadDevolucion=array();
+      $contadorErrores=0;
+        for( $j = 0 ; $j < $cantidadCanasta ; $j++ ) {
+            $ObteneIDcanasta=$ObteneIDcanasta + 1;
+           
+            for( $i = 0 ; $i < count($datos) ; $i++ ) 
+            {
+                
+                 if($productoCantidad[$tmp] !=0)
+                 {
+                   
+                  $obtenerCantidadProducto= Producto::where('codigo',$productoID[$tmp])->get(); 
+                  if( $obtenerCantidadProducto[0]->cantidad==0)
+                   {
+                     $cantidadDevolucion[$i]=0;
+
+                    $error[$contadorErrores]='el codigo '.$productoID[$tmp].' del producto '.$obtenerCantidadProducto[0]->nombre.' esta agotado ';
+               
+                    $contadorErrores=  $contadorErrores+1;
+                   }
+                   elseif( $productoCantidad[$tmp] > $obtenerCantidadProducto[0]->cantidad)
+                   {
+                      $disponibilidad=$productoCantidad[$tmp]-$obtenerCantidadProducto[0]->cantidad;
+                                           
+                        $error[$contadorErrores]='el codigo '.$productoID[$tmp].' del producto '.$obtenerCantidadProducto[0]->nombre.' tiene disponible '. $obtenerCantidadProducto[0]->cantidad.' en el inventario';
+                        $contadorErrores=  $contadorErrores+1;
+                        $cantidadDevolucion[$i]=$obtenerCantidadProducto[0]->cantidad;
+                                           
+                   }
+                  else
+                   {
+                    $cantidadDevolucion[$i]=$productoCantidad[$tmp];
+                   }
+
+                  
+                 }
+               
+             
+                 $tmp++; 
+              
+               
+            }
+          
+                      
+          }
+
+      ///si hay errores lo muestra
+
+      if($contadorErrores !=0)
+      {
+        return response()->json( ['items'=>$error,'condicionDisponibilidas'=>$contadorErrores,'cantidad'=>$cantidadDevolucion] );  
+      }
+        //// crud insercion
+
+
         for( $j = 0 ; $j < $cantidadCanasta ; $j++ ) {
             $ObteneIDcanasta=$ObteneIDcanasta + 1;
            
@@ -270,8 +327,9 @@ class VentaController extends Controller
 
           $notificacion=("Se agrego exitosamente");
 
-            return response()->json( ['items'=>$notificacion ] );            
+          return response()->json( ['items'=>$notificacion,'condicionDisponibilidas'=>$contadorErrores ] ); 
         }
+
 
 
 
@@ -407,6 +465,52 @@ class VentaController extends Controller
        $cantidadCanasta=$_POST["cantidadcanasta"];
        $datos=$_POST["datosCanasta"];
 
+
+         
+    //    $Detalles_ventas=detalles_venta::where('fk_factura',$id)->get();
+
+    //    $cantidad=0;
+    //    $subtotal=0;
+    //    $total=0;
+    //    $CondicionVenta=0;
+    //    $AcomularProducto=0;
+    //    $error = array(); 
+    //    $contadorErrores=0;
+    //    foreach( $Detalles_ventas as  $Detalles_venta)
+    //    {
+      
+
+    //       $ObtenerCantidadActual=Producto::where('estado','A')->where('codigo',$productoID)->get();
+    //       $BuscarProductos=detalles_venta::where('fk_producto',$Detalles_venta->fk_producto)->where('fk_factura',$id)->get();
+    //       if(count($ObtenerCantidadActual)!=0)
+    //       {
+    //       foreach( $BuscarProductos as  $BuscarProducto)
+    //       {
+    //           $AcomularProducto=$BuscarProducto->cantidad + $AcomularProducto;
+
+    //       }
+        
+    //       $ComprobarDisponibilidadProducto= $ObtenerCantidadActual[0]->cantidad-$AcomularProducto;
+    //      ////condicion de si existe o falta de productos para le venta
+    //       if( $ObtenerCantidadActual[0]->cantidad==0)
+    //       {
+    //           $CondicionVenta=1;
+    //           ////mensajes de productos faltantes a la venta
+    //           $error[$contadorErrores] ='-el producto '.$ObtenerCantidadActual[0]->nombre.' esta agotado';
+    //       }            
+    //       elseif( $ComprobarDisponibilidadProducto < 0)
+    //       {
+    //           ////mensajes de productos faltantes a la venta
+    //           $CondicionVenta=1;
+    //           $error[$contadorErrores]='-el producto '.$ObtenerCantidadActual[0]->nombre.' solo hay '.$ObtenerCantidadActual[0]->cantidad.' disponible';
+              
+    //       }
+       
+    //       $contadorErrores=  $contadorErrores+1;
+    //   }
+    //   $AcomularProducto=0;
+    //    }
+
 //    dd($productoCantidad,$productoID);
        $IdVenta= session::get('IdVenta');
        $ObtenerCombo=TipoPaca::where('estado','A')->where('id', $productoTipoPaca)->value('cantidad');
@@ -423,7 +527,64 @@ class VentaController extends Controller
         {
             $ObteneIDcanasta =0; 
         }
-      
+        //prueba validacion cantidad disponible
+      $disponibilidad=0;
+      $error = array(); 
+      $cantidadDevolucion=array();
+      $contadorErrores=0;
+        for( $j = 0 ; $j < $cantidadCanasta ; $j++ ) {
+            $ObteneIDcanasta=$ObteneIDcanasta + 1;
+           
+            for( $i = 0 ; $i < count($datos) ; $i++ ) 
+            {
+                
+                 if($productoCantidad[$tmp] !=0)
+                 {
+                   
+                  $obtenerCantidadProducto= Producto::where('codigo',$productoID[$tmp])->get(); 
+                  if( $obtenerCantidadProducto[0]->cantidad==0)
+                   {
+                     $cantidadDevolucion[$i]=0;
+
+                    $error[$contadorErrores]='el codigo '.$productoID[$tmp].' del producto '.$obtenerCantidadProducto[0]->nombre.' esta agotado ';
+               
+                    $contadorErrores=  $contadorErrores+1;
+                   }
+                  elseif( $productoCantidad[$tmp] > $obtenerCantidadProducto[0]->cantidad)
+                   {
+                      $disponibilidad=$productoCantidad[$tmp]-$obtenerCantidadProducto[0]->cantidad;
+
+                        $error[$contadorErrores]='el codigo '.$productoID[$tmp].' del producto '.$obtenerCantidadProducto[0]->nombre.' tiene disponible '. $obtenerCantidadProducto[0]->cantidad.' en el inventario';
+                        $contadorErrores=  $contadorErrores+1;
+                        $cantidadDevolucion[$i]=$obtenerCantidadProducto[0]->cantidad;
+                                           
+                   }
+                  else
+                   {
+                    $cantidadDevolucion[$i]=$productoCantidad[$tmp];
+                   }
+
+                  
+                 }
+               
+             
+                 $tmp++; 
+              
+               
+            }
+          
+                      
+          }
+
+      ///si hay errores lo muestra
+
+      if($contadorErrores !=0)
+      {
+        return response()->json( ['items'=>$error,'condicionDisponibilidas'=>$contadorErrores,'cantidad'=>$cantidadDevolucion] );  
+      }
+
+        //// crud insercion 
+        $tmp=0;
         for( $j = 0 ; $j < $cantidadCanasta ; $j++ ) {
             $ObteneIDcanasta=$ObteneIDcanasta + 1;
            
@@ -535,9 +696,9 @@ class VentaController extends Controller
 
        } 
 
-$notificacion=("Se agrego exitosamente");
+            $notificacion=("Se agrego exitosamente");
 
-            return response()->json( ['items'=>$notificacion ] );            
+            return response()->json( ['items'=>$notificacion,'condicionDisponibilidas'=>$contadorErrores ] );            
         }
 
 
