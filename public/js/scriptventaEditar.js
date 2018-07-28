@@ -222,10 +222,23 @@ return false;
 
 }
     
-function AbrirModalCanasta()
+function AbrirModalCanasta(cantidadDevolucion=null)
 {
- 
 
+
+
+ if(cantidadDevolucion !=null)
+ {
+  
+//  for( var d=0;  d < cantidad.length;d++)
+//  {
+  
+//   document.getElementById('cantidadVenta'+d+'').value=cantidad[d];
+//   alert(cantidad[d]);
+
+//  }
+
+ }
   var cantidadcanasta = document.getElementById('cantidadcanasta').value;
   if(cantidadcanasta==0)
   {
@@ -240,10 +253,9 @@ function AbrirModalCanasta()
   cantidadPlastico=document.getElementById('cantidadPlastico').value;
 
   var ruta=window.location.host;
- 
+  
   var tipopaca = document.getElementById('tipopaca').value;
- 
-  var ruta2 = '/venta/ConsultarCanastaEditar/'+ tipopaca;
+  var ruta2 = '/venta/ConsultarCanasta/'+ tipopaca;
 
   $.ajax({
     headers: {
@@ -255,7 +267,6 @@ function AbrirModalCanasta()
     dataType: "json",
     success: function (items) {
       // console.log(items.items[0]);
-      
       var datos = items.items;
       var CantidadCanastaActual=parseInt(items.cantidadCanasta) ;
     
@@ -263,7 +274,7 @@ function AbrirModalCanasta()
     // for( var i = 0 ; i < nombres.length ; i++ ) {
     //   $("#tipocontenido").append($("<option />").val(ids[i]).text(nombres[i]));
     // }
-    
+  
     var contador=0;
     var cantidad=0;
    
@@ -275,12 +286,36 @@ function AbrirModalCanasta()
         contenido += '<p>Contenido de la Canasta #'+ (j+1) +'</p>';
         contenido += '<div class="row">';
         contenido += '<br>';
+        if(cantidadDevolucion ==null)
+        {
+         
         for( var i = 0 ; i < datos.length ; i++ ) {
+          
           contenido += '<input id="idProducto'+contador+'" name="fk_id_producto" type="hidden" value="'+datos[i].codigo+'" >';
           contenido += '<div class="col-md-3"><label>'+datos[i].nombre+'</label></div>';
           contenido += '<div class="col-md-3"><input type="number" id="cantidadVenta'+contador+'" value="0"  min="0" placeholder="Tu Cantidad" class="form-control" required /></div>';
           contador=contador+1;
+          
         }
+      }
+
+        if(cantidadDevolucion !=null)
+        {
+         
+        for( var i=0;  i < cantidadDevolucion.length;i++)
+        {
+         
+        //  document.getElementById('cantidadVenta'+i+'').value=cantidad[d];
+        //  alert(cantidad[d]);
+        contenido += '<input id="idProducto'+contador+'" name="fk_id_producto" type="hidden" value="'+datos[i].codigo+'" >';
+        contenido += '<div class="col-md-3"><label>'+datos[i].nombre+'</label></div>';
+        contenido += '<div class="col-md-3"><input type="number" id="cantidadVenta'+contador+'" value="'+cantidadDevolucion[i]+'"  min="0" placeholder="Tu Cantidad" class="form-control" required /></div>';
+        contador=contador+1;
+       
+        }
+       
+        }
+
      
         contenido += '</div>';
       }
@@ -384,7 +419,7 @@ function AbrirModalCanasta()
                 
          
               
-              var ruta2 = '/venta/AgregarCanastaEditar/';
+              var ruta2 = '/venta/AgregarCanasta/';
 
               $.ajax({
                 headers: {
@@ -395,32 +430,41 @@ function AbrirModalCanasta()
                   data : {'ids' : arrayId,'cantidad' : arrayCantidad,'cantidadCanasta' : cantidadcanasta,'cantidadEnvase':cantidadEnvase,'tipoPaca':tipopaca,'cantidadPlastico':cantidadPlastico,'datosCanasta':datos,'cantidadcanasta':cantidadcanasta},
                 dataType: "json",
                 success: function (items) {
-                alert(items.items);
+
+                  if(items.condicionDisponibilidas !=0)
+                  {
+                   
+                    alert(items.items);
+                    
+                    AbrirModalCanasta(items.cantidad);
+                    return(0);
+                   
+                     
+                  }
+                  alert(items.items);
+
                   location.reload();
                 }
               }); 
 
           }
       },
-      cancel: function () {
+        cancel: function () {
           //close
-      },
-  },
-  onContentReady: function () {
+            },
+        },
+       onContentReady: function () {
       // bind to events
-      var jc = this;
-      this.$content.find('form').on('submit', function (e) {
+         var jc = this;
+          this.$content.find('form').on('submit', function (e) {
           // if the user submits the form by pressing enter in the field.
           e.preventDefault();
           jc.$$formSubmit.trigger('click'); // reference the button and click it
-      });
-  }
-});   
-
+         });
+        }
+      });   
     
- 
-    
-      }
+    }
   });
 
 }
