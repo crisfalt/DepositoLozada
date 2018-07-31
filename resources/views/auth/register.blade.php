@@ -118,11 +118,14 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div class="col-md-6 col-md-offset-4">
+                    <div class="row">
+                        <div class="col-md-6">
                             <button type="submit" class="btn btn-primary">
                                 Registrar
                             </button>
+                            <a href="{{ route( 'empleados' ) }}" class="btn btn-default">
+                                Cancelar
+                            </a>
                         </div>
                     </div>
                 </form>
