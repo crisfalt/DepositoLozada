@@ -6,6 +6,7 @@ use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use App\TipoDocumento;
 use App\Perfil;
@@ -31,7 +32,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/welcome';
+    protected $redirectTo = '/auth/index';
 
     /**
      * Create a new controller instance.
@@ -90,7 +91,6 @@ class RegisterController extends Controller
 
     public function index() {
         $empleados = User::where('estado','A')->get();
-        dd($empleados);
         return view('auth.index') -> with( compact('empleados') );
     }
 
@@ -111,10 +111,22 @@ class RegisterController extends Controller
         return view('auth.register') -> with( compact('tiposDocumento','perfiles','bodegas') );
     }
 
+    //sobreescribir metodo register de clase RegistersUsers
+    public function register(Request $request)
+    {
+        $this->validator($request->all())->validate();
+
+        event(new Registered($user = $this->create($request->all())));
+
+
+        return $this->registered($request, $user);
+    }
+
     //metodo que se sobreescribe para redireccionar despues de crear un usuario
     protected function registered(Request $request, $user)
     {
-        return redirect('/welcome');
+        $empleados = User::where('estado','A')->get();
+        return view('auth.index')-> with( compact('empleados') );
     }
 
 }

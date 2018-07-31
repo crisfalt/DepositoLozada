@@ -11,7 +11,7 @@
 
 @section('contenido')
 <div class="row">
-<div class="col-md-12">
+    <div class="col-md-12">
         <div class="card">
             <div class="card-header">
               <!--   {{-- <h4 class="card-title"> Simple Table</h4> --}} -->
@@ -21,7 +21,7 @@
                 <div class="table-responsive">
                     <table class="table" cellspacing="0" id="tableVentas">
                         <thead class=" text-primary">
-                            <th class="text-center">
+                            <th class="text-cen ter">
                                 Cliente
                             </th>
                              <th class="text-center">
@@ -49,7 +49,7 @@
                         <tbody>
                             @foreach( $ventas as $venta )
                                 <tr>
-                                        <td class="text-center">{{ $venta ->cliente()->name }}</td>
+                                    <td class="text-center">{{ $venta ->cliente()->name }}</td>
                                     <td class="text-center">{{ $venta -> id }}</td>
                                     @if($venta -> fecha_entrega !=null)
                                     <td class="text-center">{{ $venta -> fecha_entrega }}</td>
