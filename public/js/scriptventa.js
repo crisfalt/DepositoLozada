@@ -389,24 +389,21 @@ return false;
 }
 
   
-function AbrirModalCanasta(cantidadDevolucion=null)
+function AbrirModalCanasta(cantidadDevolucion=null,cantidadcanasta=null)
 {
 
-
-
- if(cantidadDevolucion !=null)
- {
+        if(cantidadDevolucion !=null)
+        {        
   
-//  for( var d=0;  d < cantidad.length;d++)
-//  {
-  
-//   document.getElementById('cantidadVenta'+d+'').value=cantidad[d];
-//   alert(cantidad[d]);
 
-//  }
+        }
+                      
+         if(cantidadcanasta==null)
+       {     
+          cantidadcanasta = document.getElementById('cantidadcanasta').value;
+       }
 
- }
-  var cantidadcanasta = document.getElementById('cantidadcanasta').value;
+
   if(cantidadcanasta==0)
   {
       document.getElementById('cantidadcanasta').value=0;
@@ -436,11 +433,6 @@ function AbrirModalCanasta(cantidadDevolucion=null)
       // console.log(items.items[0]);
       var datos = items.items;
       var CantidadCanastaActual=parseInt(items.cantidadCanasta) ;
-    
-      // var datos2= items.items[1];
-    // for( var i = 0 ; i < nombres.length ; i++ ) {
-    //   $("#tipocontenido").append($("<option />").val(ids[i]).text(nombres[i]));
-    // }
   
     var contador=0;
     var cantidad=0;
@@ -461,22 +453,23 @@ function AbrirModalCanasta(cantidadDevolucion=null)
           contenido += '<input id="idProducto'+contador+'" name="fk_id_producto" type="hidden" value="'+datos[i].codigo+'" >';
           contenido += '<div class="col-md-3"><label>'+datos[i].nombre+'</label></div>';
           contenido += '<div class="col-md-3"><input type="number" id="cantidadVenta'+contador+'" value="0"  min="0" placeholder="Tu Cantidad" class="form-control" required /></div>';
+         
           contador=contador+1;
           
         }
       }
-
+        ///devuelve los valores a los campos
         if(cantidadDevolucion !=null)
         {
-         
-        for( var i=0;  i < cantidadDevolucion.length;i++)
+      
+        for( var i=0;  i < datos.length ;i++)
         {
+          var CnatidadRemplazar=cantidadDevolucion[contador];
          
-        //  document.getElementById('cantidadVenta'+i+'').value=cantidad[d];
-        //  alert(cantidad[d]);
         contenido += '<input id="idProducto'+contador+'" name="fk_id_producto" type="hidden" value="'+datos[i].codigo+'" >';
         contenido += '<div class="col-md-3"><label>'+datos[i].nombre+'</label></div>';
-        contenido += '<div class="col-md-3"><input type="number" id="cantidadVenta'+contador+'" value="'+cantidadDevolucion[i]+'"  min="0" placeholder="Tu Cantidad" class="form-control" required /></div>';
+        contenido += '<div class="col-md-3"><input type="number" id="cantidadVenta'+contador+'" value="'+CnatidadRemplazar+'"  min="0" placeholder="Tu Cantidad" class="form-control" required /></div>';
+     
         contador=contador+1;
        
         }
@@ -490,7 +483,7 @@ function AbrirModalCanasta(cantidadDevolucion=null)
       contenido += '</div>'+'</form>';
 
    
-      console.log(contenido);
+      // console.log(contenido);
   
   var notificacion="";
     $.confirm({
@@ -528,11 +521,11 @@ function AbrirModalCanasta(cantidadDevolucion=null)
                   TotalCantidad=parseInt(cantidadRecorrer) + parseInt(TotalCantidad);
               }
               if( sumaProductos > CantidadCanastaActual ) {
-                notificacion+=('\nla cantidad de productos en la canasta ' +(j+1) + ' se paso del limite ' + CantidadCanastaActual+' ');
+                notificacion+=("\n"+"la cantidad de productos en la canasta " +(j+1) + " se paso del limite " + CantidadCanastaActual+" " );
                   
               }
               if( sumaProductos < CantidadCanastaActual ) {
-                notificacion+=('\nla cantidad de productos en la canasta ' +(j+1) + ' debe ser igual a ' + CantidadCanastaActual);
+                notificacion+=("\n"+"la cantidad de productos en la canasta " +(j+1) + " debe ser igual a " + CantidadCanastaActual);
                  
               }
              
@@ -597,13 +590,23 @@ function AbrirModalCanasta(cantidadDevolucion=null)
                   data : {'ids' : arrayId,'cantidad' : arrayCantidad,'cantidadCanasta' : cantidadcanasta,'cantidadEnvase':cantidadEnvase,'tipoPaca':tipopaca,'cantidadPlastico':cantidadPlastico,'datosCanasta':datos,'cantidadcanasta':cantidadcanasta},
                 dataType: "json",
                 success: function (items) {
-
+                 
                   if(items.condicionDisponibilidas !=0)
                   {
-                   
-                    alert(items.items);
-                    
-                    AbrirModalCanasta(items.cantidad);
+                    var Errores2=items.items.length;
+                    var contenido2="errores";
+                    // var contenido2 = '<form action="" class="formName" ></div>';
+                  
+                    for( var i=0; i< Errores2; i++)
+                    {
+                      
+                      alert(items.items[i]);
+                    contenido2 += ("\n"+items.items[i]);
+                    }
+                    // contenido2 += '</div>'+'</form>';
+                    alert(contenido2);
+                                   
+                    AbrirModalCanasta(items.cantidad,items.cantidadCanasta);
                     return(0);
                    
                      

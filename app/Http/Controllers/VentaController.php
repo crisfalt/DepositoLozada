@@ -10,6 +10,8 @@ use App\EstadoDeVenta;
 use App\User;
 use App\formapago;
 use Session;
+use Helpers;
+use Illuminate\Support\Collection as Collection;
 use App\Producto;
 use DateTime;
 use App\detalles_venta;
@@ -133,57 +135,77 @@ class VentaController extends Controller
         public function AgregarCanastaEditar() 
         {
             $productoID= $_POST["ids"];
-            $productoCantidad= $_POST["cantidad"];
-            $productoCantidadCanasta= $_POST["cantidadCanasta"];
-            $productoCantidadEnvase= $_POST["cantidadEnvase"];
-            $productoTipoPaca= $_POST["tipoPaca"];
-            $productoCantidadPlastico= $_POST["cantidadPlastico"];
-            $cantidadCanasta=$_POST["cantidadcanasta"];
-            $datos=$_POST["datosCanasta"];
-              dd($productoCantidad,$productoID);
-            $IdVenta= session::get('IdVentaEditar');
-            $ObtenerCombo=tipoPaca::where('estado','A')->where('id', $productoTipoPaca)->value('cantidad');
-            $total=0;
-            $tmp=0;
-            $totalCanasta=$productoCantidadCanasta * $ObtenerCombo;
+       $productoCantidad= $_POST["cantidad"];
+       $productoCantidadCanasta= $_POST["cantidadCanasta"];
+       $productoCantidadEnvase= $_POST["cantidadEnvase"];
+       $productoTipoPaca= $_POST["tipoPaca"];
+       $productoCantidadPlastico= $_POST["cantidadPlastico"];
+       $cantidadCanasta=$_POST["cantidadcanasta"];
+       $datos=$_POST["datosCanasta"];
+
+       $Agrupar=['ID' => $productoID , 'CANTIDAD' => $productoID ];
+   
+       $IdVenta= session::get('IdVentaEditar');
+       $ObtenerCombo=TipoPaca::where('estado','A')->where('id', $productoTipoPaca)->value('cantidad');
+        $total=0;
+        $tmp=0;
+        $totalCanasta=$productoCantidadCanasta * $ObtenerCombo;
       
     
 
-        $ObteneIDcanasta=Detalles_venta::where('fk_factura','=',$IdVenta)->max('Numero_canasta');
+        $ObteneIDcanasta=detalles_venta::where('fk_factura','=',$IdVenta)->max('Numero_canasta');
     //    $ContadorCanasta=0;
 
         if($ObteneIDcanasta==null)
         {
             $ObteneIDcanasta =0; 
         }
-      //prueba validacion cantidad disponible
+        //prueba validacion cantidad disponible
       $disponibilidad=0;
       $error = array(); 
       $cantidadDevolucion=array();
       $contadorErrores=0;
+      $AgruparCantidadId=array();
+      $AcomularProductoTemporales="";
+      $AcomularProductoTemporales2="";
+      $SumaTotalCantidadProductos=0;
+      $collection=0;
+      $collection3=Collection::make();
+      $collection4=0;
+      $contador2=0;
+      $canastaReferencia=1;
+      
+     
         for( $j = 0 ; $j < $cantidadCanasta ; $j++ ) {
             $ObteneIDcanasta=$ObteneIDcanasta + 1;
            
             for( $i = 0 ; $i < count($datos) ; $i++ ) 
             {
-                
+               
+               
+                 /////inicializa en cero para acomular producto
+             
+            
                  if($productoCantidad[$tmp] !=0)
                  {
-                   
+                    
                   $obtenerCantidadProducto= Producto::where('codigo',$productoID[$tmp])->get(); 
+                  $AgruparCantidadId[$contador2]=['Id'=>$productoID[$tmp],'Cantidad'=>(int)$productoCantidad[$tmp],'posicionCampo'=>$contador2];
+                  $contador2++;
+            
                   if( $obtenerCantidadProducto[0]->cantidad==0)
                    {
                      $cantidadDevolucion[$i]=0;
 
-                    $error[$contadorErrores]='el codigo '.$productoID[$tmp].' del producto '.$obtenerCantidadProducto[0]->nombre.' esta agotado ';
+                    $error[$contadorErrores]='en la canasta '.$canastaReferencia.' el producto '.$obtenerCantidadProducto[0]->nombre.' esta agotado ';
                
                     $contadorErrores=  $contadorErrores+1;
                    }
-                   elseif( $productoCantidad[$tmp] > $obtenerCantidadProducto[0]->cantidad)
+                  elseif( $productoCantidad[$tmp] > $obtenerCantidadProducto[0]->cantidad)
                    {
                       $disponibilidad=$productoCantidad[$tmp]-$obtenerCantidadProducto[0]->cantidad;
-                                           
-                        $error[$contadorErrores]='el codigo '.$productoID[$tmp].' del producto '.$obtenerCantidadProducto[0]->nombre.' tiene disponible '. $obtenerCantidadProducto[0]->cantidad.' en el inventario';
+
+                        $error[$contadorErrores]='en la canasta '.$canastaReferencia.' el producto '.$obtenerCantidadProducto[0]->nombre.' tiene disponible '. $obtenerCantidadProducto[0]->cantidad.' en el inventario';
                         $contadorErrores=  $contadorErrores+1;
                         $cantidadDevolucion[$i]=$obtenerCantidadProducto[0]->cantidad;
                                            
@@ -196,24 +218,100 @@ class VentaController extends Controller
                   
                  }
                
-             
+                
                  $tmp++; 
-              
+                 
                
             }
           
-                      
+            $canastaReferencia++;        
           }
 
+       
+          $collection = Collection::make($AgruparCantidadId);  
+          $SinRepetirError=array();
+          $SinRepeticion=array();
+          $Contador=0;
+          $cantidadDevolucion2=array();
+          $collection4=Collection::make();
+          $collection5=Collection::make($cantidadDevolucion);
+          $Division=0;
+          $j=0;
+    //////////// for agrupar producto
+    for( $j = 0 ; $j <  $tmp ; $j++ ) 
+    {
+
+        $AcomularProductoTemporales=$collection->where('Id',$productoID[$j])->sum('Cantidad');      
+        $AcomularProductoTemporales2=$collection->where('Id',$productoID[$j]);
+        $obtenerCantidadProducto= Producto::where('codigo',$productoID[$j])->get(); 
+        //condicion para no repetir el mismo error comienza hacer la consulta de repeticon de mensaje
+        if($j !=0)
+        {
+            $SinRepeticion=$collection3->where('Error',(string)$productoID[$j]);
+            $collection4=Collection::make($SinRepeticion); 
+            // print_r('_'.$collection4->count().' suma '.$AcomularProductoTemporales );
+        }
+        
+      ///se hace consulta sum para saber total del prodcuto con la misma referencia
+        if( (int)$AcomularProductoTemporales  > $obtenerCantidadProducto[0]->cantidad)
+        {
+         
+            if( $collection4->count()==0 )
+            {
+                
+                $error[$contadorErrores]='el producto '.$obtenerCantidadProducto[0]->nombre.' tiene disponible '. $obtenerCantidadProducto[0]->cantidad.' en el inventario';
+                
+                $SinRepetirError[$Contador]=['Error'=>(string)$obtenerCantidadProducto[0]->codigo]; 
+                // si el producto supera el inventario se divide para remplazar la cantidad de los campos
+               
+                $Division=(int)($obtenerCantidadProducto[0]->cantidad/(int)$AcomularProductoTemporales2->count('Cantidad'));
+                $cantidadDevolucion2[$j]=$Division;
+                $Contador++;
+                // print_r($collection4->count().' - ');
+                
+               
+            } 
+            else
+            {
+                // si el producto supera el inventario se divide para remplazar la cantidad de los campos
+                $Division=(int)($obtenerCantidadProducto[0]->cantidad/(int)$AcomularProductoTemporales2->count('Cantidad'));
+                $cantidadDevolucion2[$j]=$Division;
+                // $cantidadDevolucion[$j]=   $obtenerCantidadProducto[0]->cantidad/(int)$AcomularProductoTemporales2->count('Cantidad');
+                // str_replace( $cantidadDevolucion2[$j], $obtenerCantidadProducto[0]->cantidad/(int)$AcomularProductoTemporales2->count('Cantidad'));
+              
+            }          
+          
+            $collection3 = Collection::make($SinRepetirError); 
+                      
+            $contadorErrores++;  
+        }
+        else
+        {
+         
+         
+           $Division=$collection5->get($j); 
+           
+        //    dd($Division);
+            $cantidadDevolucion2[(int)$j]=(int)$Division;
+        }
+        // print_r($Division.', ');
+        // print_r($j.', ');
+        // print_r($j.', '.$Division);
+      
+        
+    }
       ///si hay errores lo muestra
+      
+     //   print_r($cantidadDevolucion2);
 
       if($contadorErrores !=0)
       {
-        return response()->json( ['items'=>$error,'condicionDisponibilidas'=>$contadorErrores,'cantidad'=>$cantidadDevolucion] );  
+        //   dd($cantidadDevolucion2);
+        return response()->json( ['items'=>$error,'condicionDisponibilidas'=>$contadorErrores,'cantidad'=>$cantidadDevolucion2,'cantidadCanasta'=>$cantidadCanasta]);    
       }
-        //// crud insercion
 
-
+        //// crud insercion 
+        $tmp=0;
         for( $j = 0 ; $j < $cantidadCanasta ; $j++ ) {
             $ObteneIDcanasta=$ObteneIDcanasta + 1;
            
@@ -292,7 +390,7 @@ class VentaController extends Controller
 
            if($productoCantidadPlastico!=null && $productoCantidadPlastico!=0 )
            {
-               $consultarEnvases=tipoPaca::where('estado','A')->where('id',$consultaTipoPaca)->get();
+               $consultarEnvases=TipoPaca::where('estado','A')->where('id',$consultaTipoPaca)->get();
                //    foreach($consultarEnvases as $consultarEnvase)
                //    {
                //      $DividirPrecio=$consultarEnvase->precio / $consultarEnvase->cantidad;
@@ -325,10 +423,11 @@ class VentaController extends Controller
 
        } 
 
-          $notificacion=("Se agrego exitosamente");
+            $notificacion=("Se agrego exitosamente");
 
-          return response()->json( ['items'=>$notificacion,'condicionDisponibilidas'=>$contadorErrores ] ); 
+            return response()->json( ['items'=>$notificacion,'condicionDisponibilidas'=>$contadorErrores] );            
         }
+
 
 
 
@@ -465,7 +564,15 @@ class VentaController extends Controller
        $cantidadCanasta=$_POST["cantidadcanasta"];
        $datos=$_POST["datosCanasta"];
 
+       $Agrupar=['ID' => $productoID , 'CANTIDAD' => $productoID ];
+    //    $collection = Collection::make($Agrupar);
+    //    $productoIDArray=array($productoID);
+    //    $productoCantidadArray=array($productoCantidad);
 
+    //    $Agrupar=array( 'ID'=> $productoIDArray,'CANTIDAD'=>$productoCantidadArray);
+    //    $Detalles_ventas=detalles_venta::where('fk_producto',$productoID[0])->get();
+    // $Detalles_ventas=$collection->where('ID',"123")->first();
+    //    dd($Detalles_ventas);
          
     //    $Detalles_ventas=detalles_venta::where('fk_factura',$id)->get();
 
@@ -532,55 +639,148 @@ class VentaController extends Controller
       $error = array(); 
       $cantidadDevolucion=array();
       $contadorErrores=0;
-        for( $j = 0 ; $j < $cantidadCanasta ; $j++ ) {
-            $ObteneIDcanasta=$ObteneIDcanasta + 1;
+      $AgruparCantidadId=array();
+      $AcomularProductoTemporales="";
+      $AcomularProductoTemporales2="";
+      $SumaTotalCantidadProductos=0;
+      $collection=0;
+      $collection3=Collection::make();
+      $collection4=0;
+      $contador2=0;
+      $canastaReferencia=1;
+      
+     
+      for( $j = 0 ; $j < $cantidadCanasta ; $j++ ) {
+          $ObteneIDcanasta=$ObteneIDcanasta + 1;
+         
+          for( $i = 0 ; $i < count($datos) ; $i++ ) 
+          {
+             
+             
+               /////inicializa en cero para acomular producto
            
-            for( $i = 0 ; $i < count($datos) ; $i++ ) 
-            {
-                
-                 if($productoCantidad[$tmp] !=0)
-                 {
-                   
-                  $obtenerCantidadProducto= Producto::where('codigo',$productoID[$tmp])->get(); 
-                  if( $obtenerCantidadProducto[0]->cantidad==0)
-                   {
-                     $cantidadDevolucion[$i]=0;
-
-                    $error[$contadorErrores]='el codigo '.$productoID[$tmp].' del producto '.$obtenerCantidadProducto[0]->nombre.' esta agotado ';
-               
-                    $contadorErrores=  $contadorErrores+1;
-                   }
-                  elseif( $productoCantidad[$tmp] > $obtenerCantidadProducto[0]->cantidad)
-                   {
-                      $disponibilidad=$productoCantidad[$tmp]-$obtenerCantidadProducto[0]->cantidad;
-
-                        $error[$contadorErrores]='el codigo '.$productoID[$tmp].' del producto '.$obtenerCantidadProducto[0]->nombre.' tiene disponible '. $obtenerCantidadProducto[0]->cantidad.' en el inventario';
-                        $contadorErrores=  $contadorErrores+1;
-                        $cantidadDevolucion[$i]=$obtenerCantidadProducto[0]->cantidad;
-                                           
-                   }
-                  else
-                   {
-                    $cantidadDevolucion[$i]=$productoCantidad[$tmp];
-                   }
-
+          
+               if($productoCantidad[$tmp] !=0)
+               {
                   
+                $obtenerCantidadProducto= Producto::where('codigo',$productoID[$tmp])->get(); 
+                $AgruparCantidadId[$contador2]=['Id'=>$productoID[$tmp],'Cantidad'=>(int)$productoCantidad[$tmp],'posicionCampo'=>$contador2];
+                $contador2++;
+          
+                if( $obtenerCantidadProducto[0]->cantidad==0)
+                 {
+                   $cantidadDevolucion[$i]=0;
+
+                  $error[$contadorErrores]='en la canasta '.$canastaReferencia.' el producto '.$obtenerCantidadProducto[0]->nombre.' esta agotado ';
+             
+                  $contadorErrores=  $contadorErrores+1;
                  }
+                elseif( $productoCantidad[$tmp] > $obtenerCantidadProducto[0]->cantidad)
+                 {
+                    $disponibilidad=$productoCantidad[$tmp]-$obtenerCantidadProducto[0]->cantidad;
+
+                      $error[$contadorErrores]='en la canasta '.$canastaReferencia.' el producto '.$obtenerCantidadProducto[0]->nombre.' tiene disponible '. $obtenerCantidadProducto[0]->cantidad.' en el inventario';
+                      $contadorErrores=  $contadorErrores+1;
+                      $cantidadDevolucion[$i]=$obtenerCantidadProducto[0]->cantidad;
+                                         
+                 }
+                else
+                 {
+                  $cantidadDevolucion[$i]=$productoCantidad[$tmp];
+                 }
+
+                
+               }
+             
+              
+               $tmp++; 
                
              
-                 $tmp++; 
-              
-               
-            }
-          
-                      
           }
+        
+          $canastaReferencia++;        
+        }
+       
+          $collection = Collection::make($AgruparCantidadId);  
+          $SinRepetirError=array();
+          $SinRepeticion=array();
+          $Contador=0;
+          $cantidadDevolucion2=array();
+          $collection4=Collection::make();
+          $collection5=Collection::make($cantidadDevolucion);
+          $Division=0;
+          $j=0;
+    //////////// for agrupar producto
+    for( $j = 0 ; $j <  $tmp ; $j++ ) 
+    {
 
+        $AcomularProductoTemporales=$collection->where('Id',$productoID[$j])->sum('Cantidad');      
+        $AcomularProductoTemporales2=$collection->where('Id',$productoID[$j]);
+        $obtenerCantidadProducto= Producto::where('codigo',$productoID[$j])->get(); 
+        //condicion para no repetir el mismo error comienza hacer la consulta de repeticon de mensaje
+        if($j !=0)
+        {
+            $SinRepeticion=$collection3->where('Error',(string)$productoID[$j]);
+            $collection4=Collection::make($SinRepeticion); 
+            // print_r('_'.$collection4->count().' suma '.$AcomularProductoTemporales );
+        }
+        
+      ///se hace consulta sum para saber total del prodcuto con la misma referencia
+        if( (int)$AcomularProductoTemporales  > $obtenerCantidadProducto[0]->cantidad)
+        {
+         
+            if( $collection4->count()==0 )
+            {
+                
+                $error[$contadorErrores]='el producto '.$obtenerCantidadProducto[0]->nombre.' tiene disponible '. $obtenerCantidadProducto[0]->cantidad.' en el inventario';
+                
+                $SinRepetirError[$Contador]=['Error'=>(string)$obtenerCantidadProducto[0]->codigo]; 
+                // si el producto supera el inventario se divide para remplazar la cantidad de los campos
+               
+                $Division=(int)($obtenerCantidadProducto[0]->cantidad/(int)$AcomularProductoTemporales2->count('Cantidad'));
+                $cantidadDevolucion2[$j]=$Division;
+                $Contador++;
+                // print_r($collection4->count().' - ');
+                
+               
+            } 
+            else
+            {
+                // si el producto supera el inventario se divide para remplazar la cantidad de los campos
+                $Division=(int)($obtenerCantidadProducto[0]->cantidad/(int)$AcomularProductoTemporales2->count('Cantidad'));
+                $cantidadDevolucion2[$j]=$Division;
+                // $cantidadDevolucion[$j]=   $obtenerCantidadProducto[0]->cantidad/(int)$AcomularProductoTemporales2->count('Cantidad');
+                // str_replace( $cantidadDevolucion2[$j], $obtenerCantidadProducto[0]->cantidad/(int)$AcomularProductoTemporales2->count('Cantidad'));
+              
+            }          
+          
+            $collection3 = Collection::make($SinRepetirError); 
+                      
+            $contadorErrores++;  
+        }
+        else
+        {
+         
+         
+           $Division=$collection5->get($j); 
+           
+        //    dd($Division);
+            $cantidadDevolucion2[(int)$j]=(int)$Division;
+        }
+        // print_r($Division.', ');
+        // print_r($j.', ');
+        // print_r($j.', '.$Division);
+      
+        
+    }
       ///si hay errores lo muestra
+      
+     //   print_r($cantidadDevolucion2);
 
       if($contadorErrores !=0)
       {
-        return response()->json( ['items'=>$error,'condicionDisponibilidas'=>$contadorErrores,'cantidad'=>$cantidadDevolucion] );  
+        //   dd($cantidadDevolucion2);
+        return response()->json( ['items'=>$error,'condicionDisponibilidas'=>$contadorErrores,'cantidad'=>$cantidadDevolucion2,'cantidadCanasta'=>$cantidadCanasta]);    
       }
 
         //// crud insercion 
@@ -698,7 +898,7 @@ class VentaController extends Controller
 
             $notificacion=("Se agrego exitosamente");
 
-            return response()->json( ['items'=>$notificacion,'condicionDisponibilidas'=>$contadorErrores ] );            
+            return response()->json( ['items'=>$notificacion,'condicionDisponibilidas'=>$contadorErrores] );            
         }
 
 
