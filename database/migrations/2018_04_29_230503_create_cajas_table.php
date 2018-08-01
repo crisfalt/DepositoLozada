@@ -18,7 +18,7 @@ class CreateCajasTable extends Migration
             $table -> string('nombre',10);
             $table->string('estado',1)->default('A');
             //inicio foranea a bodega donde pertenece la caja
-            $table->integer('bodega_id');
+            $table->integer('bodega_id')->unsigned();
             $table->foreign('bodega_id')->references('id')->on('bodegas');
             //fin
             $table->timestamps();

@@ -19,13 +19,13 @@ class CreateDetallesVentasTable extends Migration
             $table->integer('fk_factura')->unsigned();//foranea a autoincremental
             $table->foreign('fk_factura')->references('id')->on('ventas');//id campo primario de tabla padre categories nombre tabla padre
             //inicio foreign key
-            $table->integer('fk_producto')->unsigned();//foranea a autoincremental
+            $table->string('fk_producto', 100);//foranea a autoincremental
             $table->foreign('fk_producto')->references('codigo')->on('productos');//id campo primario de tabla padre categories nombre tabla padre
             $table->integer('fk_tipo_paca')->unsigned();//foranea a autoincremental
-            $table->foreign('fk_tipo_paca')->references('id')->on('tipo_pacas');                     
+            $table->foreign('fk_tipo_paca')->references('id')->on('tipo_pacas');
             $table->integer('cantidad');
             $table->double('precio',12,2);
-           $table->timestamps();
+            $table->timestamps();
         });
     }
 

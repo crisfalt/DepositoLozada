@@ -15,7 +15,7 @@ class AddFieldsToPreciosProductos extends Migration
     {
         //
         Schema::table('precios_productos', function($table) {
-            $table -> integer('fk_descripcion_precio'); //se deja nullable para el administsrador pero en la vista se debe pedir como requerido
+            $table -> integer('fk_descripcion_precio')->unsigned(); //se deja nullable para el administsrador pero en la vista se debe pedir como requerido
             $table -> foreign('fk_descripcion_precio')->references('id')->on('descripcion_precios');
         });
     }

@@ -26,7 +26,6 @@ class AddFieldsToVentas extends Migration
      */
     public function down()
     {
-        //
          Schema::table('ventas', function($table) {
             $table ->dropColumn([
                 'fecha_entrega'

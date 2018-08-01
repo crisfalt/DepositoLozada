@@ -15,9 +15,9 @@ class CreateCargueFacturasTable extends Migration
     {
         Schema::create('cargue_facturas', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('venta_id');
+            $table->integer('venta_id')->unsigned();
             $table->foreign('venta_id')->references('id')->on('ventas');
-            $table->integer('cargue_id');
+            $table->integer('cargue_id')->unsigned();
             $table->foreign('cargue_id')->references('id')->on('cargues');
             $table->timestamps();
         });

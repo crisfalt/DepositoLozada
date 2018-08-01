@@ -15,7 +15,7 @@ class AddFieldsToIvasProductos extends Migration
     {
         //
         Schema::table('ivas_productos', function($table) {
-            $table -> integer('fk_descripcion_iva'); //se deja nullable para el administsrador pero en la vista se debe pedir como requerido
+            $table -> integer('fk_descripcion_iva')->unsigned(); //se deja nullable para el administsrador pero en la vista se debe pedir como requerido
             $table -> foreign('fk_descripcion_iva')->references('id')->on('descripcion_ivas');
         });
     }

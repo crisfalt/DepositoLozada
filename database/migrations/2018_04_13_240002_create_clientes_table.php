@@ -25,6 +25,7 @@ class CreateClientesTable extends Migration
             //fin
             $table->string('phone',20)->nullable();
             $table->string('celular',20)->nullable();
+            $table->string('address',150);
             $table->string('email')->unique()->nullable();
             $table->double('valor_credito',12,2);
             $table->string('url_foto',500);

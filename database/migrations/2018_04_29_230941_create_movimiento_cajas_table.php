@@ -21,7 +21,7 @@ class CreateMovimientoCajasTable extends Migration
             $table->string('descripcion',600);
             $table->enum('tipo_movimiento', ['entrada', 'salida']);
             //inicio foranea a caja que realiza el movimiento
-            $table->integer('caja_id');
+            $table->integer('caja_id')->unsigned();
             $table->foreign('caja_id')->references('id')->on('cajas');
             //fin
             $table->timestamps();

@@ -29,7 +29,7 @@ class CreateComprasTable extends Migration
             //fin foranea
             //foranea a proovedor
             $table->string('fk_proveeedors',100);
-            $table->foreign('fk_proveeedors')->references('nit')->on('proveedors');
+            $table->foreign('fk_proveeedors')->references('number_id')->on('proveedors');
             //fin foranea
             ////foranea a bodega
             $table->integer('fk_bodega')->unsigned();
