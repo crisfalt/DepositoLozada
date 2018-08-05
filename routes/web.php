@@ -36,6 +36,11 @@ Route::middleware(['auth', 'admin'])->group(function () {
     //CRUD Empleados
     Route::get('empleados' , 'Auth\RegisterController@index')->name('empleados');
     Route::delete('/empleados/{id}','Auth\RegisterController@destroy'); //vista para eliminar
+    Route::get( '/empleados/{id}', 'UserController@show' );
+    Route::get('/empleados/{id}/edit' , 'UserController@edit');
+    Route::post('/empleados/{id}/edit' , 'UserController@update');
+    //VEndedor
+    Route::post('vendedor/show',array('as'=>'vendedor.show','uses'=>'UserController@getVendedor'));
     //CRUD abonosventa
     Route::get('/abono/searchTotal/{saldoventa}','AbonoController@searchTotal');
     Route::get('abono' , 'AbonoController@index')->name('abono');
@@ -74,8 +79,6 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/proveedor/{id}/edit' , 'ProveedorController@edit');
     Route::post('/proveedor/{id}/edit' , 'ProveedorController@update');
 
-    //VEndedor
-    Route::post('vendedor/show',array('as'=>'vendedor.show','uses'=>'UserController@getVendedor'));
 
     //CRUD cajas
     Route::get('/caja' , 'CajaController@index')->name('caja');

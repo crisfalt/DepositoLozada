@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title','DepositoLozada | Registrar')
+@section('title','DepositoLozada | Editar Empleado')
 
 @section('styles')
     <style>
@@ -44,7 +44,7 @@
     </style>
 @endsection
 
-@section('titulo-contenido','Editar Cliente')
+@section('titulo-contenido','Editar Empleado')
 
 @section('header-class')
     <div class="panel-header panel-header-sm">
@@ -53,10 +53,10 @@
 
 @section('contenido')
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-lg-12">
             <div class="card">
                 <div class="card-header">
-                    <h5 class="title">Editar Cliente {{$cliente->name}}</h5>
+                    <h5 class="title">Editar Empleado {{$empleado->name}}</h5>
                 </div>
                 <!-- Mostrar los errores capturados por validate -->
                 @if ($errors->any())
@@ -69,24 +69,13 @@
                     </div>
                 @endif
                 <div class="card-body">
-                    <form method="POST" action="{{ url('/cliente/'.$cliente->number_id.'/edit') }}" enctype="multipart/form-data">
+                    <form method="POST" action="{{ url('/empleados/'.$empleado->id.'/edit') }}" enctype="multipart/form-data">
                         {{ csrf_field() }}
-                        <div class="row text-center">
-                            <div class="col-md-12">
-                                <h6 for="name" class="title">Foto del Cliente Actual</h6>
-                                @if( !empty($cliente -> url_foto) )
-                                    <img class="img-raised img-rounded" src="/imagenes/clientes/{{ $cliente -> url_foto }}" alt="" width="250" height="250">
-                                @else
-                                    <img class="img-raised img-rounded" src="/imagenes/default.png" alt="" width="250" height="250">
-                                @endif
-                            </div>
-                        </div>
-                        <br><br>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="name" class="col-md-8 control-label">Nombre Completo</label>
-                                    <input id="name" type="text" class="form-control" name="name" value="{{ old('name', $cliente->name) }}" required autofocus>
+                                    <input id="name" type="text" class="form-control" name="name" value="{{ old('name', $empleado->name) }}" required autofocus>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -95,7 +84,7 @@
                                     <select class="form-control" name="tipo_documento_id">
                                         <option class="form-control" value="I">Seleccione</option>
                                         @foreach ( $tiposDocumento as $tipo )
-                                            <option class="form-control" value="{{ $tipo->id }}" @if( $tipo -> id == old( 'tipo_documento_id',$cliente->tipo_documento_id) )  selected @endif>{{ $tipo->nombre }}</option>
+                                            <option class="form-control" value="{{ $tipo->id }}" @if( $tipo -> id == old( 'tipo_documento_id',$empleado->tipo_documento_id) )  selected @endif>{{ $tipo->nombre }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -105,64 +94,56 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="number_id" class="col-md-8 control-label">Numero Documento</label>
-                                    <input id="number_id" type="text" class="form-control" name="number_id" value="{{ old('number_id',$cliente->number_id) }}" readonly>
+                                    <input id="number_id" type="text" class="form-control" name="number_id" value="{{ old('number_id',$empleado->number_id) }}" readonly>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="address" class="col-md-8 control-label">Direccion</label>
-                                    <input id="address" type="text" class="form-control" name="address" value="{{ old('address',$cliente->address) }}" required autofocus>
+                                    <input id="address" type="text" class="form-control" name="address" value="{{ old('address',$empleado->address) }}" required autofocus>
                                 </div>
                             </div>
                         </div>
 
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="phone" class="col-md-8 control-label">Numero de Telefono</label>
-                                    <input id="phone" type="text" class="form-control" name="phone" value="{{ old('phone',$cliente->phone) }}" onkeypress="return solo_numeros(event)">
+                                    <input id="phone" type="text" class="form-control" name="phone" value="{{ old('phone',$empleado->phone) }}" onkeypress="return solo_numeros(event)">
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="celular" class="col-md-8 control-label">Numero de Celular</label>
-                                    <input id="celular" type="text" class="form-control" name="celular" value="{{ old('celular',$cliente->celular) }}" onkeypress="return solo_numeros(event)">
+                                    <input id="celular" type="text" class="form-control" name="celular" value="{{ old('celular',$empleado->celular) }}" onkeypress="return solo_numeros(event)">
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="email" class="col-md-6 control-label">Correo Electronico</label>
-                                    <input id="email" type="email" class="form-control" name="email" value="{{ old('email',$cliente->email) }}" placeholder="Correo Electronico...">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="valor_credito" class="col-md-6 control-label">Valor Tope Para Credito</label>
-                                    <input id="valor_credito" type="number" class="form-control" name="valor_credito" min="0" max="10000000" onkeypress="return solo_numeros(event)" value="{{ old('valor_credito',$cliente->valor_credito) }}"/>
+                                    <input id="email" type="email" class="form-control" name="email" value="{{ old('email',$empleado->email) }}" placeholder="Correo Electronico...">
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Bodega Perteneciente</label>
-                                    <select class="form-control" name="bodega_id">
-                                        <option class="form-control" value="I" required>Seleccione</option>
-                                        @foreach ( $bodegas as $bodega )
-                                            <option class="form-control" value="{{ $bodega->id }}" @if( $bodega -> id == old( 'bodega_id',$cliente->bodega_id) )  selected @endif>{{ $bodega->nombre }}</option>
+                                    <label>Tipo de Perfil</label>
+                                    <select class="form-control" name="perfil_id">
+                                        <option class="form-control" value="I">Seleccione</option>
+                                        @foreach ( $perfiles as $perfil )
+                                            <option class="form-control" value="{{ $perfil->id }}" @if( $perfil -> id == old( 'perfil_id', $empleado->perfil->id) )  selected @endif>{{ $perfil->nombre }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Ruta Para el Cliente</label>
-                                    <select class="form-control" name="ruta_id">
-                                        <option class="form-control" value="I" required>Seleccione</option>
-                                        @foreach ( $rutas as $ruta )
-                                            <option class="form-control" value="{{ $ruta->id }}" @if( $ruta -> id == old( 'ruta_id',$cliente->ruta_id) )  selected @endif>{{ $ruta->nombre }}</option>
+                                    <label>Bodega Perteneciente</label>
+                                    <select class="form-control" name="bodega_id">
+                                        <option class="form-control" value="I">Seleccione</option>
+                                        @foreach ( $bodegas as $bodega )
+                                            <option class="form-control" value="{{ $bodega->id }}" @if( $bodega -> id == old( 'bodega_id',$empleado->bodega_id) )  selected @endif>{{ $bodega->nombre }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -175,35 +156,10 @@
                                 </button>
                             </div>
                             <div class="col-md-6 text-center">
-                                <a href="{{ url('/cliente') }}" class="btn btn-info btn-round"><i class="now-ui-icons arrows-1_minimal-left"></i> Volver</a>
+                                <a href="{{ url('/empleados') }}" class="btn btn-info btn-round"><i class="now-ui-icons arrows-1_minimal-left"></i> Volver</a>
                             </div>
                         </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="row">
-                <div class="card card-user">
-                    <div class="text-center">
-                        <h5>Foto a Actualizar</h5>
-                    </div>
-                    <div class="card-body">
-                        <center><p>Seleccionar Imagen</p></center>
-
-                        <div class="row text-center">
-                            <div class="upload"><input type="file" class="form-control" title="Imagen a subir" name="photo" id="photo"></div>
-                        </div>
-                        <br>
-                        <div class="row text-center">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <!-- Aqui pone la imagen que sube -->
-                                    <img src="" alt="..." class="img quarter" id="image">
-                                </div>
-                            </div>
-                        </div>
-                        </form>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>

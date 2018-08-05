@@ -76,10 +76,10 @@
                                         {{ csrf_field() }}
                                         {{ method_field('DELETE') }}
 
-                                        <a href="{{ url('/cliente/'.$empleado->number_id) }}" rel="tooltip" title="Ver cliente {{ $empleado -> name }}" class="btn btn-info btn-icon btn-sm">
+                                        <a href="{{ url('/empleados/'.$empleado->id) }}" rel="tooltip" title="Ver empleado {{ $empleado -> name }}" class="btn btn-info btn-icon btn-sm">
                                             <i class="fa fa-info"></i>
                                         </a>
-                                        <a href="{{ url('/cliente/'.$empleado->number_id.'/edit') }}" rel="tooltip" title="Editar cliente {{ $empleado -> name }}" class="btn btn-success btn-icon btn-sm">
+                                        <a href="{{ url('/empleados/'.$empleado->id.'/edit') }}" rel="tooltip" title="Editar empleado {{ $empleado -> name }}" class="btn btn-success btn-icon btn-sm">
                                             <i class="fa fa-edit"></i>
                                         </a>
                                         <a class='btn btn-danger btn-icon btn-sm' rel="tooltip" title="Eliminar cliente {{ $empleado -> name }}" onclick="Delete('{{ $empleado -> name }}','{{ $empleado -> id }}')">
