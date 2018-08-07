@@ -41,7 +41,7 @@
                 <ul class="nav">
                     <!-- <li class="active"> para que quede como activo -->
                     @if( Auth::user() )
-                        @if( Auth::user() -> perfil_id == 1 )
+                        @if( Auth::user() -> perfil_id == 1 || Auth::user()->perfil->nombre === 'Administrador' )
                             <li>
                                 <a class="nav-link" href="{{ route('home') }}">
                                     <i class="now-ui-icons design_app"></i>
@@ -452,7 +452,7 @@
                                 </a>
                             </li>
                         @else
-                            @if( Auth::user() -> perfil_id == 4 )
+                            @if( Auth::user() -> perfil_id == 4 || Auth::user()->perfil->nombre === 'Cajero' )
                                 <li>
                                     <a href="">
                                         <i class="now-ui-icons files_single-copy-04"></i>
@@ -467,14 +467,20 @@
                                 </li>
                             @else
                                 <li>
+                                    <a href="#">
+                                        <i class="fa fa-motorcycle fa-spin"></i>
+                                        <p>Mi Ruta</p>
+                                    </a>
+                                </li>
+                                <li>
                                     <a href="">
-                                        <i class="now-ui-icons files_single-copy-04"></i>
+                                        <i class="fa fa-money-check-alt"></i>
                                         <p>Ventas</p>
                                     </a>
                                 </li>
                                 <li>
                                 <a href="{{ url('/vendedor/producto') }}">
-                                    <i class="now-ui-icons ui-1_settings-gear-63"></i>
+                                    <i class="fa fa-box-open"></i>
                                     <p>Productos</p>
                                 </a>
                             </li>
