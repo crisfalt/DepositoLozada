@@ -466,24 +466,33 @@
                                     </a>
                                 </li>
                             @else
-                                <li>
-                                    <a href="#">
-                                        <i class="fa fa-motorcycle fa-spin"></i>
-                                        <p>Mi Ruta</p>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="">
-                                        <i class="fa fa-money-check-alt"></i>
-                                        <p>Ventas</p>
-                                    </a>
-                                </li>
-                                <li>
-                                <a href="{{ url('/vendedor/producto') }}">
-                                    <i class="fa fa-box-open"></i>
-                                    <p>Productos</p>
-                                </a>
-                            </li>
+                                @if( Auth::user() -> perfil_id == 2 || Auth::user()->perfil->nombre === 'Vendedor' )
+                                    <li>
+                                        <a href="#">
+                                            <i class="fa fa-motorcycle fa-spin"></i>
+                                            <p>Mi Ruta</p>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="">
+                                            <i class="fa fa-money-check-alt"></i>
+                                            <p>Ventas</p>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ url('/vendedor/producto') }}">
+                                            <i class="fa fa-box-open"></i>
+                                            <p>Productos</p>
+                                        </a>
+                                    </li>
+                                @else
+                                    <li>
+                                        <a href="{{ url('/vendedor/producto') }}">
+                                            <i class="fa fa-box-open"></i>
+                                            <p>Inventario</p>
+                                        </a>
+                                    </li>
+                                @endif
                             @endif
                         @endif
                     @endif
