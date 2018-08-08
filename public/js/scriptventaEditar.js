@@ -412,7 +412,7 @@ function AbrirModalCanasta(cantidadDevolucion=null,cantidadcanasta=null)
                 
          
               
-              var ruta2 = '/venta/AgregarCanasta/';
+              var ruta2 = '/venta/AgregarCanasta/'+arrayId+'/'+arrayCantidad+'/'+cantidadcanasta+'/'+cantidadEnvase+'/'+tipopaca+'/'+cantidadPlastico+'/'+cantidadcanasta+'/'+datos;
 
               $.ajax({
                 headers: {
@@ -420,7 +420,7 @@ function AbrirModalCanasta(cantidadDevolucion=null,cantidadcanasta=null)
                   },
                 type: "post",
                 url: ruta2,
-                  data : {'ids' : arrayId,'cantidad' : arrayCantidad,'cantidadCanasta' : cantidadcanasta,'cantidadEnvase':cantidadEnvase,'tipoPaca':tipopaca,'cantidadPlastico':cantidadPlastico,'datosCanasta':datos,'cantidadcanasta':cantidadcanasta},
+                  // data : {'ids' : arrayId,'cantidad' : arrayCantidad,'cantidadCanasta' : cantidadcanasta,'cantidadEnvase':cantidadEnvase,'tipoPaca':tipopaca,'cantidadPlastico':cantidadPlastico,'datosCanasta':datos,'cantidadcanasta':cantidadcanasta},
                 dataType: "json",
                 success: function (items) {
                  
@@ -704,14 +704,12 @@ $("#tipopaca").change(function () {
             //   $("#tipocontenido").append($("<option />").val(ids[i]).text(nombres[i]));
             // }
               var compracion =0;
-            $.each(datos, function (index , valor) {
-              if(valor.tipo_contenido.id != compracion)
-                {
-                    $("#tipocontenido").append($("<option />").val(valor.tipo_contenido.id).text(valor.tipo_contenido.nombre).addClass("form-control"));
-                    compracion=valor.tipo_contenido.id;
-                }
-
-            })
+              datos.forEach( function( valor , index ) { 
+                // console.log(valor);
+                $("#tipocontenido").append($("<option />").val(valor.id).text(valor.nombre).addClass("form-control"));
+  
+              });
+  
 
             datos2.forEach( function( valor , index ) {
               $("#combobox").append($("<option />").val(valor.codigo).text(valor.nombre));
@@ -765,15 +763,10 @@ $("#tipopaca").change(function () {
               //   $("#tipopaca").append($("<option />").val(ids[i]).text(nombres[i]));
               // }
             
-             var compracion =0;
               datosListarTipoContenido.forEach( function( valor , index ) { 
                 // console.log(valor);
-              
-                if(valor.tipo_paca.id !=compracion)
-                {
-                $("#tipopaca").append($("<option/>").val(valor.tipo_paca.id).text(valor.tipo_paca.nombre).addClass("form-control"));
-                compracion=valor.tipo_paca.id;
-                }
+                $("#tipopaca").append($("<option />").val(valor.id).text(valor.nombre).addClass("form-control"));
+  
               });
 
               datosFiltro.forEach( function( valor , index ) { 

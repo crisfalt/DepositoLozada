@@ -49,4 +49,10 @@ class detalles_venta extends Model
     public  function ventas() {
         return $this->belongsTo(Venta::class);
     }
+   
+     public function productoMarca() 
+    {
+
+      return Marca::where('id',$this->producto()->fk_marca)->first();
+    } 
 }

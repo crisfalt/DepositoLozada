@@ -380,64 +380,49 @@
                                $total=0;      
                             ?>
                            @foreach( $Detalles_ventas as $Detalles_venta )
-                               <tr>
-                                  <?php
-                                      
-                                       $NombreProducto =  $Detalles_venta->producto();
-                                       $PrecioProducto = $Detalles_venta->producto();
-                                       $envase=$Detalles_venta->empaque();
-                                       
-                                        $IdVenta =$Detalles_venta ->fk_factura; 
-                                        $subtotal=$Detalles_venta->precio * $Detalles_venta->cantidad;
-                                        $total=$total+$subtotal;
-                                        $canasta= $Detalles_venta->Numero_canasta;
-                                        $cantidad=0;
-                                     if($canasta==null)
+                           <tr>
+                            <?php
+                                
+                                 $NombreProducto =  $Detalles_venta->producto();
+                                 $PrecioProducto = $Detalles_venta->producto();
+                                 $envase=$Detalles_venta->empaque();
+                                 $marca=$Detalles_venta->productoMarca();
+                                  $IdVenta =$Detalles_venta ->fk_factura; 
+                                  $subtotal=$Detalles_venta->precio * $Detalles_venta->cantidad;
+                                  $total=$total+$subtotal;
+                                  $canasta= $Detalles_venta->Numero_canasta;
+                                  if($canasta==null || $canasta==0 || $canasta==-1 || $canasta==-2 )
                                      {
                                         $canasta=0;
-                                     }
-   
-   
-   
-                                       
-                                   ?>
-   
-   
-                                   @if($Detalles_venta->Numero_canasta !=null)
-                                   
-                                       <th class="text-center">{{  $Detalles_venta -> Numero_canasta }}</td>
-   
-                                   
-                                   @else
-                                   
-                                       <th class="text-center"> </td> 
-                                   
-                                   @endif
-                                   @if($envase!=null)
-                                   @if($envase->precio != 0)
-                                   
-                                   <th class="text-center">{{  $envase -> nombre }}</td>
-                                   @else
-                                   <th class="text-center">{{  $NombreProducto -> nombre }}</td>
-                                   @endif
-   
-                                   @else
-                                     <th class="text-center">{{  $NombreProducto -> nombre }}</td>
-                                       
-                                    @endif
-                                    @if($Detalles_venta->Numero_canasta ==null)
-                                    @if($CargarVentas[0]->fk_estado_venta ==1)
-                                    
-                                       <th class="text-center"><input name='{{$Detalles_venta -> id}}' type="number" value='{{$Detalles_venta -> cantidad}}' class="number"  MIN="1" STEP="1" SIZE="6" id="number" onchange="agregarCantidad(this.name,this.value);"></td>
-                                    @elseif($CargarVentas[0]->fk_estado_venta ==2)
-                                    
-                                        <th class="text-center"><input name='{{$Detalles_venta -> id}}' type="number" value='{{$Detalles_venta -> cantidad}}' class="number"  MIN="1" STEP="1" SIZE="6" id="number" disabled></td>
-                                                   
-                                        @endif
-                                    @else
-                                    
-                                    <th class="text-center"><input name='{{$Detalles_venta -> id}}' type="number" value='{{$Detalles_venta -> cantidad}}' class="number "  MIN="1" STEP="1" SIZE="6" id="number"  style="background-color:#ff0000" disabled></td>
-                                    @endif
+                                     }                                                                         
+                             ?>
+                             {{-- {{$marca->nombre}} --}}
+                             <input type="text" id="idfac" value="{{$IdVenta}}" name="idfac" hidden="true">
+
+                             @if($Detalles_venta->Numero_canasta !=null && $Detalles_venta->Numero_canasta != 0 && $Detalles_venta->Numero_canasta != -1 && $Detalles_venta->Numero_canasta != -2)
+                             
+                             <th class="text-center">{{  $Detalles_venta -> Numero_canasta }}</td>                               
+                             @else                                
+                                 <th class="text-center"> </td>                                 
+                             @endif
+                            
+                               @if($Detalles_venta->Numero_canasta ==-1)
+                              <th class="text-center">{{  $envase -> nombre.'-'.$marca->nombre}}</td>
+                               
+                               @elseif($Detalles_venta->Numero_canasta >0 || $Detalles_venta->Numero_canasta ==-2)
+                              <th class="text-center">{{  $NombreProducto -> nombre.'-'.$marca->nombre }}</td>
+                               @elseif($Detalles_venta->Numero_canasta ==0 )
+                               <th class="text-center">{{'envases-'.$marca->nombre}}</td>
+                               @endif
+                                 
+                             
+                              @if($Detalles_venta->Numero_canasta ==null || $Detalles_venta->Numero_canasta == -2 || $Detalles_venta->Numero_canasta == -1)
+                              
+                                 <th class="text-center"><input name='{{$Detalles_venta -> id}}' type="number" value='{{$Detalles_venta -> cantidad}}' class="number"  MIN="1" STEP="1" SIZE="6" id="number" onchange="agregarCantidad(this.name,this.value);"></td>
+                              
+                              @else
+                              <th class="text-center"><input name='{{$Detalles_venta -> id}}' type="number" value='{{$Detalles_venta -> cantidad}}' class="number "  MIN="1" STEP="1" SIZE="6" id="number"  style="background-color:#ff0000" disabled></td>
+                              @endif
                                    
                                        {{-- <td>{{ $Detalles_venta -> cantidad }}</td> --}}
                                        <th class="text-center">{{ $Detalles_venta-> precio }}</td>

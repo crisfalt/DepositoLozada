@@ -329,64 +329,49 @@
                                    $total=0;      
                                 ?>
                                @foreach( $Detalle_compras as $Detalle_compra )
-                                   <tr>
-                                      <?php
-                                          
-                                           $NombreProducto =  $Detalle_compra->producto();
-                                           $PrecioProducto = $Detalle_compra->producto();
-                                           $envase=$Detalle_compra->empaque();
-                                           
-                                            $IdCompra =$Detalle_compra ->fk_compra; 
-                                            $subtotal=$Detalle_compra->precio * $Detalle_compra->cantidad;
-                                            $total=$total+$subtotal;
-                                            $canasta= $Detalle_compra->Numero_canasta;
-                                            $cantidad=0;
-                                         if($canasta==null)
-                                         {
-                                            $canasta=0;
-                                         }
-       
-       
-       
-                                           
-                                       ?>
-       
-       
-                                       @if($Detalle_compra->Numero_canasta !=null)
-                                       
-                                           <th class="text-center">{{  $Detalle_compra -> Numero_canasta }}</td>
-       
-                                       
-                                       @else
-                                       
-                                           <th class="text-center"> </td> 
-                                       
-                                       @endif
-                                       @if($envase!=null)
-                                       @if($envase->precio != 0)
-                                       
-                                       <th class="text-center">{{  $envase -> nombre }}</td>
-                                       @else
-                                       <th class="text-center">{{  $NombreProducto -> nombre }}</td>
-                                       @endif
-       
-                                       @else
-                                         <th class="text-center">{{  $NombreProducto -> nombre }}</td>
-                                           
-                                        @endif
-                                        @if($Detalle_compra->Numero_canasta ==null)
-                                        @if($Cargarcompras[0]->fk_estado_compra ==1)
-                                        
-                                           <th class="text-center"><input name='{{$Detalle_compra -> id}}' type="number" value='{{$Detalle_compra -> cantidad}}' class="number"  MIN="1" STEP="1" SIZE="6" id="number" onchange="agregarCantidadEditar(this.name,this.value);"></td>
-                                        @elseif($Cargarcompras[0]->fk_estado_compra ==2)
-                                        
-                                            <th class="text-center"><input name='{{$Detalle_compra -> id}}' type="number" value='{{$Detalle_compra -> cantidad}}' class="number"  MIN="1" STEP="1" SIZE="6" id="number" disabled></td>
-                                                       
-                                            @endif
-                                        @else
-                                        
-                                        <th class="text-center"><input name='{{$Detalle_compra -> id}}' type="number" value='{{$Detalle_compra -> cantidad}}' class="number "  MIN="1" STEP="1" SIZE="6" id="number"  style="background-color:#ff0000" disabled></td>
-                                        @endif
+                               <tr>
+                                <?php
+                                    
+                                     $NombreProducto =  $Detalle_compra->producto();
+                                     $PrecioProducto = $Detalle_compra->producto();
+                                     $envase=$Detalle_compra->empaque();
+                                     $marca=$Detalle_compra->productoMarca();
+                                      $IdVenta =$Detalle_compra ->fk_factura; 
+                                      $subtotal=$Detalle_compra->precio * $Detalle_compra->cantidad;
+                                      $total=$total+$subtotal;
+                                      $canasta= $Detalle_compra->Numero_canasta;
+                                      if($canasta==null || $canasta==0 || $canasta==-1 || $canasta==-2 )
+                                     {
+                                        $canasta=0;
+                                     }                                                                          
+                                 ?>
+                                 {{-- {{$marca->nombre}} --}}
+                                 <input type="text" id="idfac" value="{{$IdVenta}}" name="idfac" hidden="true">
+ 
+                                 @if($Detalle_compra->Numero_canasta !=null && $Detalle_compra->Numero_canasta != 0 && $Detalle_compra->Numero_canasta != -1 && $Detalle_compra->Numero_canasta != -2)
+                                 
+                                 <th class="text-center">{{  $Detalle_compra -> Numero_canasta }}</td>                               
+                                 @else                                
+                                     <th class="text-center"> </td>                                 
+                                 @endif
+                                
+                                   @if($Detalle_compra->Numero_canasta ==-1)
+                                  <th class="text-center">{{  $envase -> nombre.'-'.$marca->nombre}}</td>
+                                   
+                                   @elseif($Detalle_compra->Numero_canasta >0 || $Detalle_compra->Numero_canasta ==-2)
+                                  <th class="text-center">{{  $NombreProducto -> nombre.'-'.$marca->nombre }}</td>
+                                   @elseif($Detalle_compra->Numero_canasta ==0 )
+                                   <th class="text-center">{{'envases-'.$marca->nombre}}</td>
+                                   @endif
+                                     
+                                 
+                                  @if($Detalle_compra->Numero_canasta ==null || $Detalle_compra->Numero_canasta == -2 || $Detalle_compra->Numero_canasta == -1)
+                                  
+                                     <th class="text-center"><input name='{{$Detalle_compra -> id}}' type="number" value='{{$Detalle_compra -> cantidad}}' class="number"  MIN="1" STEP="1" SIZE="6" id="number" onchange="agregarCantidad(this.name,this.value);"></td>
+                                  
+                                  @else
+                                  <th class="text-center"><input name='{{$Detalle_compra -> id}}' type="number" value='{{$Detalle_compra -> cantidad}}' class="number "  MIN="1" STEP="1" SIZE="6" id="number"  style="background-color:#ff0000" disabled></td>
+                                  @endif
                                        
                                            {{-- <td>{{ $Detalle_compra -> cantidad }}</td> --}}
                                            <th class="text-center">{{ $Detalle_compra-> precio }}</td>

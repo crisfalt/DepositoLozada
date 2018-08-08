@@ -37,5 +37,10 @@ class detalle_compra extends Model
     // public function estado() {
     //     return EstadoCompra::where( 'id' , $this -> fk_estado_compra) -> first();
     // }
+    public function productoMarca() 
+    {
+
+      return Marca::where('id',$this->producto()->fk_marca)->first();
+    } 
 
 }

@@ -336,10 +336,10 @@ Route::middleware(['auth', 'admin'])->group(function () {
         return Response::json( $precio);
     });
     Route::get('/venta/ConsultarCanasta/{tipopaca}' , 'VentaController@ConsultarCanasta');
-    Route::post('/venta/AgregarCanasta' , 'VentaController@AgregarCanasta');
+    Route::post('/venta/AgregarCanasta/{ids}/{cantidad}/{cantidadCanasta}/{cantidadEnvase}/{tipoPaca}/{cantidadPlastico}/{cantidadcanasta}/{datosCanasta}' , 'VentaController@AgregarCanasta');
     //////consultar y agregar edit controlador venta
     Route::get('/venta/ConsultarCanastaEditar/{tipopaca}' , 'VentaController@ConsultarCanastaEditar');
-    Route::post('/venta/AgregarCanastaEditar' , 'VentaController@AgregarCanastaEditar');
+    Route::post('/venta/AgregarCanastaEditar/{ids}/{cantidad}/{cantidadCanasta}/{cantidadEnvase}/{tipoPaca}/{cantidadPlastico}/{cantidadcanasta}/{datosCanasta}' , 'VentaController@AgregarCanastaEditar');
     Route::post('/venta/ActualizarFechaEntrega' , 'VentaController@ActualizarFechaEntrega');
     Route::post('/venta/ActualizarFechaHora' , 'VentaController@ActualizarHoraEntrega');
     Route::get('/ventacabeza/{id}/edit' , 'VentaController@editcabeza');

@@ -40,7 +40,7 @@ class compraController extends Controller
        $productoCantidadPlastico= $_POST["cantidadPlastico"];
        $cantidadCanasta=$_POST["cantidadcanasta"];
        $datos=$_POST["datosCanasta"];
-
+       dd($productoTipoPaca);
 //    dd($productoCantidad,$productoID);
         $IdCompra= session::get('IdCompraEditar');
         // $ObtenerCombo=DB::table('tipo_pacas')->where('id', $productoTipoPaca)->value('cantidad');
@@ -53,10 +53,10 @@ class compraController extends Controller
         $ObteneIDcanasta=detalle_compra::where('fk_compra','=',$IdCompra)->max('Numero_canasta');
     //  $ContadorCanasta=0;
 
-        if($ObteneIDcanasta==null)
-        {
-            $ObteneIDcanasta=0; 
-        }
+    if($ObteneIDcanasta==null || $ObteneIDcanasta==-1 || $ObteneIDcanasta==-2 )
+    {
+        $ObteneIDcanasta=0; 
+    }
       
         for( $j = 0 ; $j < $cantidadCanasta ; $j++ ) {
             $ObteneIDcanasta=$ObteneIDcanasta + 1;
@@ -75,8 +75,7 @@ class compraController extends Controller
                          // 
                          detalle_compra::insert([
                          ['precio' => $DatoPrecio, 'cantidad' =>$productoCantidad[$tmp],'fk_tipo_paca'=>0,'fk_compra'=>$IdCompra,'fk_producto'=>$productoID[$tmp],'Numero_canasta' =>$ObteneIDcanasta]]);
-                     
-         
+                              
                  }
                
              
@@ -90,85 +89,83 @@ class compraController extends Controller
 
       ////canasta y envases Editar
 
-       $consultaTipoPaca=Producto::where('codigo',$productoID)->value('fk_tipo_paca');
+       
+      $consultaTipoPaca=Producto::where('estado','A')->where('codigo',$productoID)->value('fk_tipo_paca');
       
-      
-       $consultaIDCanasta=detalle_compra::where('fk_compra', $IdCompra)->where('fk_tipo_paca',$productoTipoPaca)->get();
+      $consultaIDPlastico=detalle_compra::where('fk_compra', $IdCompra)->where('fk_tipo_paca',$productoTipoPaca)->where('Numero_canasta',-1)->get();
+      $consultaIDCanasta=detalle_compra::where('fk_compra', $IdCompra)->where('fk_tipo_paca',$productoTipoPaca)->where('Numero_canasta',null)->get();
 
-      
-      
-       if($consultaTipoPaca!=null)
-       {
-           
-           if($productoCantidadEnvase!=null && $productoCantidadEnvase!=0)
-           {
-             
-           $consultarEnvases=TipoPaca::where('id',$consultaTipoPaca)->get();
-      
-         
-          if(count($consultaIDCanasta)!=0)
-          {
-           // dd($consultaIDCanasta[0]-> cantidad,$productoCantidadEnvase);
+     
+     
+      if($consultaTipoPaca!=null)
+      {
           
-               //  DB::table('detalle_compras')
-               // ->where('fk_tipo_paca',$consultaTipoPaca)
-               // ->where('fk_compra',$IdCompra)
-               // ->where('precio',$consultarEnvases[0]->precio_envase)
-               // ->update(['cantidad' => (int)$consultaIDCanasta[0]-> cantidad + (int)$productoCantidadEnvase]);
-                detalle_compra::where('fk_tipo_paca',$consultaTipoPaca)
-               ->where('fk_compra',$IdCompra)
-               ->where('precio',$consultarEnvases[0]->precio_envase)
-               ->update(['cantidad' => (int)$consultaIDCanasta[0]-> cantidad + (int)$productoCantidadEnvase]);
-           
-          }
-           else
-           {
-              
-           //  $TotaEnvases=$DividirPrecio * $precio;
-               // DB::table('detalle_compras')->insert([
-               // ['precio' => $consultarEnvases[0]->precio_envase, 'cantidad' =>(int)$productoCantidadEnvase,'fk_tipo_paca'=>(int)$consultaTipoPaca,'fk_compra'=>(int)$IdCompra,'fk_producto'=>0 ]
-               // 
-               detalle_compra::insert([
-               ['precio' => $consultarEnvases[0]->precio_envase, 'cantidad' =>(int)$productoCantidadEnvase,'fk_tipo_paca'=>(int)$consultaTipoPaca,'fk_compra'=>(int)$IdCompra,'fk_producto'=>0 ]
+          if($productoCantidadEnvase!=null && $productoCantidadEnvase!=0)
+          {
+            
+          $consultarEnvases=TipoPaca::where('estado','A')->where('id',$consultaTipoPaca)->get();
+          if( $consultarEnvases[0]->precio_envase !=null && $consultarEnvases[0]->precio_envase !=0)
+          {
+        
+         if(count($consultaIDCanasta)!=0)
+         {
+          // dd($consultaIDCanasta[0]-> cantidad,$productoCantidadEnvase);
+         
+              detalle_compra::
+              where('fk_tipo_paca',$consultaTipoPaca)
+              ->where('fk_compra',$IdCompra)
+              ->where('precio',$consultarEnvases[0]->precio_envase)
+              ->update(['cantidad' => (int)$consultaIDCanasta[0]-> cantidad + (int)$productoCantidadEnvase]);
+          
+         }
+          else
+          {
              
-           ]);
-            }
-           
+          //  $TotaEnvases=$DividirPrecio * $precio;
+              detalle_compra::insert([
+              ['precio' => $consultarEnvases[0]->precio_envase, 'cantidad' =>(int)$productoCantidadEnvase,'fk_tipo_paca'=>(int)$consultaTipoPaca,'fk_compra'=>(int)$IdCompra,'fk_producto'=>$productoID[0] ]
+            
+          ]);
            }
+        }
+          
+    }
 
-           if($productoCantidadPlastico!=null && $productoCantidadPlastico!=0 )
-           {
-               $consultarEnvases=TipoPaca::where('id',$consultaTipoPaca)->get();
-               //    foreach($consultarEnvases as $consultarEnvase)
-               //    {
-               //      $DividirPrecio=$consultarEnvase->precio / $consultarEnvase->cantidad;
-                   
-               //    }
-                 
-                  if(count($consultaIDCanasta)!=0)
-                  {
-                   // dd($consultaIDCanasta[0]-> cantidad,$request->input('cantidadEnvases'));
+          if($productoCantidadPlastico!=null && $productoCantidadPlastico!=0 )
+          {
+              $consultarEnvases=TipoPaca::where('estado','A')->where('id',$consultaTipoPaca)->get();
+              //    foreach($consultarEnvases as $consultarEnvase)
+              //    {
+              //      $DividirPrecio=$consultarEnvase->precio / $consultarEnvase->cantidad;
                   
-                       detalle_compra::where('fk_tipo_paca',$productoTipoPaca)
-                       ->where('fk_compra',$IdCompra)
-                       ->where('precio',$consultarEnvases[0]->precio)
-                       ->update(['cantidad' => (int)$consultaIDCanasta[0]-> cantidad + (int)$productoCantidadPlastico]);
-                   
-                  }
-                   else
-                   {
-                      
-                   //  $TotaEnvases=$DividirPrecio * $precio;
-                    DB::table('detalle_compras')->insert([
-                       ['precio' => $consultarEnvases[0]->precio , 'cantidad' =>(int)$productoCantidadPlastico,'fk_tipo_paca'=>(int)$consultaTipoPaca,'fk_compra'=>(int)$IdCompra,'fk_producto'=>0 ]
+              //    }
+              if( $consultarEnvases[0]->precio !=null && $consultarEnvases[0]->precio !=0)
+              {
+                 if(count($consultaIDPlastico)!=0)
+                 {
+                  // dd($consultaIDCanasta[0]-> cantidad,$request->input('cantidadEnvases'));
+                 
+                      detalle_compra::
+                      where('fk_tipo_paca',$productoTipoPaca)
+                      ->where('fk_compra',$IdCompra)
+                      ->where('precio',$consultarEnvases[0]->precio)
+                      ->update(['cantidad' => (int) $consultaIDPlastico[0]-> cantidad + (int)$productoCantidadPlastico]);
+                  
+                 }
+                  else
+                  {
                      
-                   ]);
-                    }
+                  //  $TotaEnvases=$DividirPrecio * $precio;
+                     detalle_compra::insert([
+                      ['precio' => $consultarEnvases[0]->precio , 'cantidad' =>(int)$productoCantidadPlastico,'fk_tipo_paca'=>(int)$consultaTipoPaca,'fk_compra'=>(int)$IdCompra,'fk_producto'=>$productoID[0],'Numero_canasta'=>-1 ]
+                    
+                  ]);
+                }
+            }
 
+          }
 
-           }
-
-       } 
+      }  
 
               $notificacion=("Se agrego exitosamente");
 
@@ -204,15 +201,16 @@ class compraController extends Controller
         public function tipoContenidoEditar($id) 
         {
 
-            // $ListarTipoContenido= DB::table('productos')                        
-            // ->join('marcas','productos.fk_marca','=','marcas.id')
-            // ->join('tipo_contenidos','productos.fk_tipo_contenido','=','tipo_contenidos.id')
-            // ->select('tipo_contenidos.id','tipo_contenidos.nombre')                
-            // ->where('productos.fk_marca','=',$id)
-            // ->groupBy('tipo_contenidos.id')
-            // ->get();
+            $ListarTipoContenido= Producto::                        
+            join('marcas','productos.fk_marca','=','marcas.id')
+            ->join('tipo_contenidos','productos.fk_tipo_contenido','=','tipo_contenidos.id')
+            ->select('tipo_contenidos.id','tipo_contenidos.nombre')                
+            ->where('productos.fk_marca','=',$id)
+            ->where('productos.estado','A')
+            ->groupBy('tipo_contenidos.id')
+            ->get();
 
-            $ListarTipoContenido= Producto::where('estado','A')->where('fk_marca',$id)->with('tipoContenido')->get();
+            // $ListarTipoContenido= Producto::where('estado','A')->where('fk_marca',$id)->with('tipoContenido')->get();
 
             Session::put('IdMarcaEditar',$id);
             $ListarMarcas=Producto::where('estado','A')->where('fk_marca',$id)->select('codigo','nombre')->get();
@@ -230,32 +228,34 @@ class compraController extends Controller
               Session::put('IdContenidoEditar',$id);
               
 
-            // $ListarTipoPaca= DB::table('productos')                        
-            //   ->join('marcas',
-            //          'productos.fk_marca',
-            //          '=',
-            //          'marcas.id'
-            //         )   
-            //   ->join('tipo_pacas',
-            //           'productos.fk_tipo_paca',
-            //           '=',
-            //           'tipo_pacas.id'
-            //          )
-            //   ->join('tipo_contenidos',
-            //           'productos.fk_tipo_contenido',
-            //           '=',
-            //           'tipo_contenidos.id'
-            //          )
-            //   ->select('tipo_pacas.id',
-            //            'tipo_pacas.nombre'
-            //           ) 
-            //   ->where([
-            //       ['fk_marca', '=',$marca],
-            //       ['fk_tipo_contenido', '=', $id]
-            //   ])
-            //   ->groupBy('tipo_pacas.id')                       
-            //   ->get();
-            $ListarTipoPaca = Producto::where('estado','A')->where('fk_marca',$marca)->where('fk_tipo_contenido',$id)->with('tipoPaca')->get();
+            $ListarTipoPaca= Producto::                        
+              join('marcas',
+                     'productos.fk_marca',
+                     '=',
+                     'marcas.id'
+                    )   
+              ->join('tipo_pacas',
+                      'productos.fk_tipo_paca',
+                      '=',
+                      'tipo_pacas.id'
+                     )
+              ->join('tipo_contenidos',
+                      'productos.fk_tipo_contenido',
+                      '=',
+                      'tipo_contenidos.id'
+                     )
+              ->select('tipo_pacas.id',
+                       'tipo_pacas.nombre'
+                      ) 
+              ->where('productos.estado','A')
+              ->where([
+                  ['fk_marca', '=',$marca],
+                  ['fk_tipo_contenido', '=', $id],
+                  
+              ])
+              ->groupBy('tipo_pacas.id')                       
+              ->get();
+            // $ListarTipoPaca = Producto::where('estado','A')->where('fk_marca',$marca)->where('fk_tipo_contenido',$id)->with('tipoPaca')->get();
              // dd($ListarTipoPaca);
 
             // $ObtenerProductoTipoPaca=DB::table('productos')->where('fk_tipo_contenido',$id)->where('fk_marca',$marca)->get();//obtengo los productos con una marca
@@ -349,7 +349,7 @@ class compraController extends Controller
            $productoCantidadPlastico= $_POST["cantidadPlastico"];
            $cantidadCanasta=$_POST["cantidadcanasta"];
            $datos=$_POST["datosCanasta"];
-
+            
             //    dd($productoCantidad,$productoID);
            $IdCompra= session::get('IdCompra');
            // $ObtenerCombo=DB::table('tipo_pacas')->where('id', $productoTipoPaca)->value('cantidad');
@@ -363,13 +363,14 @@ class compraController extends Controller
 
             //$ContadorCanasta=0;
 
-              if($ObteneIDcanasta==null)
+              if($ObteneIDcanasta==null || $ObteneIDcanasta==-1 || $ObteneIDcanasta==-2 )
               {
                   $ObteneIDcanasta=0; 
               }
       
         for( $j = 0 ; $j < $cantidadCanasta ; $j++ ) 
         {
+            // dd("hola");
             $ObteneIDcanasta=$ObteneIDcanasta + 1;
            
             for( $i = 0 ; $i < count($datos) ; $i++ ) 
@@ -384,8 +385,8 @@ class compraController extends Controller
                    $DatoPrecio= Producto::where('productos.codigo','=', $productoID[$tmp])     
                    ->value('precio_compra');         
          
-                    DB::table('detalle_compras')->insert([
-                         ['precio' => $DatoPrecio, 'cantidad' =>$productoCantidad[$tmp],'fk_tipo_paca'=>0,'fk_compra'=>$IdCompra,'fk_producto'=>$productoID[$tmp],'Numero_canasta' =>$ObteneIDcanasta]]);
+                          detalle_compra::insert([
+                         ['precio' => $DatoPrecio, 'cantidad' =>$productoCantidad[$tmp],'fk_tipo_paca'=>$productoTipoPaca,'fk_compra'=>$IdCompra,'fk_producto'=>$productoID[$tmp],'Numero_canasta' =>$ObteneIDcanasta]]);
                      
          
                  }
@@ -401,71 +402,81 @@ class compraController extends Controller
 
       ////canasta y envases
 
-       $consultaTipoPaca=Producto::where('codigo',$productoID)->value('fk_tipo_paca');
-       $consultaIDCanasta=detalle_compra::('fk_compra', $IdCompra)->where('fk_tipo_paca',$productoTipoPaca)->get();
+      $consultaTipoPaca=Producto::where('estado','A')->where('codigo',$productoID)->value('fk_tipo_paca');
       
-       if($consultaTipoPaca!=null)
-       {
-           if($productoCantidadEnvase!=null && $productoCantidadEnvase!=0)
-           {
-             
-                $consultarEnvases=TipoPaca::where('id',$consultaTipoPaca)->get();
-      
-         
-                if(count($consultaIDCanasta)!=0)
-                {
-                 // dd($consultaIDCanasta[0]-> cantidad,$productoCantidadEnvase);
-                
-                     detalle_compra::where('fk_tipo_paca',$consultaTipoPaca)
-                     ->where('fk_compra',$IdCompra)
-                     ->where('precio',$consultarEnvases[0]->precio_envase)
-                     ->update(['cantidad' => (int)$consultaIDCanasta[0]-> cantidad + (int)$productoCantidadEnvase]);
-                 
-                }
-                 else
-                 {
-                    
-                 //  $TotaEnvases=$DividirPrecio * $precio;
-                  DB::table('detalle_compras')->insert([
-                     ['precio' => $consultarEnvases[0]->precio_envase, 'cantidad' =>(int)$productoCantidadEnvase,'fk_tipo_paca'=>(int)$consultaTipoPaca,'fk_compra'=>(int)$IdCompra,'fk_producto'=>0 ]
-                   
-                 ]);
-                  }
-           
-           }
+      $consultaIDPlastico=detalle_compra::where('fk_compra', $IdCompra)->where('fk_tipo_paca',$productoTipoPaca)->where('Numero_canasta',-1)->get();
+      $consultaIDCanasta=detalle_compra::where('fk_compra', $IdCompra)->where('fk_tipo_paca',$productoTipoPaca)->where('Numero_canasta',null)->get();
 
-           if($productoCantidadPlastico!=null && $productoCantidadPlastico!=0 )
-           {
-               $consultarEnvases=TipoPaca::where('id',$consultaTipoPaca)->get();
-               //    foreach($consultarEnvases as $consultarEnvase)
-               //    {
-               //      $DividirPrecio=$consultarEnvase->precio / $consultarEnvase->cantidad;
-                   
-               //    }
+     
+     
+      if($consultaTipoPaca!=null)
+      {
+          
+          if($productoCantidadEnvase!=null && $productoCantidadEnvase!=0)
+          {
+            
+          $consultarEnvases=TipoPaca::where('estado','A')->where('id',$consultaTipoPaca)->get();
+          if( $consultarEnvases[0]->precio_envase !=null && $consultarEnvases[0]->precio_envase !=0)
+          {
+        
+         if(count($consultaIDCanasta)!=0)
+         {
+          // dd($consultaIDCanasta[0]-> cantidad,$productoCantidadEnvase);
+         
+              detalle_compra::
+              where('fk_tipo_paca',$consultaTipoPaca)
+              ->where('fk_compra',$IdCompra)
+              ->where('precio',$consultarEnvases[0]->precio_envase)
+              ->update(['cantidad' => (int)$consultaIDCanasta[0]-> cantidad + (int)$productoCantidadEnvase]);
+          
+         }
+          else
+          {
+             
+          //  $TotaEnvases=$DividirPrecio * $precio;
+              detalle_compra::insert([
+              ['precio' => $consultarEnvases[0]->precio_envase, 'cantidad' =>(int)$productoCantidadEnvase,'fk_tipo_paca'=>(int)$consultaTipoPaca,'fk_compra'=>(int)$IdCompra,'fk_producto'=>$productoID[0] ]
+            
+          ]);
+           }
+        }
+     }
+
+          if($productoCantidadPlastico!=null && $productoCantidadPlastico!=0 )
+          {
+              $consultarEnvases=TipoPaca::where('estado','A')->where('id',$consultaTipoPaca)->get();
+              //    foreach($consultarEnvases as $consultarEnvase)
+              //    {
+              //      $DividirPrecio=$consultarEnvase->precio / $consultarEnvase->cantidad;
+                  
+              //    }
+              if( $consultarEnvases[0]->precio !=null && $consultarEnvases[0]->precio !=0)
+            {
+                 if(count($consultaIDPlastico)!=0)
+                {
+                  // dd($consultaIDCanasta[0]-> cantidad,$request->input('cantidadEnvases'));
                  
-                  if(count($consultaIDCanasta)!=0)
-                  {
-                   // dd($consultaIDCanasta[0]-> cantidad,$request->input('cantidadEnvases'));
-                       detalle_compra::where('fk_tipo_paca',$productoTipoPaca)
-                       ->where('fk_compra',$IdCompra)
-                       ->where('precio',$consultarEnvases[0]->precio)
-                       ->update(['cantidad' => (int)$consultaIDCanasta[0]-> cantidad + (int)$productoCantidadPlastico]);
-                   
-                  }
+                      detalle_compra::
+                      where('fk_tipo_paca',$productoTipoPaca)
+                      ->where('fk_compra',$IdCompra)
+                      ->where('precio',$consultarEnvases[0]->precio)
+                      ->update(['cantidad' => (int) $consultaIDPlastico[0]-> cantidad + (int)$productoCantidadPlastico]);
+                  
+                 }
                   else
                   {
-                      
-                   //  $TotaEnvases=$DividirPrecio * $precio;
-                    DB::table('detalle_compras')->insert([
-                       ['precio' => $consultarEnvases[0]->precio , 'cantidad' =>(int)$productoCantidadPlastico,'fk_tipo_paca'=>(int)$consultaTipoPaca,'fk_compra'=>(int)$IdCompra,'fk_producto'=>0 ]
-                   ]);
+                     
+                  //  $TotaEnvases=$DividirPrecio * $precio;
+                     detalle_compra::insert([
+                      ['precio' => $consultarEnvases[0]->precio , 'cantidad' =>(int)$productoCantidadPlastico,'fk_tipo_paca'=>(int)$consultaTipoPaca,'fk_compra'=>(int)$IdCompra,'fk_producto'=>$productoID[0],'Numero_canasta'=>-1 ]
+                    
+                  ]);
+                 }
+            }
 
-                  }
+          }
 
-
-           }
-
-       } 
+      }  
 
           $notificacion=("Se agrego exitosamente");
 
@@ -501,16 +512,17 @@ class compraController extends Controller
         public function tipoContenido($id) 
         {
 
-             
-            // $ListarTipoContenido= DB::table('productos')                        
-            // ->join('marcas','productos.fk_marca','=','marcas.id')
-            // ->join('tipo_contenidos','productos.fk_tipo_contenido','=','tipo_contenidos.id')
-            // ->select('tipo_contenidos.id','tipo_contenidos.nombre')                
-            // ->where('productos.fk_marca','=',$id)
-            // ->groupBy('tipo_contenidos.id')
-            // ->get();
+            //  dd($id);
+            $ListarTipoContenido= Producto::                        
+            join('marcas','productos.fk_marca','=','marcas.id')
+            ->join('tipo_contenidos','productos.fk_tipo_contenido','=','tipo_contenidos.id')
+            ->select('tipo_contenidos.id','tipo_contenidos.nombre')                
+            ->where('productos.fk_marca','=',$id)
+            ->where('productos.estado','A')
+            ->groupBy('tipo_contenidos.id')
+            ->get();
 
-            $ListarTipoContenido= Producto::where('estado','A')->where('fk_marca',$id)->with('tipoContenido')->get();
+            // $ListarTipoContenido= Producto::where('estado','A')->where('fk_marca',$id)->with('tipoContenido')->get();
 
 
             Session::put('IdMarca',$id);
@@ -527,33 +539,36 @@ class compraController extends Controller
             Session::put('IdContenido',$id);
             
 
-            // $ListarTipoPaca= DB::table('productos')                        
-            // ->join('marcas',
-            //        'productos.fk_marca',
-            //        '=',
-            //        'marcas.id'
-            //       )   
-            // ->join('tipo_pacas',
-            //         'productos.fk_tipo_paca',
-            //         '=',
-            //         'tipo_pacas.id'
-            //        )
-            // ->join('tipo_contenidos',
-            //         'productos.fk_tipo_contenido',
-            //         '=',
-            //         'tipo_contenidos.id'
-            //        )
-            // ->select('tipo_pacas.id',
-            //          'tipo_pacas.nombre'
-            //         ) 
-            // ->where([
-            //     ['fk_marca', '=',$marca],
-            //     ['fk_tipo_contenido', '=', $id]
-            // ])
-            // ->groupBy('tipo_pacas.id')                       
-            // ->get();
+            $ListarTipoPaca= Producto::                        
+            join('marcas',
+                   'productos.fk_marca',
+                   '=',
+                   'marcas.id'
+                  )   
+            ->join('tipo_pacas',
+                    'productos.fk_tipo_paca',
+                    '=',
+                    'tipo_pacas.id'
+                   )
+            ->join('tipo_contenidos',
+                    'productos.fk_tipo_contenido',
+                    '=',
+                    'tipo_contenidos.id'
+                   )
+            ->select('tipo_pacas.id',
+                     'tipo_pacas.nombre'
+                    ) 
+           
+            ->where('productos.estado','A')
+            ->where([
+                ['fk_marca', '=',$marca],
+                ['fk_tipo_contenido', '=', $id]
+                // ['estado','=','A']
+            ])
+            ->groupBy('tipo_pacas.id')                       
+            ->get();
             // 
-            /$ListarTipoPaca = Producto::where('estado','A')->where('fk_marca',$marca)->where('fk_tipo_contenido',$id)->with('tipoPaca')->groupBy('tipoPaca')->get();
+            // $ListarTipoPaca = Producto::where('estado','A')->where('fk_marca',$marca)->where('fk_tipo_contenido',$id)->with('tipoPaca')->groupBy('tipoPaca')->get();
 
 
 
@@ -747,127 +762,155 @@ class compraController extends Controller
                         //    dd($DatoPrecio);
                      
     
-            $productos=Producto::where('codigo',$ObtenerIdProdcuto[0])->value('fk_tipo_paca');
-        
-            $ObtenerPaca=TipoPaca::where('id',$productos)->value('retornable');
-            $this->validate($request,detalle_compra::$rules,detalle_compra::$messages);
-            $notification = 'se agrego exitosamente';
-            $detalle_compra = new detalle_compra();
-             if( $request->input('cantidad') == null ) {
-                $request['cantidad'] = 0;
-               }
-               
-            //    $this->validate( $Datoscompras,detalle_compra::$rules,detalle_compra::$messages);
-            $idCompra=$request->session()->get('IdCompra');
-            $request['fk_compra']= $idCompra;
-            $detalle_compra -> fk_tipo_paca = 0;
-            $detalle_compra -> fk_producto = $ObtenerIdProdcuto[0];
-            $detalle_compra -> fk_compra = $request->input('fk_compra');            
-            $detalle_compra -> cantidad = $request->input('cantidad');
-            $preciocompra=($DatoPrecio);
-          
-            // $preciocompra = DB::table('precios_productos')->where('id',$precio)->value('valor');
-            // dd($preciocompra );
-            $detalle_compra -> precio= $preciocompra;
-            $IdCompra= session::get('IdCompra');
-
-          
-            $ConsultarIDProducto = detalle_compra::where('fk_producto',$ObtenerIdProdcuto[0])->where('fk_compra', $IdCompra)->where('precio',$preciocompra)->get();
-            // dd($ConsultarIDProducto);
-            // $consultarPrecioProducto=DB::table('precios_productos')->where('fk_producto', $ObtenerIdProdcuto[0])->value('valor');
-
-            $consultaTipoPaca=Producto::where('codigo',$request->input('fk_producto'))->value('fk_tipo_paca');
-            $consultaPrecioDetalle=detalle_compra::where('fk_compra', $IdCompra)->where('precio',$preciocompra)->where('fk_producto',$ObtenerIdProdcuto[0])->value('precio');
            
-            $consultaIDCanasta=detalle_compra::where('fk_compra', $IdCompra)->where('fk_tipo_paca',$consultaTipoPaca)->get();
-            $DividirPrecio=0;
-            $SaberCombo=TipoPaca::where('id',$consultaTipoPaca)->get();
-            $TotaEnvases=0;
-     
-            if($consultaTipoPaca!=null)
-            {
-                
-                if($request->input('cantidadEnvases')!=null && $request->input('cantidadEnvases')!=0)
-                {
-                  
-                $consultarEnvases=TipoPaca::where('id',$consultaTipoPaca)->get();
-            //    foreach($consultarEnvases as $consultarEnvase)
-            //    {
-            //      $DividirPrecio=$consultarEnvase->precio / $consultarEnvase->cantidad;
-                
-            //    }
-            //    dd($consultarEnvases)
-              
-               if(count($consultaIDCanasta)!=0)
-               {
-                // dd($consultaIDCanasta[0]-> cantidad,$request->input('cantidadEnvases'));
-               
-                    detalle_compra::where('fk_tipo_paca',$consultaTipoPaca)
-                    ->where('fk_compra',$IdCompra)
-                    ->where('precio',$consultarEnvases[0]->precio_envase)
-                    ->update(['cantidad' => (int)$consultaIDCanasta[0]-> cantidad + (int)$request->input('cantidadEnvases')]);
-                
-               }
-                else
-                {
-                   
-                //  $TotaEnvases=$DividirPrecio * $precio;
-                    DB::table('detalle_compras')->insert([
-                    ['precio' => $consultarEnvases[0]->precio_envase, 'cantidad' =>(int)$request->input('cantidadEnvases'),'fk_tipo_paca'=>(int)$consultaTipoPaca,'fk_compra'=>(int)$IdCompra,'fk_producto'=>0 ]
-                  
-                ]);
-                 }
-                
-                }
-
-                if($request->input('cantidadPlastico')!=null && $request->input('cantidadPlastico')!=0 )
-                {
-                    $consultarEnvases=TipoPaca::where('id',$consultaTipoPaca)->get();
-                    //    foreach($consultarEnvases as $consultarEnvase)
-                    //    {
-                    //      $DividirPrecio=$consultarEnvase->precio / $consultarEnvase->cantidad;
+                        $productos=Producto::where('estado','A')->where('codigo',$ObtenerIdProdcuto[0])->value('fk_tipo_paca');
+        
+                        $ObtenerPaca=TipoPaca::where('estado','A')->where('id',$productos)->value('retornable');
+            
                         
-                    //    }
-                      
-                       if(count($consultaIDCanasta)!=0)
-                       {
-                        // dd($consultaIDCanasta[0]-> cantidad,$request->input('cantidadEnvases'));
-                       
-                            detalle_compra::where('fk_tipo_paca',$consultaTipoPaca)
-                            ->where('fk_compra',$IdCompra)
-                            ->where('precio',$consultarEnvases[0]->precio)
-                            ->update(['cantidad' => (int)$consultaIDCanasta[0]-> cantidad + (int)$request->input('cantidadPlastico')]);
-                        
-                       }
-                        else
-                        {
+                  
+            
+                        $this->validate($request,detalle_compra::$rules,detalle_compra::$messages);
+                        $notification = 'se agrego exitosamente';
+                        $detalle_compra = new detalle_compra();
+                         if( $request->input('cantidad') == null ) {
+                            $request['cantidad'] = 0;
+                           }
                            
-                        //  $TotaEnvases=$DividirPrecio * $precio;
-                         DB::table('detalle_compras')->insert([
-                            ['precio' => $consultarEnvases[0]->precio , 'cantidad' =>(int)$request->input('cantidadPlastico'),'fk_tipo_paca'=>(int)$consultaTipoPaca,'fk_compra'=>(int)$IdCompra,'fk_producto'=>0 ]
-                          
-                        ]);
+                        //    $this->validate( $DatosVentas,detalle_compra::$rules,detalle_compra::$messages);
+                         
+                        
+                        $idCompra=$request->session()->get('IdCompra');
+                        $request['fk_compra']= $idCompra;
+                     
+                       
+                        $detalle_compra -> fk_tipo_paca = $productos;
+               
+                        $detalle_compra -> fk_producto = $ObtenerIdProdcuto[0];
+                       
+                        $detalle_compra -> fk_compra = $request->input('fk_compra');
+                        // $detalle_compra -> precio = $request->input('fk_precio');
+                        $detalle_compra -> cantidad = $request->input('cantidad');
+                        $detalle_compra -> Numero_canasta=-2;
+                        $preciocompra=($DatoPrecio);
+                      
+            
+                        // $preciocompra = DB::table('precios_productos')->where('id',$precio)->value('valor');
+                        // dd($preciocompra );
+                        $detalle_compra -> precio= $preciocompra;
+                        $IdCompra= session::get('IdCompra');
+                        $ConsultarIDProducto =detalle_compra::where('fk_producto',$ObtenerIdProdcuto[0])->where('fk_compra', $IdCompra)->where('precio',$preciocompra)->where('Numero_canasta',-2)->get();
+                        // dd($ConsultarIDProducto);
+                        // $consultarPrecioProducto=DB::table('precios_productos')->where('fk_producto', $ObtenerIdProdcuto[0])->value('valor');
+            
+                        $consultaTipoPaca=Producto::where('estado','A')->where('codigo',$request->input('fk_producto'))->value('fk_tipo_paca');
+                        $consultaPrecioDetalle=detalle_compra::where('fk_compra', $IdCompra)->where('precio',$preciocompra)->where('fk_producto',$ObtenerIdProdcuto[0])->value('precio');
+                       
+                        $consultaIDCanasta=detalle_compra::where('fk_compra', $IdCompra)->where('fk_tipo_paca',$consultaTipoPaca)->where('Numero_canasta',null)->get();
+                        $consultaIDPlastico=detalle_compra::where('fk_compra', $IdCompra)->where('fk_tipo_paca',$consultaTipoPaca)->where('Numero_canasta',-1)->get();
+                        $DividirPrecio=0;
+                        $SaberCombo=TipoPaca::where('estado','A')->where('id',$consultaTipoPaca)->get();
+                        $TotaEnvases=0;
+                  ////para el envase y canastas
+                        //  dd($consultaTipoPaca);
+             
+                        if($consultaTipoPaca!=null)
+                        {
+                            
+                            if($request->input('cantidadEnvases')!=null && $request->input('cantidadEnvases')!=0)
+                            {
+                             
+                            $consultarEnvases=TipoPaca::where('id',$consultaTipoPaca)->get();
+                        //    foreach($consultarEnvases as $consultarEnvase)
+                        //    {
+                        //      $DividirPrecio=$consultarEnvase->precio / $consultarEnvase->cantidad;
+                            
+                        //    }
+                          if( $consultarEnvases[0]->precio_envase !=null && $consultarEnvases[0]->precio_envase !=0)
+                          {
+                           if(count($consultaIDCanasta)!=0)
+                           {
+                            // dd($consultaIDCanasta[0]-> cantidad,$request->input('cantidadEnvases'));
+                            // dd($request->input('cantidadEnvases'));
+                                detalle_compra::
+                                where('fk_tipo_paca',$consultaTipoPaca)
+                                ->where('fk_compra',$IdCompra)
+                                ->where('precio',$consultarEnvases[0]->precio_envase)
+                                ->update(['cantidad' => (int)$consultaIDCanasta[0]-> cantidad + (int)$request->input('cantidadEnvases')]);
+                            
+                           }
+                            else
+                            {
+                               
+                            //  $TotaEnvases=$DividirPrecio * $precio;
+                                detalle_compra::insert([
+                                ['precio' => $consultarEnvases[0]->precio_envase, 'cantidad' =>(int)$request->input('cantidadEnvases'),'fk_tipo_paca'=>(int)$consultaTipoPaca,'fk_compra'=>(int)$IdCompra,'fk_producto'=>$ObtenerIdProdcuto[0] ]
+                              
+                            ]);
+                             }
+                            }
+                            }
+                             
+                            if($request->input('cantidadPlastico')!=null && $request->input('cantidadPlastico')!=0 )
+                            {
+                                $consultarEnvases=TipoPaca::where('id',$consultaTipoPaca)->get();
+                                //    foreach($consultarEnvases as $consultarEnvase)
+                                //    {
+                                //      $DividirPrecio=$consultarEnvase->precio / $consultarEnvase->cantidad;
+                                    
+                                //    }
+                                if( $consultarEnvases[0]->precio !=null && $consultarEnvases[0]->precio !=0)
+                                {
+                                   if(count($consultaIDPlastico)!=0)
+                                   {
+                                    // dd($consultaIDCanasta[0]-> cantidad,$request->input('cantidadEnvases'));
+                                   
+                                        detalle_compra::
+                                        where('fk_tipo_paca',$consultaTipoPaca)
+                                        ->where('fk_compra',$IdCompra)
+                                        ->where('precio',$consultarEnvases[0]->precio)
+                                        ->update(['cantidad' => (int)$consultaIDPlastico[0]-> cantidad + (int)$request->input('cantidadPlastico')]);
+                                    
+                                   }
+                                    else
+                                    {
+                                        
+                                    //  $TotaEnvases=$DividirPrecio * $precio;
+                                         detalle_compra::insert([
+                                        ['precio' => $consultarEnvases[0]->precio , 'cantidad' =>(int)$request->input('cantidadPlastico'),'fk_tipo_paca'=>(int)$consultaTipoPaca,'fk_compra'=>(int)$IdCompra,'fk_producto'=>$ObtenerIdProdcuto[0],'Numero_canasta'=>-1 ]
+                                      
+                                    ]);
+                                     }
+                                }
+            
+                            }
+            
+                        }   
+                         
+            
+            
+            
+                        if(count($ConsultarIDProducto) != 0 && $preciocompra == $consultaPrecioDetalle)
+                         {
+            
+                         
+                             
+                            detalle_compra::
+                            where('fk_producto',($ObtenerIdProdcuto[0]))
+                            ->where('fk_compra',$IdCompra)
+                            ->where('precio',$preciocompra )
+                            ->where('Numero_canasta',-2)
+                            ->update(['cantidad' => $ConsultarIDProducto[0]-> cantidad + $request->input('cantidad')]);
                         }
-
-                }
-
-            }   
-
-            if(count($ConsultarIDProducto) != 0 && $preciocompra == $consultaPrecioDetalle)
-             {
-                 
-                detalle_compra::where('fk_producto',($ObtenerIdProdcuto[0]))
-                ->where('fk_compra',$IdCompra)
-                ->where('precio',$preciocompra )
-                ->update(['cantidad' => $ConsultarIDProducto[0]-> cantidad + $request->input('cantidad')]);
-            }
-            else
-            {
-   
-                $detalle_compra-> save();
-            }
-             //registrar Pre detalle de compra
-            $notification = 'se agrego exitosamente';        
+                        else {
+               
+                            $detalle_compra-> save();
+                        }
+                       
+                         //registrar Pre detalle de venta
+                       
+                        $notification = 'se agrego exitosamente';
+                      
             return redirect('/compra/create') -> with( compact( 'detalle_compra' ) );
             
         }
@@ -890,135 +933,156 @@ class compraController extends Controller
                     ->where('productos.codigo','=', $ObtenerIdProdcuto[0])                          
                     ->max('precios_productos.valor');
 
-      $productos=Producto::where('codigo',$ObtenerIdProdcuto[0])->value('fk_tipo_paca');
-      $ObtenerPaca=TipoPaca::where('id',$productos)->value('retornable');
-      $this->validate($request,detalle_compra::$rules,detalle_compra::$messages);
-      $notification = 'se agrego exitosamente';
-      $detalle_compra = new detalle_compra();
-       if( $request->input('cantidad') == null ) {
-          $request['cantidad'] = 0;
-         }
      
-  //    $this->validate( $Datoscompras,detalle_compra::$rules,detalle_compra::$messages);
-   
-  
-          $idCompra=$request->session()->get('IdCompraEditar');
-          $request['fk_compra']= $idCompra;         
-          $detalle_compra -> fk_tipo_paca = 0;
-          $detalle_compra -> fk_producto = $ObtenerIdProdcuto[0];         
-          $detalle_compra -> fk_compra = $request->input('fk_compra');          
-          $detalle_compra -> cantidad = $request->input('cantidad');
-          $preciocompra=($DatoPrecio);
-
-
-          // $preciocompra = DB::table('precios_productos')->where('id',$precio)->value('valor');
-          // dd($preciocompra );
-          $detalle_compra -> precio= $preciocompra;
-          $IdCompra= session::get('IdCompraEditar');
-          $ConsultarIDProducto = detalle_compra::where('fk_producto',$ObtenerIdProdcuto[0])->where('fk_compra', $IdCompra)->where('precio',$preciocompra)->get();
-          // dd($ConsultarIDProducto);
-          // $consultarPrecioProducto=DB::table('precios_productos')->where('fk_producto', $ObtenerIdProdcuto[0])->value('valor');
-
-          $consultaTipoPaca=Producto::where('codigo',$request->input('fk_producto'))->value('fk_tipo_paca');
-          $consultaPrecioDetalle=detalle_compra::where('fk_compra', $IdCompra)->where('precio',$preciocompra)->where('fk_producto',$ObtenerIdProdcuto[0])->value('precio');
-         
-          $consultaIDCanasta=detalle_compra::where('fk_compra', $IdCompra)->where('fk_tipo_paca',$consultaTipoPaca)->get();
-          $DividirPrecio=0;
-          $SaberCombo=TipoPaca::where('id',$consultaTipoPaca)->get();
-          $TotaEnvases=0;
-
-
-
-  if($consultaTipoPaca!=null)
-  {
-      
-      if($request->input('cantidadEnvases')!=null && $request->input('cantidadEnvases')!=0)
-      {
+                    $productos=Producto::where('estado','A')->where('codigo',$ObtenerIdProdcuto[0])->value('fk_tipo_paca');
         
-      $consultarEnvases=TipoPaca::where('id',$consultaTipoPaca)->get();
-  //    foreach($consultarEnvases as $consultarEnvase)
-  //    {
-  //      $DividirPrecio=$consultarEnvase->precio / $consultarEnvase->cantidad;
-      
-  //    }
-    
-     if(count($consultaIDCanasta)!=0)
-     {
-      // dd($consultaIDCanasta[0]-> cantidad,$request->input('cantidadEnvases'));
-     
-          detalle_compra::where('fk_tipo_paca',$consultaTipoPaca)
-          ->where('fk_compra',$IdCompra)
-          ->where('precio',$consultarEnvases[0]->precio_envase)
-          ->update(['cantidad' => (int)$consultaIDCanasta[0]-> cantidad + (int)$request->input('cantidadEnvases')]);
-      
-     }
-      else
-      {
-         
-      //  $TotaEnvases=$DividirPrecio * $precio;
-       DB::table('detalle_compras')->insert([
-          ['precio' => $consultarEnvases[0]->precio_envase, 'cantidad' =>(int)$request->input('cantidadEnvases'),'fk_tipo_paca'=>(int)$consultaTipoPaca,'fk_compra'=>(int)$IdCompra,'fk_producto'=>0 ]
+                    $ObtenerPaca=TipoPaca::where('estado','A')->where('id',$productos)->value('retornable');
         
-      ]);
-       }
-      
-      }
-
-      if($request->input('cantidadPlastico')!=null && $request->input('cantidadPlastico')!=0 )
-      {
-          $consultarEnvases=TipoPaca::where('id',$consultaTipoPaca)->get();
-          //    foreach($consultarEnvases as $consultarEnvase)
-          //    {
-          //      $DividirPrecio=$consultarEnvase->precio / $consultarEnvase->cantidad;
+                    
               
-          //    }
-            
-             if(count($consultaIDCanasta)!=0)
-             {
-              // dd($consultaIDCanasta[0]-> cantidad,$request->input('cantidadEnvases'));
-             
-                  detalle_compra::where('fk_tipo_paca',$consultaTipoPaca)
-                  ->where('fk_compra',$IdCompra)
-                  ->where('precio',$consultarEnvases[0]->precio)
-                  ->update(['cantidad' => (int)$consultaIDCanasta[0]-> cantidad + (int)$request->input('cantidadPlastico')]);
-              
-             }
-              else
-              {
+        
+                    $this->validate($request,detalle_compra::$rules,detalle_compra::$messages);
+                    $notification = 'se agrego exitosamente';
+                    $detalle_compra = new detalle_compra();
+                     if( $request->input('cantidad') == null ) {
+                        $request['cantidad'] = 0;
+                       }
+                       
+                    //    $this->validate( $DatosVentas,detalle_compra::$rules,detalle_compra::$messages);
+                     
+                    
+                    $idCompra=$request->session()->get('IdCompraEditar');
+                    $request['fk_compra']= $idCompra;
                  
-              //  $TotaEnvases=$DividirPrecio * $precio;
-               DB::table('detalle_compras')->insert([
-                  ['precio' => $consultarEnvases[0]->precio , 'cantidad' =>(int)$request->input('cantidadPlastico'),'fk_tipo_paca'=>(int)$consultaTipoPaca,'fk_compra'=>(int)$IdCompra,'fk_producto'=>0 ]
-                
-              ]);
-               }
-
-
-      }
-
-  }   
- 
-
-
-
-  if(count($ConsultarIDProducto) != 0 && $preciocompra == $consultaPrecioDetalle)
-   {
-
-   
-       
-      detalle_compra::where('fk_producto',($ObtenerIdProdcuto[0]))
-      ->where('fk_compra',$IdCompra)
-      ->where('precio',$preciocompra )
-      ->update(['cantidad' => $ConsultarIDProducto[0]-> cantidad + $request->input('cantidad')]);
-  }
-  else {
-
-      $detalle_compra-> save();
-  }
- 
-   //registrar Pre detalle de compra
- 
-  $notification = 'se agrego exitosamente';
+                   
+                    $detalle_compra -> fk_tipo_paca = $productos;
+           
+                    $detalle_compra -> fk_producto = $ObtenerIdProdcuto[0];
+                   
+                    $detalle_compra -> fk_compra = $request->input('fk_compra');
+                    // $detalle_compra -> precio = $request->input('fk_precio');
+                    $detalle_compra -> cantidad = $request->input('cantidad');
+                    $detalle_compra -> Numero_canasta=-2;
+                    $preciocompra=($DatoPrecio);
+                  
+        
+                    // $preciocompra = DB::table('precios_productos')->where('id',$precio)->value('valor');
+                    // dd($preciocompra );
+                    $detalle_compra -> precio= $preciocompra;
+                    $IdCompra= session::get('IdCompraEditar');
+                    $ConsultarIDProducto =detalle_compra::where('fk_producto',$ObtenerIdProdcuto[0])->where('fk_compra', $IdCompra)->where('precio',$preciocompra)->where('Numero_canasta',-2)->get();
+                    // dd($ConsultarIDProducto);
+                    // $consultarPrecioProducto=DB::table('precios_productos')->where('fk_producto', $ObtenerIdProdcuto[0])->value('valor');
+        
+                    $consultaTipoPaca=Producto::where('estado','A')->where('codigo',$request->input('fk_producto'))->value('fk_tipo_paca');
+                    $consultaPrecioDetalle=detalle_compra::where('fk_compra', $IdCompra)->where('precio',$preciocompra)->where('fk_producto',$ObtenerIdProdcuto[0])->value('precio');
+                   
+                    $consultaIDCanasta=detalle_compra::where('fk_compra', $IdCompra)->where('fk_tipo_paca',$consultaTipoPaca)->where('Numero_canasta',null)->get();
+                    $consultaIDPlastico=detalle_compra::where('fk_compra', $IdCompra)->where('fk_tipo_paca',$consultaTipoPaca)->where('Numero_canasta',-1)->get();
+                    $DividirPrecio=0;
+                    $SaberCombo=TipoPaca::where('estado','A')->where('id',$consultaTipoPaca)->get();
+                    $TotaEnvases=0;
+              ////para el envase y canastas
+              
+         
+                    if($consultaTipoPaca!=null)
+                    {
+                        
+                        if($request->input('cantidadEnvases')!=null && $request->input('cantidadEnvases')!=0)
+                        {
+                         
+                        $consultarEnvases=TipoPaca::where('id',$consultaTipoPaca)->get();
+                    //    foreach($consultarEnvases as $consultarEnvase)
+                    //    {
+                    //      $DividirPrecio=$consultarEnvase->precio / $consultarEnvase->cantidad;
+                        
+                    //    }
+                    //   dd(count($consultaIDCanasta));
+                    if( $consultarEnvases[0]->precio_envase !=null && $consultarEnvases[0]->precio_envase !=0)
+                    {
+                       if(count($consultaIDCanasta)!=0)
+                       {
+                        // dd($consultaIDCanasta[0]-> cantidad,$request->input('cantidadEnvases'));
+                        // dd($request->input('cantidadEnvases'));
+                            detalle_compra::
+                            where('fk_tipo_paca',$consultaTipoPaca)
+                            ->where('fk_compra',$IdCompra)
+                            ->where('precio',$consultarEnvases[0]->precio_envase)
+                            ->update(['cantidad' => (int)$consultaIDCanasta[0]-> cantidad + (int)$request->input('cantidadEnvases')]);
+                        
+                       }
+                        else
+                        {
+                           
+                        //  $TotaEnvases=$DividirPrecio * $precio;
+                            detalle_compra::insert([
+                            ['precio' => $consultarEnvases[0]->precio_envase, 'cantidad' =>(int)$request->input('cantidadEnvases'),'fk_tipo_paca'=>(int)$consultaTipoPaca,'fk_compra'=>(int)$IdCompra,'fk_producto'=>$ObtenerIdProdcuto[0] ]
+                          
+                        ]);
+                         }
+                        }
+                    }
+                         
+                        if($request->input('cantidadPlastico')!=null && $request->input('cantidadPlastico')!=0 )
+                        {
+                            $consultarEnvases=TipoPaca::where('id',$consultaTipoPaca)->get();
+                            //    foreach($consultarEnvases as $consultarEnvase)
+                            //    {
+                            //      $DividirPrecio=$consultarEnvase->precio / $consultarEnvase->cantidad;
+                                
+                            //    }
+                            if( $consultarEnvases[0]->precio !=null && $consultarEnvases[0]->precio !=0)
+                            {
+                             
+                               if(count($consultaIDPlastico)!=0)
+                               {
+                                // dd($consultaIDCanasta[0]-> cantidad,$request->input('cantidadEnvases'));
+                               
+                                    detalle_compra::
+                                    where('fk_tipo_paca',$consultaTipoPaca)
+                                    ->where('fk_compra',$IdCompra)
+                                    ->where('precio',$consultarEnvases[0]->precio)
+                                    ->update(['cantidad' => (int)$consultaIDPlastico[0]-> cantidad + (int)$request->input('cantidadPlastico')]);
+                                
+                               }
+                                else
+                                {
+                                    
+                                //  $TotaEnvases=$DividirPrecio * $precio;
+                                     detalle_compra::insert([
+                                    ['precio' => $consultarEnvases[0]->precio , 'cantidad' =>(int)$request->input('cantidadPlastico'),'fk_tipo_paca'=>(int)$consultaTipoPaca,'fk_compra'=>(int)$IdCompra,'fk_producto'=>$ObtenerIdProdcuto[0],'Numero_canasta'=>-1 ]
+                                  
+                                ]);
+                                 }
+                            }
+        
+                        }
+        
+                    }   
+                     
+        
+        
+        
+                    if(count($ConsultarIDProducto) != 0 && $preciocompra == $consultaPrecioDetalle)
+                     {
+        
+                     
+                         
+                        detalle_compra::
+                        where('fk_producto',($ObtenerIdProdcuto[0]))
+                        ->where('fk_compra',$IdCompra)
+                        ->where('precio',$preciocompra )
+                        ->where('Numero_canasta',-2)
+                        ->update(['cantidad' => $ConsultarIDProducto[0]-> cantidad + $request->input('cantidad')]);
+                    }
+                    else {
+           
+                        $detalle_compra-> save();
+                    }
+                   
+                     //registrar Pre detalle de venta
+                   
+                    $notification = 'se agrego exitosamente';
 
     
       
@@ -1209,18 +1273,21 @@ class compraController extends Controller
 ////////se cumple la condicon de compra comienza hacer el recorrido             
          foreach( $Detalle_compras as  $Detalle_compra)
          {
-          $ObtenerCantidadActual=Producto::where('codigo',$Detalle_compra->fk_producto)->value('cantidad');
- 
-             $subtotal=$Detalle_compra->precio * $Detalle_compra->cantidad;
-             $total=$total+$subtotal;
- ////////estado cero recbido su al inventario
-               if($estado==0)
-           {
-             Producto::where('codigo',$Detalle_compra->fk_producto)            
-             ->update(['cantidad' =>$ObtenerCantidadActual+$Detalle_compra->cantidad ]);
-           }
-             
- 
+           
+              $ObtenerCantidadActual=Producto::where('codigo',$Detalle_compra->fk_producto)->value('cantidad');
+  
+              $subtotal=$Detalle_compra->precio * $Detalle_compra->cantidad;
+              $total=$total+$subtotal;
+              ////////estado cero recbido su al inventario
+              if($Detalle_compra->Numero_canasta !=null && $Detalle_compra->Numero_canasta !=0 && $Detalle_compra->Numero_canasta !=-1 )
+              {
+              if($estado==0)
+              {
+                  Producto::where('codigo',$Detalle_compra->fk_producto)                
+                  ->update(['cantidad' =>$ObtenerCantidadActual+$Detalle_compra->cantidad ]);
+              }
+              
+             }
          }
          // dd($id);
          
@@ -1504,18 +1571,21 @@ public function imprimir($id,$estado)
             ////////se cumple la condicon de compra comienza hacer el recorrido             
         foreach( $Detalle_compras as  $Detalle_compra)
         {
+          
             $ObtenerCantidadActual=Producto::where('codigo',$Detalle_compra->fk_producto)->value('cantidad');
 
             $subtotal=$Detalle_compra->precio * $Detalle_compra->cantidad;
             $total=$total+$subtotal;
             ////////estado cero recbido su al inventario
+            if($Detalle_compra->Numero_canasta !=null && $Detalle_compra->Numero_canasta !=0 && $Detalle_compra->Numero_canasta !=-1 )
+            {
             if($estado==0)
             {
                 Producto::where('codigo',$Detalle_compra->fk_producto)                
                 ->update(['cantidad' =>$ObtenerCantidadActual+$Detalle_compra->cantidad ]);
             }
             
-
+           }
         }
         
         $fechaActual= new DateTime();
