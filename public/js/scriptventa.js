@@ -844,7 +844,6 @@ $("#tipopaca").change(function () {
               
             dataType: "json",
             success: function (items) {
-              // console.log(items);
               var datos = items.items[0];
               // console.log(datos[0].tipo_contenido);
               var datos2= items.items[1];
@@ -869,8 +868,8 @@ $("#tipopaca").change(function () {
             $("#combobox").empty(); $("#combobox").append($("<option />").val("0").text("SELECCIONE El PRODUCTO"));
             
             datos.forEach( function( valor , index ) { 
-              // console.log(valor);
-              $("#tipocontenido").append($("<option />").val(valor.id).text(valor.nombre).addClass("form-control"));
+              console.log(valor.tipo_contenido);
+              $("#tipocontenido").append($("<option />").val(valor.tipo_contenido.id).text(valor.tipo_contenido.nombre).addClass("form-control"));
 
             });
 
@@ -899,6 +898,7 @@ $("#tipopaca").change(function () {
               
             dataType: "json",
             success: function (items) {
+                console.log(items);
               document.getElementById('OcltarBotonSubmit').style.display = 'block';
            
               document.getElementById('tipopaca').style.display = 'block';
@@ -921,7 +921,7 @@ $("#tipopaca").change(function () {
               document.getElementById('cantidadcanastaOcultar').style.display = 'none';
               datosListarTipoContenido.forEach( function( valor , index ) { 
                 // console.log(valor);
-                $("#tipopaca").append($("<option />").val(valor.id).text(valor.nombre).addClass("form-control"));
+                $("#tipopaca").append($("<option />").val(valor.tipo_paca.id).text(valor.tipo_paca.nombre).addClass("form-control"));
   
               });
 

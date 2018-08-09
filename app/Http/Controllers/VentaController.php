@@ -527,17 +527,17 @@ class VentaController extends Controller
         public function tipoContenidoEditar($id) 
         {
 
-            // $ListarTipoContenido= Producto::where('estado','A')->where('fk_marca',$id)->with('tipoContenido')->get();
+            $ListarTipoContenido= Producto::where('estado','A')->where('fk_marca',$id)->with('tipoContenido')->distinct()->get();
 
 
-            $ListarTipoContenido= Producto::                        
-            join('marcas','productos.fk_marca','=','marcas.id')
-            ->join('tipo_contenidos','productos.fk_tipo_contenido','=','tipo_contenidos.id')
-            ->select('tipo_contenidos.id','tipo_contenidos.nombre')                
-            ->where('productos.fk_marca','=',$id)
-            ->where('productos.estado','A')
-            ->groupBy('tipo_contenidos.id')
-            ->get();
+//            $ListarTipoContenido= Producto::
+//            join('marcas','productos.fk_marca','=','marcas.id')
+//            ->join('tipo_contenidos','productos.fk_tipo_contenido','=','tipo_contenidos.id')
+//            ->select('tipo_contenidos.id','tipo_contenidos.nombre')
+//            ->where('productos.fk_marca','=',$id)
+//            ->where('productos.estado','A')
+//            ->groupBy('tipo_contenidos.id')
+//            ->get();
 
             Session::put('IdMarcaEditar',$id);
             $ListarMarcas=Producto::where('estado','A')->where('fk_marca',$id)->select('codigo','nombre')->get();
@@ -552,36 +552,36 @@ class VentaController extends Controller
         {
         $marca = Session::get('IdMarcaEditar');
             Session::put('IdContenidoEditar',$id);
-            $ListarTipoPaca= Producto::                        
-            join('marcas',
-                   'productos.fk_marca',
-                   '=',
-                   'marcas.id'
-                  )   
-            ->join('tipo_pacas',
-                    'productos.fk_tipo_paca',
-                    '=',
-                    'tipo_pacas.id'
-                   )
-            ->join('tipo_contenidos',
-                    'productos.fk_tipo_contenido',
-                    '=',
-                    'tipo_contenidos.id'
-                   )
-            ->select('tipo_pacas.id',
-                     'tipo_pacas.nombre'
-                    ) 
-           
-            ->where('productos.estado','A')
-            ->where([
-                ['fk_marca', '=',$marca],
-                ['fk_tipo_contenido', '=', $id]
-                // ['estado','=','A']
-            ])
-            ->groupBy('tipo_pacas.id')                       
-            ->get();
+//            $ListarTipoPaca= Producto::
+//            join('marcas',
+//                   'productos.fk_marca',
+//                   '=',
+//                   'marcas.id'
+//                  )
+//            ->join('tipo_pacas',
+//                    'productos.fk_tipo_paca',
+//                    '=',
+//                    'tipo_pacas.id'
+//                   )
+//            ->join('tipo_contenidos',
+//                    'productos.fk_tipo_contenido',
+//                    '=',
+//                    'tipo_contenidos.id'
+//                   )
+//            ->select('tipo_pacas.id',
+//                     'tipo_pacas.nombre'
+//                    )
+//
+//            ->where('productos.estado','A')
+//            ->where([
+//                ['fk_marca', '=',$marca],
+//                ['fk_tipo_contenido', '=', $id]
+//                // ['estado','=','A']
+//            ])
+//            ->groupBy('tipo_pacas.id')
+//            ->get();
 
-            // $ListarTipoPaca = Producto::where('estado','A')->where('fk_marca',$marca)->where('fk_tipo_contenido',$id)->with('tipoPaca')->get();
+             $ListarTipoPaca = Producto::where('estado','A')->where('fk_marca',$marca)->where('fk_tipo_contenido',$id)->with('tipoPaca')->disctinct()->get();
 
 
 
@@ -600,7 +600,7 @@ class VentaController extends Controller
             if($id!=0)
             {
          
-            $ObtenerProductos=Producto::where('estado','A')->where('fk_tipo_paca',$id)->where('fk_marca',$marca)->where('fk_tipo_contenido',$contenido)->get();//obtengo los productos con una marca,tipo cotenido,tipo empaque
+                $ObtenerProductos=Producto::where('estado','A')->where('fk_tipo_paca',$id)->where('fk_marca',$marca)->where('fk_tipo_contenido',$contenido)->get();//obtengo los productos con una marca,tipo cotenido,tipo empaque
             }
             else
             {
@@ -1045,17 +1045,16 @@ class VentaController extends Controller
         public function tipoContenido($id) 
         {
 
-            // $ListarTipoContenido= Producto::where('estado','A')->where('fk_marca',$id)->with('tipoContenido')->get();
+            $ListarTipoContenido= Producto::where('estado','A')->where('fk_marca',$id)->with('tipoContenido')->distinct()->get(['fk_tipo_contenido']);
 
-
-            $ListarTipoContenido= Producto::                        
-            join('marcas','productos.fk_marca','=','marcas.id')
-            ->join('tipo_contenidos','productos.fk_tipo_contenido','=','tipo_contenidos.id')
-            ->select('tipo_contenidos.id','tipo_contenidos.nombre')                
-            ->where('productos.fk_marca','=',$id)
-            ->where('productos.estado','A')
-            ->groupBy('tipo_contenidos.id')
-            ->get();
+//            $ListarTipoContenido= Producto::
+//            join('marcas','productos.fk_marca','=','marcas.id')
+//            ->join('tipo_contenidos','productos.fk_tipo_contenido','=','tipo_contenidos.id')
+//            ->select('tipo_contenidos.id','tipo_contenidos.nombre')
+//            ->where('productos.fk_marca','=',$id)
+//            ->where('productos.estado','A')
+//            ->groupBy('tipo_contenidos.id')
+//            ->get();
 
             Session::put('IdMarca',$id);
             $ListarMarcas=Producto::where('estado','A')->where('fk_marca',$id)->select('codigo','nombre')->get();
@@ -1070,37 +1069,37 @@ class VentaController extends Controller
         {
             $marca = Session::get('IdMarca');
             Session::put('IdContenido',$id);
-            $ListarTipoPaca= Producto::                        
-            join('marcas',
-                   'productos.fk_marca',
-                   '=',
-                   'marcas.id'
-                  )   
-            ->join('tipo_pacas',
-                    'productos.fk_tipo_paca',
-                    '=',
-                    'tipo_pacas.id'
-                   )
-            ->join('tipo_contenidos',
-                    'productos.fk_tipo_contenido',
-                    '=',
-                    'tipo_contenidos.id'
-                   )
-            ->select('tipo_pacas.id',
-                     'tipo_pacas.nombre'
-                    ) 
-           
-            ->where('productos.estado','A')
-            ->where([
-                ['fk_marca', '=',$marca],
-                ['fk_tipo_contenido', '=', $id]
-                // ['estado','=','A']
-            ])
-            ->groupBy('tipo_pacas.id')                       
-            ->get();
+//            $ListarTipoPaca= Producto::
+//            join('marcas',
+//                   'productos.fk_marca',
+//                   '=',
+//                   'marcas.id'
+//                  )
+//            ->join('tipo_pacas',
+//                    'productos.fk_tipo_paca',
+//                    '=',
+//                    'tipo_pacas.id'
+//                   )
+//            ->join('tipo_contenidos',
+//                    'productos.fk_tipo_contenido',
+//                    '=',
+//                    'tipo_contenidos.id'
+//                   )
+//            ->select('tipo_pacas.id',
+//                     'tipo_pacas.nombre'
+//                    )
+//
+//            ->where('productos.estado','A')
+//            ->where([
+//                ['fk_marca', '=',$marca],
+//                ['fk_tipo_contenido', '=', $id]
+//                // ['estado','=','A']
+//            ])
+//            ->groupBy('tipo_pacas.id')
+//            ->get();
 
 
-            // $ListarTipoPaca = Producto::where('estado','A')->where('fk_marca',$marca)->where('fk_tipo_contenido',$id)->with('tipoPaca')->get();
+             $ListarTipoPaca = Producto::where('estado','A')->where('fk_marca',$marca)->where('fk_tipo_contenido',$id)->with('tipoPaca')->distinct()->get(['fk_tipo_paca']);
 
 
 

@@ -4,6 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\ImagenesProducto;
+use App\TipoContenido;
+use App\TipoPaca;
+use App\SizeBotella;
 
 class Producto extends Model
 {
@@ -115,8 +118,8 @@ class Producto extends Model
     }
 
     public function tipoContenido() {
-        return $this->belongsTo(TipoContenido::class,'fk_tipo_contenido');
-//        return $tipoContenido = TipoContenido::where('id',$this->fk_tipo_contenido) -> first();
+        return $this->belongsTo('App\TipoContenido','fk_tipo_contenido');
+//        return $tipoContenido = TipoContenido::where('id',$this->fk_tipo_contenido) -> get();
     }
 
     public function tipoPaca() {
