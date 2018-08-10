@@ -336,7 +336,7 @@
                                      $PrecioProducto = $Detalle_compra->producto();
                                      $envase=$Detalle_compra->empaque();
                                      $marca=$Detalle_compra->productoMarca();
-                                      $IdVenta =$Detalle_compra ->fk_factura; 
+                                      $IdCompra =$Detalle_compra ->fk_compra;
                                       $subtotal=$Detalle_compra->precio * $Detalle_compra->cantidad;
                                       $total=$total+$subtotal;
                                       $canasta= $Detalle_compra->Numero_canasta;
@@ -346,7 +346,7 @@
                                      }                                                                          
                                  ?>
                                  {{-- {{$marca->nombre}} --}}
-                                 <input type="text" id="idfac" value="{{$IdVenta}}" name="idfac" hidden="true">
+                                 <input type="text" id="idfac" value="{{$IdCompra}}" name="idfac" hidden="true">
  
                                  @if($Detalle_compra->Numero_canasta !=null && $Detalle_compra->Numero_canasta != 0 && $Detalle_compra->Numero_canasta != -1 && $Detalle_compra->Numero_canasta != -2)
                                  

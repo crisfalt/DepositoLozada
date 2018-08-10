@@ -401,7 +401,8 @@ $("#tipopaca").change(function () {
         var nombres = datos[ 0 ];
         var ids = datos[1];
         for( var i = 0 ; i < nombres.length ; i++ ) {
-          $("#combobox").append($("<option />").val(ids[i]).text(nombres[i]));
+
+            $("#combobox").append($("<option />").val(ids[i]).text(nombres[i]));
         }
 
       
@@ -454,17 +455,17 @@ $("#tipopaca").change(function () {
             // for( var i = 0 ; i < nombres.length ; i++ ) {
             //   $("#tipocontenido").append($("<option />").val(ids[i]).text(nombres[i]));
             // }
-            datos.forEach( function( valor , index ) { 
-              // console.log(valor);
-              $("#tipocontenido").append($("<option />").val(valor.id).text(valor.nombre).addClass("form-control"));
+                datos.forEach( function( valor , index ) {
+                    // console.log(valor);
+                    $("#tipocontenido").append($("<option />").val(valor.tipo_contenido.id).text(valor.tipo_contenido.nombre).addClass("form-control"));
 
-            });
+                });
 
-            datos2.forEach( function( valor , index ) { 
-              // console.log(valor);
-              $("#combobox").append($("<option />").val(valor.codigo).text(valor.nombre));
+                datos2.forEach( function( valor , index ) {
+                    // console.log(valor);
+                    $("#combobox").append($("<option />").val(valor.codigo).text(valor.nombre));
 
-            });
+                });
             //  for( var i = 0 ; i < datos.length ; i++ ) {
             //   $("#tipocontenido").append($("<option />").val(ids[i]).text(nombres[i]));
             // }
@@ -515,18 +516,18 @@ $("#tipopaca").change(function () {
               // for( var i = 0 ; i < nombres.length ; i++ ) {
               //   $("#tipopaca").append($("<option />").val(ids[i]).text(nombres[i]));
               // }
-            
-              datosListarTipoContenido.forEach( function( valor , index ) { 
-                // console.log(valor);
-                $("#tipopaca").append($("<option />").val(valor.id).text(valor.nombre).addClass("form-control"));
-  
-              });
 
-              datosFiltro.forEach( function( valor , index ) { 
-                // console.log(valor);
-                $("#combobox").append($("<option />").val(valor.codigo).text(valor.nombre));
-  
-              });
+                datosListarTipoContenido.forEach( function( valor , index ) {
+                    // console.log(valor);
+                    $("#tipopaca").append($("<option />").val(valor.tipo_paca.id).text(valor.tipo_paca.nombre).addClass("form-control"));
+
+                });
+
+                datosFiltro.forEach( function( valor , index ) {
+                    // console.log(valor);
+                    $("#combobox").append($("<option />").val(valor.codigo).text(valor.nombre));
+
+                });
             }
             });
 

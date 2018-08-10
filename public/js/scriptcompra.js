@@ -524,7 +524,7 @@ return false;
                     // }
                     datos.forEach( function( valor , index ) { 
                       // console.log(valor);
-                      $("#tipocontenido").append($("<option />").val(valor.id).text(valor.nombre).addClass("form-control"));
+                      $("#tipocontenido").append($("<option />").val(valor.tipo_contenido.id).text(valor.tipo_contenido.nombre).addClass("form-control"));
         
                     });
         
@@ -585,7 +585,7 @@ return false;
                       // }
                       datosListarTipoContenido.forEach( function( valor , index ) { 
                         // console.log(valor);
-                        $("#tipopaca").append($("<option />").val(valor.id).text(valor.nombre).addClass("form-control"));
+                        $("#tipopaca").append($("<option />").val(valor.tipo_paca.id).text(valor.tipo_paca.nombre).addClass("form-control"));
           
                       });
         

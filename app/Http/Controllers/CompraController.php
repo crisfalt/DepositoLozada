@@ -32,144 +32,150 @@ class compraController extends Controller
         public function AgregarCanastaEditar() 
 
         {
-       $productoID= $_POST["ids"];
-       $productoCantidad= $_POST["cantidad"];
-       $productoCantidadCanasta= $_POST["cantidadCanasta"];
-       $productoCantidadEnvase= $_POST["cantidadEnvase"];
-       $productoTipoPaca= $_POST["tipoPaca"];
-       $productoCantidadPlastico= $_POST["cantidadPlastico"];
-       $cantidadCanasta=$_POST["cantidadcanasta"];
-       $datos=$_POST["datosCanasta"];
-       dd($productoTipoPaca);
-//    dd($productoCantidad,$productoID);
-        $IdCompra= session::get('IdCompraEditar');
-        // $ObtenerCombo=DB::table('tipo_pacas')->where('id', $productoTipoPaca)->value('cantidad');
-        $ObtenerCombo=TipoPaca::where('id', $productoTipoPaca)->value('cantidad');
-        $total=0;
-        $tmp=0;
-        $totalCanasta=$productoCantidadCanasta * $ObtenerCombo;
-      
-        // $ObteneIDcanasta=DB::table('detalle_compras')->where('fk_compra','=',$IdCompra)->max('Numero_canasta');
-        $ObteneIDcanasta=detalle_compra::where('fk_compra','=',$IdCompra)->max('Numero_canasta');
-    //  $ContadorCanasta=0;
+            $productoID= $_POST["ids"];
+            $productoCantidad= $_POST["cantidad"];
+            $productoCantidadCanasta= $_POST["cantidadCanasta"];
+            $productoCantidadEnvase= $_POST["cantidadEnvase"];
+            $productoTipoPaca= $_POST["tipoPaca"];
+            $productoCantidadPlastico= $_POST["cantidadPlastico"];
+            $cantidadCanasta=$_POST["cantidadcanasta"];
+            $datos=$_POST["datosCanasta"];
 
-    if($ObteneIDcanasta==null || $ObteneIDcanasta==-1 || $ObteneIDcanasta==-2 )
-    {
-        $ObteneIDcanasta=0; 
-    }
-      
-        for( $j = 0 ; $j < $cantidadCanasta ; $j++ ) {
-            $ObteneIDcanasta=$ObteneIDcanasta + 1;
-           
-            for( $i = 0 ; $i < count($datos) ; $i++ ) 
+            //    dd($productoCantidad,$productoID);
+            $IdCompra= session::get('IdCompra');
+            // $ObtenerCombo=DB::table('tipo_pacas')->where('id', $productoTipoPaca)->value('cantidad');
+            $ObtenerCombo=TipoPaca::where('estado','A')->where('id', $productoTipoPaca)->value('cantidad');
+            $total=0;
+            $tmp=0;
+            $totalCanasta=$productoCantidadCanasta * $ObtenerCombo;
+
+            // $ObteneIDcanasta=DB::table('detalle_compras')->where('fk_compra','=',$IdCompra)->max('Numero_canasta');
+            $ObteneIDcanasta=detalle_compra::where('fk_compra','=',$IdCompra)->max('Numero_canasta');
+
+            //$ContadorCanasta=0;
+
+            if($ObteneIDcanasta==null || $ObteneIDcanasta==-1 || $ObteneIDcanasta==-2 )
+            {
+                $ObteneIDcanasta=0;
+            }
+
+            for( $j = 0 ; $j < $cantidadCanasta ; $j++ )
             {
 
-                 if($productoCantidad[$tmp] !=0)
-                 {
-                    $DatoPrecio= Producto::where('productos.codigo','=', $productoID[$tmp])       
-                     ->value('precio_compra');
-               
-         
-                         // DB::table('detalle_compras')->insert([
-                         // ['precio' => $DatoPrecio, 'cantidad' =>$productoCantidad[$tmp],'fk_tipo_paca'=>0,'fk_compra'=>$IdCompra,'fk_producto'=>$productoID[$tmp],'Numero_canasta' =>$ObteneIDcanasta]]);
-                         // 
-                         detalle_compra::insert([
-                         ['precio' => $DatoPrecio, 'cantidad' =>$productoCantidad[$tmp],'fk_tipo_paca'=>0,'fk_compra'=>$IdCompra,'fk_producto'=>$productoID[$tmp],'Numero_canasta' =>$ObteneIDcanasta]]);
-                              
-                 }
-               
-             
-                 $tmp++; 
-               
-            }
-          
-           
-           
-          }
+                $ObteneIDcanasta=$ObteneIDcanasta + 1;
 
-      ////canasta y envases Editar
+                for( $i = 0 ; $i < count($datos) ; $i++ )
+                {
 
-       
-      $consultaTipoPaca=Producto::where('estado','A')->where('codigo',$productoID)->value('fk_tipo_paca');
-      
-      $consultaIDPlastico=detalle_compra::where('fk_compra', $IdCompra)->where('fk_tipo_paca',$productoTipoPaca)->where('Numero_canasta',-1)->get();
-      $consultaIDCanasta=detalle_compra::where('fk_compra', $IdCompra)->where('fk_tipo_paca',$productoTipoPaca)->where('Numero_canasta',null)->get();
+                    if($productoCantidad[$tmp] !=0)
+                    {
+                        //  $DatoPrecio= DB::table('productos')
+                        // ->where('productos.codigo','=', $productoID[$tmp])
+                        // ->value('precio_compra');
+                        //
+                        $DatoPrecio= Producto::where('productos.codigo','=', $productoID[$tmp])
+                            ->value('precio_compra');
+                        dd("soy dd1");
 
-     
-     
-      if($consultaTipoPaca!=null)
-      {
-          
-          if($productoCantidadEnvase!=null && $productoCantidadEnvase!=0)
-          {
-            
-          $consultarEnvases=TipoPaca::where('estado','A')->where('id',$consultaTipoPaca)->get();
-          if( $consultarEnvases[0]->precio_envase !=null && $consultarEnvases[0]->precio_envase !=0)
-          {
-        
-         if(count($consultaIDCanasta)!=0)
-         {
-          // dd($consultaIDCanasta[0]-> cantidad,$productoCantidadEnvase);
-         
-              detalle_compra::
-              where('fk_tipo_paca',$consultaTipoPaca)
-              ->where('fk_compra',$IdCompra)
-              ->where('precio',$consultarEnvases[0]->precio_envase)
-              ->update(['cantidad' => (int)$consultaIDCanasta[0]-> cantidad + (int)$productoCantidadEnvase]);
-          
-         }
-          else
-          {
-             
-          //  $TotaEnvases=$DividirPrecio * $precio;
-              detalle_compra::insert([
-              ['precio' => $consultarEnvases[0]->precio_envase, 'cantidad' =>(int)$productoCantidadEnvase,'fk_tipo_paca'=>(int)$consultaTipoPaca,'fk_compra'=>(int)$IdCompra,'fk_producto'=>$productoID[0] ]
-            
-          ]);
-           }
-        }
-          
-    }
+                        detalle_compra::insert([
+                            ['precio' => $DatoPrecio, 'cantidad' =>$productoCantidad[$tmp],'fk_tipo_paca'=>$productoTipoPaca,'fk_compra'=>$IdCompra,'fk_producto'=>$productoID[$tmp],'Numero_canasta' =>$ObteneIDcanasta]]);
 
-          if($productoCantidadPlastico!=null && $productoCantidadPlastico!=0 )
-          {
-              $consultarEnvases=TipoPaca::where('estado','A')->where('id',$consultaTipoPaca)->get();
-              //    foreach($consultarEnvases as $consultarEnvase)
-              //    {
-              //      $DividirPrecio=$consultarEnvase->precio / $consultarEnvase->cantidad;
-                  
-              //    }
-              if( $consultarEnvases[0]->precio !=null && $consultarEnvases[0]->precio !=0)
-              {
-                 if(count($consultaIDPlastico)!=0)
-                 {
-                  // dd($consultaIDCanasta[0]-> cantidad,$request->input('cantidadEnvases'));
-                 
-                      detalle_compra::
-                      where('fk_tipo_paca',$productoTipoPaca)
-                      ->where('fk_compra',$IdCompra)
-                      ->where('precio',$consultarEnvases[0]->precio)
-                      ->update(['cantidad' => (int) $consultaIDPlastico[0]-> cantidad + (int)$productoCantidadPlastico]);
-                  
-                 }
-                  else
-                  {
-                     
-                  //  $TotaEnvases=$DividirPrecio * $precio;
-                     detalle_compra::insert([
-                      ['precio' => $consultarEnvases[0]->precio , 'cantidad' =>(int)$productoCantidadPlastico,'fk_tipo_paca'=>(int)$consultaTipoPaca,'fk_compra'=>(int)$IdCompra,'fk_producto'=>$productoID[0],'Numero_canasta'=>-1 ]
-                    
-                  ]);
+
+                    }
+
+
+                    $tmp++;
+
                 }
+
+
+
             }
 
-          }
+            ////canasta y envases
 
-      }  
+            $consultaTipoPaca=Producto::where('estado','A')->where('codigo',$productoID)->value('fk_tipo_paca');
 
-              $notificacion=("Se agrego exitosamente");
+            $consultaIDPlastico=detalle_compra::where('fk_compra', $IdCompra)->where('fk_tipo_paca',$productoTipoPaca)->where('Numero_canasta',-1)->get();
+            $consultaIDCanasta=detalle_compra::where('fk_compra', $IdCompra)->where('fk_tipo_paca',$productoTipoPaca)->where('Numero_canasta',null)->get();
 
-            return response()->json( ['items'=>$notificacion ] );            
+
+
+            if($consultaTipoPaca!=null)
+            {
+
+                if($productoCantidadEnvase!=null && $productoCantidadEnvase!=0)
+                {
+
+                    $consultarEnvases=TipoPaca::where('estado','A')->where('id',$consultaTipoPaca)->get();
+                    if( $consultarEnvases[0]->precio_envase !=null && $consultarEnvases[0]->precio_envase !=0)
+                    {
+
+                        if(count($consultaIDCanasta)!=0)
+                        {
+                            // dd($consultaIDCanasta[0]-> cantidad,$productoCantidadEnvase);
+
+                            detalle_compra::
+                            where('fk_tipo_paca',$consultaTipoPaca)
+                                ->where('fk_compra',$IdCompra)
+                                ->where('precio',$consultarEnvases[0]->precio_envase)
+                                ->update(['cantidad' => (int)$consultaIDCanasta[0]-> cantidad + (int)$productoCantidadEnvase]);
+
+                        }
+                        else
+                        {
+
+                            //  $TotaEnvases=$DividirPrecio * $precio;
+                            dd("dd2");
+
+                            detalle_compra::insert([
+                                ['precio' => $consultarEnvases[0]->precio_envase, 'cantidad' =>(int)$productoCantidadEnvase,'fk_tipo_paca'=>(int)$consultaTipoPaca,'fk_compra'=>(int)$IdCompra,'fk_producto'=>$productoID[0] ]
+
+                            ]);
+                        }
+                    }
+                }
+
+                if($productoCantidadPlastico!=null && $productoCantidadPlastico!=0 )
+                {
+                    $consultarEnvases=TipoPaca::where('estado','A')->where('id',$consultaTipoPaca)->get();
+                    //    foreach($consultarEnvases as $consultarEnvase)
+                    //    {
+                    //      $DividirPrecio=$consultarEnvase->precio / $consultarEnvase->cantidad;
+
+                    //    }
+                    if( $consultarEnvases[0]->precio !=null && $consultarEnvases[0]->precio !=0)
+                    {
+                        if(count($consultaIDPlastico)!=0)
+                        {
+                            // dd($consultaIDCanasta[0]-> cantidad,$request->input('cantidadEnvases'));
+
+                            detalle_compra::
+                            where('fk_tipo_paca',$productoTipoPaca)
+                                ->where('fk_compra',$IdCompra)
+                                ->where('precio',$consultarEnvases[0]->precio)
+                                ->update(['cantidad' => (int) $consultaIDPlastico[0]-> cantidad + (int)$productoCantidadPlastico]);
+
+                        }
+                        else
+                        {
+
+                            //  $TotaEnvases=$DividirPrecio * $precio;
+
+                            detalle_compra::insert([
+                                ['precio' => $consultarEnvases[0]->precio , 'cantidad' =>(int)$productoCantidadPlastico,'fk_tipo_paca'=>(int)$consultaTipoPaca,'fk_compra'=>(int)$IdCompra,'fk_producto'=>$productoID[0],'Numero_canasta'=>-1 ]
+
+                            ]);
+                        }
+                    }
+
+                }
+
+            }
+
+            $notificacion=("Se agrego exitosamente");
+
+            return response()->json( ['items'=>$notificacion ] );
         }
 
 
@@ -200,17 +206,18 @@ class compraController extends Controller
 
         public function tipoContenidoEditar($id) 
         {
+          
 
-            $ListarTipoContenido= Producto::                        
-            join('marcas','productos.fk_marca','=','marcas.id')
-            ->join('tipo_contenidos','productos.fk_tipo_contenido','=','tipo_contenidos.id')
-            ->select('tipo_contenidos.id','tipo_contenidos.nombre')                
-            ->where('productos.fk_marca','=',$id)
-            ->where('productos.estado','A')
-            ->groupBy('tipo_contenidos.id')
-            ->get();
+            // $ListarTipoContenido= Producto::                        
+            // join('marcas','productos.fk_marca','=','marcas.id')
+            // ->join('tipo_contenidos','productos.fk_tipo_contenido','=','tipo_contenidos.id')
+            // ->select('tipo_contenidos.id','tipo_contenidos.nombre')                
+            // ->where('productos.fk_marca','=',$id)
+            // ->where('productos.estado','A')
+            // ->groupBy('tipo_contenidos.id')
+            // ->get();
 
-            // $ListarTipoContenido= Producto::where('estado','A')->where('fk_marca',$id)->with('tipoContenido')->get();
+            $ListarTipoContenido= Producto::where('estado','A')->where('fk_marca',$id)->with('tipoContenido')->distinct()->get(['fk_tipo_contenido']);
 
             Session::put('IdMarcaEditar',$id);
             $ListarMarcas=Producto::where('estado','A')->where('fk_marca',$id)->select('codigo','nombre')->get();
@@ -228,34 +235,34 @@ class compraController extends Controller
               Session::put('IdContenidoEditar',$id);
               
 
-            $ListarTipoPaca= Producto::                        
-              join('marcas',
-                     'productos.fk_marca',
-                     '=',
-                     'marcas.id'
-                    )   
-              ->join('tipo_pacas',
-                      'productos.fk_tipo_paca',
-                      '=',
-                      'tipo_pacas.id'
-                     )
-              ->join('tipo_contenidos',
-                      'productos.fk_tipo_contenido',
-                      '=',
-                      'tipo_contenidos.id'
-                     )
-              ->select('tipo_pacas.id',
-                       'tipo_pacas.nombre'
-                      ) 
-              ->where('productos.estado','A')
-              ->where([
-                  ['fk_marca', '=',$marca],
-                  ['fk_tipo_contenido', '=', $id],
+            // $ListarTipoPaca= Producto::                        
+            //   join('marcas',
+            //          'productos.fk_marca',
+            //          '=',
+            //          'marcas.id'
+            //         )   
+            //   ->join('tipo_pacas',
+            //           'productos.fk_tipo_paca',
+            //           '=',
+            //           'tipo_pacas.id'
+            //          )
+            //   ->join('tipo_contenidos',
+            //           'productos.fk_tipo_contenido',
+            //           '=',
+            //           'tipo_contenidos.id'
+            //          )
+            //   ->select('tipo_pacas.id',
+            //            'tipo_pacas.nombre'
+            //           ) 
+            //   ->where('productos.estado','A')
+            //   ->where([
+            //       ['fk_marca', '=',$marca],
+            //       ['fk_tipo_contenido', '=', $id],
                   
-              ])
-              ->groupBy('tipo_pacas.id')                       
-              ->get();
-            // $ListarTipoPaca = Producto::where('estado','A')->where('fk_marca',$marca)->where('fk_tipo_contenido',$id)->with('tipoPaca')->get();
+            //   ])
+            //   ->groupBy('tipo_pacas.id')                       
+            //   ->get();
+            $ListarTipoPaca = Producto::where('estado','A')->where('fk_marca',$marca)->where('fk_tipo_contenido',$id)->with('tipoPaca')->distinct()->get(['fk_tipo_paca']);
              // dd($ListarTipoPaca);
 
             // $ObtenerProductoTipoPaca=DB::table('productos')->where('fk_tipo_contenido',$id)->where('fk_marca',$marca)->get();//obtengo los productos con una marca
@@ -370,7 +377,7 @@ class compraController extends Controller
       
         for( $j = 0 ; $j < $cantidadCanasta ; $j++ ) 
         {
-            // dd("hola");
+           
             $ObteneIDcanasta=$ObteneIDcanasta + 1;
            
             for( $i = 0 ; $i < count($datos) ; $i++ ) 
@@ -513,17 +520,17 @@ class compraController extends Controller
         {
 
             //  dd($id);
-            $ListarTipoContenido= Producto::                        
-            join('marcas','productos.fk_marca','=','marcas.id')
-            ->join('tipo_contenidos','productos.fk_tipo_contenido','=','tipo_contenidos.id')
-            ->select('tipo_contenidos.id','tipo_contenidos.nombre')                
-            ->where('productos.fk_marca','=',$id)
-            ->where('productos.estado','A')
-            ->groupBy('tipo_contenidos.id')
-            ->get();
+            // $ListarTipoContenido= Producto::                        
+            // join('marcas','productos.fk_marca','=','marcas.id')
+            // ->join('tipo_contenidos','productos.fk_tipo_contenido','=','tipo_contenidos.id')
+            // ->select('tipo_contenidos.id','tipo_contenidos.nombre')                
+            // ->where('productos.fk_marca','=',$id)
+            // ->where('productos.estado','A')
+            // ->groupBy('tipo_contenidos.id')
+            // ->get();
 
             // $ListarTipoContenido= Producto::where('estado','A')->where('fk_marca',$id)->with('tipoContenido')->get();
-
+            $ListarTipoContenido= Producto::where('estado','A')->where('fk_marca',$id)->with('tipoContenido')->distinct()->get(['fk_tipo_contenido']);
 
             Session::put('IdMarca',$id);
             $ListarMarcas=Producto::where('fk_marca',$id)->select('codigo','nombre')->get();             
@@ -569,8 +576,7 @@ class compraController extends Controller
             ->get();
             // 
             // $ListarTipoPaca = Producto::where('estado','A')->where('fk_marca',$marca)->where('fk_tipo_contenido',$id)->with('tipoPaca')->groupBy('tipoPaca')->get();
-
-
+             $ListarTipoPaca = Producto::where('estado','A')->where('fk_marca',$marca)->where('fk_tipo_contenido',$id)->with('tipoPaca')->distinct()->get(['fk_tipo_paca']);
 
 
             $ObtenerProductoTipoPaca=Producto::where('fk_tipo_contenido',$id)->where('fk_marca',$marca)->get();//obtengo los productos con una marca
@@ -811,7 +817,7 @@ class compraController extends Controller
                         $DividirPrecio=0;
                         $SaberCombo=TipoPaca::where('estado','A')->where('id',$consultaTipoPaca)->get();
                         $TotaEnvases=0;
-                  ////para el envase y canastas
+                        ////para el envase y canastas
                         //  dd($consultaTipoPaca);
              
                         if($consultaTipoPaca!=null)
@@ -955,10 +961,8 @@ class compraController extends Controller
                     $request['fk_compra']= $idCompra;
                  
                    
-                    $detalle_compra -> fk_tipo_paca = $productos;
-           
-                    $detalle_compra -> fk_producto = $ObtenerIdProdcuto[0];
-                   
+                    $detalle_compra -> fk_tipo_paca = $productos;           
+                    $detalle_compra -> fk_producto = $ObtenerIdProdcuto[0];                   
                     $detalle_compra -> fk_compra = $request->input('fk_compra');
                     // $detalle_compra -> precio = $request->input('fk_precio');
                     $detalle_compra -> cantidad = $request->input('cantidad');
@@ -1551,147 +1555,149 @@ public function imprimir($id,$estado)
 
     public function recibo($id,$estado,$abono)
     {
-            
+
+
         $ObtenerEstadoCompra=compra::where('id',$id)->get();
         if($ObtenerEstadoCompra[0]->fk_estado_compra==1)
         {
 
-        $Detalle_compras=detalle_compra::where('fk_compra',$id)->get();
-        $cantidad=0;
-        $subtotal=0;
-        $total=0;
-        $Condicioncompra=0;
-        $AcomularProducto=0;
-        $error = array(); 
-        $contadorErrores=0;
-        
+            $Detalle_compras=detalle_compra::where('fk_compra',$id)->get();
+            $cantidad=0;
+            $subtotal=0;
+            $total=0;
+            $Condicioncompra=0;
+            $AcomularProducto=0;
+            $error = array();
+            $contadorErrores=0;
             ////////condicon de compra si falta productos no genere factura
-                //  if( $Condicioncompra==0)
-                //  {
-            ////////se cumple la condicon de compra comienza hacer el recorrido             
-        foreach( $Detalle_compras as  $Detalle_compra)
-        {
-          
-            $ObtenerCantidadActual=Producto::where('codigo',$Detalle_compra->fk_producto)->value('cantidad');
+            //  if( $Condicioncompra==0)
+            //  {
+            ////////se cumple la condicon de compra comienza hacer el recorrido
+            foreach( $Detalle_compras as  $Detalle_compra)
+            {
 
-            $subtotal=$Detalle_compra->precio * $Detalle_compra->cantidad;
-            $total=$total+$subtotal;
-            ////////estado cero recbido su al inventario
-            if($Detalle_compra->Numero_canasta !=null && $Detalle_compra->Numero_canasta !=0 && $Detalle_compra->Numero_canasta !=-1 )
-            {
-            if($estado==0)
-            {
-                Producto::where('codigo',$Detalle_compra->fk_producto)                
-                ->update(['cantidad' =>$ObtenerCantidadActual+$Detalle_compra->cantidad ]);
+                $ObtenerCantidadActual=Producto::where('codigo',$Detalle_compra->fk_producto)->value('cantidad');
+
+                $subtotal=$Detalle_compra->precio * $Detalle_compra->cantidad;
+                $total=$total+$subtotal;
+                ////////estado cero recbido su al inventario
+
+                if($Detalle_compra->Numero_canasta !=null && $Detalle_compra->Numero_canasta !=0 && $Detalle_compra->Numero_canasta !=-1 )
+                {
+                    if($estado==0)
+                    {
+                        Producto::where('codigo',$Detalle_compra->fk_producto)
+                            ->update(['cantidad' =>$ObtenerCantidadActual+$Detalle_compra->cantidad ]);
+                    }
+
+                }
             }
-            
-           }
-        }
-        
-        $fechaActual= new DateTime();
-        $fechaAbono= Carbon::now()->toDateString();
+
+            $fechaActual= new DateTime();
+            $fechaAbono= Carbon::now()->toDateString();
             ////////se actualiza la compra cambiando el estado y total de la factura
             ///la condicon estado==4 hacer referencia al estado (por rcebir) fk_estado_compra # 2
             //////si no cumple llega al else (0) donde se cambia estado  (recbido) Fk_estado_compra #3
             if($estado==0)
             {
+
                 if($abono !=0)
                 {
                     if($abono >$total)
                     {
 
-                        $notification = 'el abono no puede ser mayor al saldo de la compra'; 
+                        $notification = 'el abono no puede ser mayor al saldo de la compra';
                         return redirect('compra/create') -> with( compact( 'notification' ) );
-                
+
                     }
                     else
                     {
-                    if($total == $abono && $ObtenerEstadoCompra[0] -> fk_forma_pago==2)
-                    {
-
-                        $objAbono = new abonoCompra();
-                        $objAbono -> valor = (float)$abono; 
-                        $objAbono -> fecha = $fechaAbono;                  
-                        $objAbono -> fk_compra = $id;
-                        $objAbono->save();
-                        //inicio de la factura
-
-                        $resta= floatval($total -$abono);
-
-                        compra::where('id',$id)      
-                        ->update(['fk_estado_compra' => 3,'fk_forma_pago' => 1,'total' => $total,
-                        'saldo' => $resta,'fecha_compra'=>$fechaAbono]);
-                        Session::forget('IdCompra');                            
-                        $notification = 'la compra fue pagada exitosamente'. $ObtenerEstadoCompra[0]->id;
-                        return redirect('compra') -> with( compact( 'notification' ));
-                    }
-                    else
-                    {
-                        if($ObtenerEstadoCompra[0] -> fk_forma_pago==2)
+                        if($total == $abono && $ObtenerEstadoCompra[0] -> fk_forma_pago==2)
                         {
 
-
                             $objAbono = new abonoCompra();
-                            $objAbono -> valor = (float)$abono; 
-                            $objAbono -> fecha = $fechaAbono;     
-                        
+                            $objAbono -> valor = (float)$abono;
+                            $objAbono -> fecha = $fechaAbono;
                             $objAbono -> fk_compra = $id;
                             $objAbono->save();
+                            //inicio de la factura
 
                             $resta= floatval($total -$abono);
 
-                            compra::where('id',$id)      
-                            ->update(['fk_estado_compra' => 3,'fk_forma_pago' => 2,'total' => $total,
-                            'saldo' => $resta,'fecha_compra'=>$fechaAbono]);
-                            Session::forget('IdCompra');     
-
-                            $notification = 'la compra fue agregada exitosamente  con su abono'. $ObtenerEstadoCompra[0]->id;
+                            compra::where('id',$id)
+                                ->update(['fk_estado_compra' => 3,'fk_forma_pago' => 1,'total' => $total,
+                                    'saldo' => $resta,'fecha_compra'=>$fechaAbono]);
+                            Session::forget('IdCompra');
+                            $notification = 'la compra fue pagada exitosamente'. $ObtenerEstadoCompra[0]->id;
                             return redirect('compra') -> with( compact( 'notification' ));
+                        }
+                        else
+                        {
+                            if($ObtenerEstadoCompra[0] -> fk_forma_pago==2)
+                            {
+
+
+                                $objAbono = new abonoCompra();
+                                $objAbono -> valor = (float)$abono;
+                                $objAbono -> fecha = $fechaAbono;
+
+                                $objAbono -> fk_compra = $id;
+                                $objAbono->save();
+
+                                $resta= floatval($total -$abono);
+
+                                compra::where('id',$id)
+                                    ->update(['fk_estado_compra' => 3,'fk_forma_pago' => 2,'total' => $total,
+                                        'saldo' => $resta,'fecha_compra'=>$fechaAbono]);
+                                Session::forget('IdCompra');
+
+                                $notification = 'la compra fue agregada exitosamente  con su abono'. $ObtenerEstadoCompra[0]->id;
+                                return redirect('compra') -> with( compact( 'notification' ));
 
 
 
                             }
 
-                    }
-                    
+                        }
+
 
                     }
-                
+
 
                 }
 
                 else
                 {
-                
-                if($ObtenerEstadoVenta[0] -> fk_forma_pago==2 && (int)$abono==0)
-                        {
 
-                            $resta= floatval($total -(int)$abono);
+                    if($ObtenerEstadoCompra[0] -> fk_forma_pago==2 && (int)$abono==0)
+                    {
 
-                            compra::where('id',$id)      
+                        $resta= floatval($total -(int)$abono);
+
+                        compra::where('id',$id)
                             ->update(['fk_estado_compra' => 3,'fk_forma_pago' => 2,'total' => $total,
-                            'saldo' => $resta,'fecha_compra'=>$fechaAbono]);                  
-                            Session::forget('IdCompra');
-                            $notification = 'la factura fue agregada exitosamente sin abono'. $ObtenerEstadoCompra[0]->id;
-                            return redirect('venta') -> with( compact( 'notification' ));
+                                'saldo' => $resta,'fecha_compra'=>$fechaAbono]);
+                        Session::forget('IdCompra');
+                        $notification = 'la factura fue agregada exitosamente sin abono'. $ObtenerEstadoCompra[0]->id;
+                        return redirect('venta') -> with( compact( 'notification' ));
 
 
 
-                            }
-                
+                    }
+
 
                 }
 
-                compra::where('id',$id)      
-                ->update(['fk_estado_compra' => 3,'total' => $total,'fecha_compra'=>$fechaActual]);
+                compra::where('id',$id)
+                    ->update(['fk_estado_compra' => 3,'total' => $total,'fecha_compra'=>$fechaActual]);
                 Session::forget('IdCompra');
                 $notification = 'ya se registro con el estado recibido la compra # ' . $id ;
-                return back() -> with( compact( 'notification' ) );    
+                return back() -> with( compact( 'notification' ) );
 
-                
-            
 
-            }           
+
+
+            }
 
             if($estado==4)
             {
@@ -1701,104 +1707,104 @@ public function imprimir($id,$estado)
                     if($abono >$total)
                     {
 
-                        $notification = 'el abono no puede ser mayor al saldo de la compra'; 
+                        $notification = 'el abono no puede ser mayor al saldo de la compra';
                         return redirect('compra/create') -> with( compact( 'notification' ) );
-                
+
                     }
                     else
                     {
-                    if($total == $abono && $ObtenerEstadoCompra[0] -> fk_forma_pago==2)
-                    {
-
-                        $objAbono = new abonoCompra();
-                        $objAbono -> valor = (float)$abono; 
-                        $objAbono -> fecha = $fechaAbono;                  
-                        $objAbono -> fk_compra = $id;
-                        $objAbono->save();
-                        //inicio de la factura
-
-                        $resta= floatval($total -$abono);
-
-
-
-                        compra::where('id',$id)      
-                        ->update(['fk_estado_compra' => 2,'fk_forma_pago' => 1,'total' => $total,
-                        'saldo' => $resta,'fecha_compra'=>$fechaAbono]);
-                        Session::forget('IdCompra');
-                        $notification = 'la compra fue pagada exitosamente'. $ObtenerEstadoCompra[0]->id;
-                        return redirect('compra') -> with( compact( 'notification' ));
-                    }
-                    else
-                    {
-                        if($ObtenerEstadoCompra[0] -> fk_forma_pago==2)
+                        if($total == $abono && $ObtenerEstadoCompra[0] -> fk_forma_pago==2)
                         {
 
-
                             $objAbono = new abonoCompra();
-                            $objAbono -> valor = (float)$abono; 
-                            $objAbono -> fecha = $fechaAbono;    
+                            $objAbono -> valor = (float)$abono;
+                            $objAbono -> fecha = $fechaAbono;
                             $objAbono -> fk_compra = $id;
                             $objAbono->save();
+                            //inicio de la factura
 
                             $resta= floatval($total -$abono);
 
-                            compra::where('id',$id)      
-                            ->update(['fk_estado_compra' => 2,'fk_forma_pago' => 2,'total' => $total,
-                            'saldo' => $resta,'fecha_compra'=>$fechaAbono]);                  
+
+
+                            compra::where('id',$id)
+                                ->update(['fk_estado_compra' => 2,'fk_forma_pago' => 1,'total' => $total,
+                                    'saldo' => $resta,'fecha_compra'=>$fechaAbono]);
                             Session::forget('IdCompra');
-                            $notification = 'la compra fue agregada exitosamente  con su abono'. $ObtenerEstadoCompra[0]->id;
+                            $notification = 'la compra fue pagada exitosamente'. $ObtenerEstadoCompra[0]->id;
                             return redirect('compra') -> with( compact( 'notification' ));
+                        }
+                        else
+                        {
+                            if($ObtenerEstadoCompra[0] -> fk_forma_pago==2)
+                            {
+
+
+                                $objAbono = new abonoCompra();
+                                $objAbono -> valor = (float)$abono;
+                                $objAbono -> fecha = $fechaAbono;
+                                $objAbono -> fk_compra = $id;
+                                $objAbono->save();
+
+                                $resta= floatval($total -$abono);
+
+                                compra::where('id',$id)
+                                    ->update(['fk_estado_compra' => 2,'fk_forma_pago' => 2,'total' => $total,
+                                        'saldo' => $resta,'fecha_compra'=>$fechaAbono]);
+                                Session::forget('IdCompra');
+                                $notification = 'la compra fue agregada exitosamente  con su abono'. $ObtenerEstadoCompra[0]->id;
+                                return redirect('compra') -> with( compact( 'notification' ));
 
 
 
                             }
 
-                    }
-                    
+                        }
+
 
                     }
-                
+
 
                 }
 
                 else
                 {
-                
-                if($ObtenerEstadoVenta[0] -> fk_forma_pago==2 && (int)$abono==0)
-                        {
 
-                            $resta= floatval($total -(int)$abono);
+                    if($ObtenerEstadoCompra[0] -> fk_forma_pago==2 && (int)$abono==0)
+                    {
 
-                            compra::where('id',$id)      
+                        $resta= floatval($total -(int)$abono);
+
+                        compra::where('id',$id)
                             ->update(['fk_estado_compra' => 2,'fk_forma_pago' => 2,'total' => $total,
-                            'saldo' => $resta,'fecha_compra'=>$fechaAbono]);                  
-                            Session::forget('IdCompra');
-                            $notification = 'la factura fue agregada exitosamente sin abono'. $ObtenerEstadoCompra[0]->id;
-                            return redirect('venta') -> with( compact( 'notification' ));
+                                'saldo' => $resta,'fecha_compra'=>$fechaAbono]);
+                        Session::forget('IdCompra');
+                        $notification = 'la factura fue agregada exitosamente sin abono'. $ObtenerEstadoCompra[0]->id;
+                        return redirect('venta') -> with( compact( 'notification' ));
 
 
 
-                            }
-                
+                    }
+
 
                 }
-               
-                compra::where('id',$id)      
-                ->update(['fk_estado_compra' => 2,'total' => $total,'fecha_compra'=>$fechaAbono]);
+
+                compra::where('id',$id)
+                    ->update(['fk_estado_compra' => 2,'total' => $total,'fecha_compra'=>$fechaAbono]);
                 Session::forget('IdCompra');
-                
+
                 $notification = 'ya se registro con el estado por recibir la compra # ' . $id ;
                 return back() -> with( compact( 'notification' ) );
-                
 
 
-                
+
+
             }
-            
+
             else
             {
-                
-                
+
+
                 Session::forget('IdCompra');
                 $notification = 'ya se registro la compra # ' . $id ;
                 return back() -> with( compact( 'notification' ) );
@@ -1814,6 +1820,9 @@ public function imprimir($id,$estado)
 
 
     }
+
+
+
     
 
 }
