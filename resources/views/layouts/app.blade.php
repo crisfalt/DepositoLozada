@@ -640,8 +640,6 @@
 <!-- Now Ui Dashboard DEMO methods, don't include it in your project! -->
 <script src="{{ asset('/demo/demo.js') }}"></script>
 <script src="{{ asset('/demo/jquery.sharrre.js') }}"></script>
-<!-- plugin js para eliminar registros -->
-<script src="{{ asset('/js/jquery-confirm.js') }}" type="text/javascript"></script>
 <!-- LOS NUEVOS SCRIPTS -->
 <script src="{{ asset('/js/plugins/moment.min.js') }}"></script>
 <script src="{{ asset('/js/plugins/bootstrap-datetimepicker.js') }}"></script>
@@ -655,6 +653,8 @@
 <script src="{{ asset('/js/plugins/nouislider.min.js') }}"></script>
 <script src="{{ asset('/js/plugins/perfect-scrollbar.jquery.min.js') }}"></script>
 <script src="{{ asset('/js/plugins/sweetalert2.min.js') }}"></script>
+<!-- plugin js para eliminar registros -->
+<script src="{{ asset('/js/jquery-confirm.js') }}" type="text/javascript"></script>
  <!-- Google Maps Plugin   
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDS-rmXg8BxyY1KtI2N3s7h86kOhzZQvI8&callback=initMap"></script> -->
 <!-- <script>
