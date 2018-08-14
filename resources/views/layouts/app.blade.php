@@ -90,6 +90,12 @@
                                                 <span class="sidebar-normal">Tipo Paca </span>
                                             </a>
                                         </li>
+                                         <li>
+                                            <a href="{{route('tiponegocio')}}">
+                                                <i class="now-ui-icons design_app submenu"></i>
+                                                <span class="sidebar-normal">Tipo Negocio </span>
+                                            </a>
+                                        </li>
 
                                     </ul>
                                 </div>

@@ -7,6 +7,7 @@ use App\Bodega;
 use App\Ruta;
 use App\Venta;
 use App\TipoDocumento;
+use App\TipoNegocio;
 
 class Cliente extends Model
 {
@@ -56,6 +57,10 @@ class Cliente extends Model
 
     public function rutas() {
         return $this->belongsTo(Ruta::class);
+    }
+
+    public function tipoNegocio() {
+        return $this->belongsTo(TipoNegocio::class);
     }
     
 }
