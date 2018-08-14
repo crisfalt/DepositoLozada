@@ -407,6 +407,15 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/productos/json','SearchController@data2');
     Route::get('/precio/{id}/json','SearchController@precio');
 
+     //CRUD TIPOS Negociops
+    Route::get('tiponegocio' , 'TipoNegocioController@index')->name('tiponegocio');
+    Route::get('/tiponegocio/create' , 'TipoNegocioController@create');
+    Route::post('/tiponegocio' , 'TipoNegocioController@store');
+    Route::delete('/tiponegocio/{id}','TipoNegocioController@destroy'); //vista para eliminar
+    Route::get('/tiponegocio/{id}','TipoNegocioController@show'); //mostrar el tipo de movimiento
+    Route::get('/tiponegocio/{id}/edit' , 'TipoNegocioController@edit');
+    Route::post('/tiponegocio/{id}/edit' , 'TipoNegocioController@update');
+
 });
 
 Route::middleware(['auth', 'vendedor'])->prefix('vendedor')->namespace('Vendedor')->group(function () {
