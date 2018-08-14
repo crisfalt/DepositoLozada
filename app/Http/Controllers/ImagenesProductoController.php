@@ -34,7 +34,12 @@ class ImagenesProductoController extends Controller
         $this->validate($request,$rules,$messages);
         //crear un prodcuto nuevo
         $file = $request->file('photo');
-        $path = public_path() . '/imagenes/productos'; //concatena public_path la ruta absoluta a public y concatena la carpeta para imagenes
+        if ($this->app->environment() === 'local') {
+            $path = public_path() . '/imagenes/productos'; //concatena public_path la ruta absoluta a public y concatena la carpeta para imagenes
+        }
+        else {
+            $path = 'imagenes/productos';
+        }
         $fileName = uniqid() . $file->getClientOriginalName();//crea una imagen asi sea igual no la sobreescribe
         $moved = $file->move( $path , $fileName );//dar la orden al archivo para que se guarde en la ruta indicada la sube al servidor
         $notification = "";
@@ -64,7 +69,12 @@ class ImagenesProductoController extends Controller
             $deleted = true;
         }
         else {
-            $fullPath = public_path() . '/imagenes/productos/' . $productImage -> url_imagen; //concatena public_path la ruta absoluta a public y concatena la carpeta para imagenes
+            if ($this->app->environment() === 'local') {
+                $fullPath = public_path() . '/imagenes/productos/' . $productImage -> url_imagen; //concatena public_path la ruta absoluta a public y concatena la carpeta para imagenes
+            }
+            else {
+                $fullPath = 'imagenes/productos/' . $productImage -> url_imagen; //concatena public_path la ruta absoluta a public y concatena la carpeta para imagenes
+            }
             $deleted = File::delete( $fullPath ); //nos devuelve si la imagen ha sido eliminada o no del public
         }
         //eliminar registro de la bd

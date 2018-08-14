@@ -79,7 +79,12 @@ class ClienteController extends Controller
             $fileName = 'default.png';//crea una imagen asi sea igual no la sobreescribe
         }
         else {
-            $path = public_path() . '/imagenes/clientes'; //concatena public_path la ruta absoluta a public y concatena la carpeta para imagenes
+            if ($this->app->environment() === 'local') {
+                $path = public_path() . '/imagenes/clientes'; //concatena public_path la ruta absoluta a public y concatena la carpeta para imagenes
+            }
+            else {
+                $path = 'imagenes/clientes';
+            }
             $fileName = uniqid() . $file->getClientOriginalName();//crea una imagen asi sea igual no la sobreescribe
             //fin subir foto al servidor
             $file->move( $path , $fileName );//dar la orden al archivo para que se guarde en la ruta indicada la sube al servidor
@@ -170,7 +175,12 @@ class ClienteController extends Controller
         $file = $request->file('photo');
         $fileName = $cliente->url_foto; //obtengo la foto actual del cliente
         if( !empty( $file ) ) {
-            $path = public_path() . '/imagenes/clientes'; //concatena public_path la ruta absoluta a public y concatena la carpeta para imagenes
+            if ($this->app->environment() === 'local') {
+                $path = public_path() . '/imagenes/clientes'; //concatena public_path la ruta absoluta a public y concatena la carpeta para imagenes
+            }
+            else {
+                $path = 'imagenes/clientes';
+            }
             $fileName = uniqid() . $file->getClientOriginalName();//crea una imagen asi sea igual no la sobreescribe
             //fin subir foto al servidor
             $file->move( $path , $fileName );//dar la orden al archivo para que se guarde en la ruta indicada la sube al servidor
