@@ -9,6 +9,7 @@ use App\Bodega;
 use App\Ruta;
 use App\TipoDocumento;
 use App\OrdenRuta;
+use App\TipoNegocio;
 use LynX39\LaraPdfMerger;
 
 class ClienteController extends Controller
@@ -27,6 +28,7 @@ class ClienteController extends Controller
     public function show($id)
     {
         $cliente = Cliente::where( 'number_id' , $id )->first();
+       
 //        dd($cliente);
         return view('admin.cliente.show')->with(compact('cliente'));
     }
@@ -36,7 +38,8 @@ class ClienteController extends Controller
         $bodegas = Bodega::orderBy('nombre') -> get();
         $rutas = Ruta::orderBy('nombre') -> get();
         $tiposDocumento = TipoDocumento::orderBy('nombre') -> get();
-        return view('admin.cliente.register')->with( compact('tiposDocumento','bodegas','rutas') );
+        $tipoNegocio = TipoNegocio::where('estado','A')->orderBy('nombre') -> get();
+        return view('admin.cliente.register')->with( compact('tiposDocumento','bodegas','rutas','tipoNegocio') );
     }
 
     public function store( Request $request ) {
@@ -68,6 +71,10 @@ class ClienteController extends Controller
             $reglas['number_id'] .= 'required';
             $mensajes['number_id.required'] .= 'El Campo Numero de Identificacion es Obligatorio';
         }
+        if( empty( $request->input('tipo_negocio') ) ) {
+            $reglas['tipo_negocio'] .= 'required';
+            $mensajes['tipo_negocio.required'] .= 'El Campo tipo de negocio es Obligatorio';
+        }
         else {
             $reglas['number_id'] .= 'max:30|unique:clientes,number_id';
         }
@@ -95,6 +102,7 @@ class ClienteController extends Controller
         $cliente -> number_id = $request->input('number_id');
         //$product -> description = $request->input('description');
         $cliente -> name = $request->input('name');
+        $cliente -> tipo_negocio_id  = $request->input('tipo_negocio');
         $cliente -> tipo_documento_id = $request->input('tipo_documento_id');
         $cliente -> phone = $request->input('phone');
         $cliente -> celular = $request->input('celular');
@@ -131,7 +139,8 @@ class ClienteController extends Controller
         $rutas = Ruta::orderBy('nombre') -> get();
         $tiposDocumento = TipoDocumento::orderBy('nombre') -> get();
         $cliente = Cliente::where('number_id',$id)->first();
-        return view('admin.cliente.edit')->with( compact('tiposDocumento','bodegas','rutas','cliente') );
+        $tipoNegocio = TipoNegocio::where('estado','A')->orderBy('nombre') -> get();
+        return view('admin.cliente.edit')->with( compact('tiposDocumento','bodegas','rutas','cliente','tipoNegocio') );
     }
 
     public function update( Request $request , $id ) {
@@ -153,6 +162,9 @@ class ClienteController extends Controller
         if( $request->input('celular') != "" ) {
             $reglas['celular'] .= 'numeric|between:0,99999999999999999999';
         }
+         if( $request->input('tipo_negocio') == 'I' ) {
+            $request['tipo_negocio_id'] = null;
+        }
 
         //consultar el cliente a editar
         $cliente = Cliente::where( 'number_id' , $id )->first();
@@ -165,6 +177,7 @@ class ClienteController extends Controller
         //luego de validar se procede a almacenar
         $cliente -> name = $request->input('name');
         $cliente -> tipo_documento_id = $request->input('tipo_documento_id');
+        $cliente -> tipo_negocio_id  = $request->input('tipo_negocio');
         $cliente -> phone = $request->input('phone');
         $cliente -> celular = $request->input('celular');
         $cliente -> address = $request->input('address');

@@ -62,5 +62,7 @@ class Cliente extends Model
     public function tipoNegocio() {
         return $this->belongsTo(TipoNegocio::class);
     }
+
+        
     
 }

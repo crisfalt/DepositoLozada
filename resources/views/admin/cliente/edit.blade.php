@@ -101,6 +101,17 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Tipo de Negocio</label>
+                                <select class="form-control" name="tipo_negocio">
+                                        <option class="form-control" value="I">Seleccione</option>
+                                        @foreach ( $tipoNegocio as $tiponegocio )
+                                            <option class="form-control" value="{{ $tiponegocio->id }}" @if( $tiponegocio -> id == old( 'tipo_negocio',$cliente->tipo_negocio_id) )  selected @endif>{{ $tiponegocio->nombre }}</option>
+                                        @endforeach
+                                </select>
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
