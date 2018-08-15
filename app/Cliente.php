@@ -17,18 +17,21 @@ class Cliente extends Model
         'photo.max' => 'la imagen supera el tamaño maximo permitido de 2048 Kb',
         'photo.mimes' => 'la imagen debe tener un tipo de archivo jpeg,bmp,png o jpg',
         'photo.required' => '',
-        'number_id.required' => ''
+        'number_id.required' => '',
+
+        
     ];
 
     public static $rules = [
         'number_id' => '',
         'name' => 'required|string|max:255',
-        'tipo_documento_id' => 'required',
+        'tipo_documento_id' => 'required',        
         'address' => 'required|max:150',
         'phone' => '',
         'celular' => '',
         'email' => '',
         'ruta_id' => 'required',
+        
         'bodega_id' => 'required',
         'valor_credito' => 'numeric',
         'photo' => 'max:2000|mimes:jpeg,bmp,png'
