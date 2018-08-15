@@ -476,7 +476,7 @@
                                     <li>
                                         <a href="#">
                                             <i class="fa fa-motorcycle fa-spin"></i>
-                                            <p>Mi Ruta</p>
+                                            <p>Mis Rutas</p>
                                         </a>
                                     </li>
                                     <li>

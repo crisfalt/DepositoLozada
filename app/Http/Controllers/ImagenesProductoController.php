@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\App;
 use Illuminate\Http\Request;
 use App\Producto;
 use App\ImagenesProducto;
@@ -34,7 +35,7 @@ class ImagenesProductoController extends Controller
         $this->validate($request,$rules,$messages);
         //crear un prodcuto nuevo
         $file = $request->file('photo');
-        if ($this->app->environment() === 'local') {
+        if (App::environment('local')) {
             $path = public_path() . '/imagenes/productos'; //concatena public_path la ruta absoluta a public y concatena la carpeta para imagenes
         }
         else {
@@ -69,7 +70,7 @@ class ImagenesProductoController extends Controller
             $deleted = true;
         }
         else {
-            if ($this->app->environment() === 'local') {
+            if (App::environment('local')) {
                 $fullPath = public_path() . '/imagenes/productos/' . $productImage -> url_imagen; //concatena public_path la ruta absoluta a public y concatena la carpeta para imagenes
             }
             else {

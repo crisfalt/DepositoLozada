@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use App\Cliente;
 use App\Bodega;
 use App\Ruta;
@@ -79,7 +80,7 @@ class ClienteController extends Controller
             $fileName = 'default.png';//crea una imagen asi sea igual no la sobreescribe
         }
         else {
-            if ($this->app->environment() === 'local') {
+            if (App::environment('local')) {
                 $path = public_path() . '/imagenes/clientes'; //concatena public_path la ruta absoluta a public y concatena la carpeta para imagenes
             }
             else {
@@ -175,7 +176,7 @@ class ClienteController extends Controller
         $file = $request->file('photo');
         $fileName = $cliente->url_foto; //obtengo la foto actual del cliente
         if( !empty( $file ) ) {
-            if ($this->app->environment() === 'local') {
+            if (App::environment('local')) {
                 $path = public_path() . '/imagenes/clientes'; //concatena public_path la ruta absoluta a public y concatena la carpeta para imagenes
             }
             else {
