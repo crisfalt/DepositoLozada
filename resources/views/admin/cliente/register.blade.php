@@ -91,7 +91,7 @@
                         </div>
                     </div>
                     <div class="row">                        
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label>Tipo de Documento</label>
                                 <select class="form-control" name="tipo_documento_id">
@@ -100,6 +100,12 @@
                                             <option class="form-control" value="{{ $tipo->id }}" @if( $tipo -> id == old( 'tipo_documento_id') )  selected @endif>{{ $tipo->nombre }}</option>
                                         @endforeach
                                 </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Nombre Negocio</label>
+                                  <input id="namenegocio" type="text" class="form-control" name="namenegocio" value="{{ old('namenegocio') }}" required autofocus>
                             </div>
                         </div>
                     </div>

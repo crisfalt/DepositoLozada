@@ -75,6 +75,10 @@ class ClienteController extends Controller
             $reglas['tipo_negocio'] .= 'required';
             $mensajes['tipo_negocio.required'] .= 'El Campo tipo de negocio es Obligatorio';
         }
+        if( empty( $request->input('namenegocio') ) ) {
+            $reglas['nombre_negocio'] .= 'required';
+            $mensajes['nombre_negocio.required'] .= 'El Campo Nombre de Negocio es Obligatorio';
+        }
         else {
             $reglas['number_id'] .= 'max:30|unique:clientes,number_id';
         }
@@ -109,6 +113,7 @@ class ClienteController extends Controller
         $cliente -> address = $request->input('address');
         $cliente -> email = $request->input('email');
         $cliente -> bodega_id = $request->input('bodega_id');
+        $cliente -> nombre_negocio = $request->input('namenegocio');
         $cliente -> ruta_id = $request->input('ruta_id');
         $cliente -> valor_credito = $request->input('valor_credito');
         $cliente -> url_foto = $fileName;
@@ -165,6 +170,10 @@ class ClienteController extends Controller
          if( $request->input('tipo_negocio') == 'I' ) {
             $request['tipo_negocio_id'] = null;
         }
+        if( empty( $request->input('namenegocio') ) ) {
+            $reglas['nombre_negocio'] .= 'required';
+            $mensajes['nombre_negocio.required'] .= 'El Campo Nombre de Negocio es Obligatorio';
+        }
 
         //consultar el cliente a editar
         $cliente = Cliente::where( 'number_id' , $id )->first();
@@ -183,6 +192,7 @@ class ClienteController extends Controller
         $cliente -> address = $request->input('address');
         $cliente -> email = $request->input('email');
         $cliente -> bodega_id = $request->input('bodega_id');
+        $cliente -> nombre_negocio = $request->input('namenegocio');
         $cliente -> ruta_id = $request->input('ruta_id');
         $cliente -> valor_credito = $request->input('valor_credito');
         //inicio subir foto al servidor

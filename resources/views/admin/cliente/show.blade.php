@@ -39,6 +39,8 @@
                         <h6 class="title">{{ $cliente -> nombre_tipo_documento}}</h6>
                         <h5 class="title text-danger">Tipo de Negocio</h5>
                         <h6 class="title">{{ $cliente -> tipoNegocio -> nombre}}</h6>
+                        <h5 class="title text-danger">Nombre del Negocio</h5>
+                        <h6 class="title">{{ $cliente -> nombre_negocio}}</h6>
                         <h5 class="title text-danger">Numero de Identificacion</h5>
                         <h6 class="title">{{ $cliente -> number_id }}</h6>
                         <h5 class="title text-danger">Nombre del Cliente</h5>
