@@ -24,47 +24,57 @@
     @endif
     <div class="col-md-12">
         <div class="card">
+            <div class="card-header">
+                <h3 class="card-title text-center">Mis rutas de hoy {{ Carbon\Carbon::now() }}</h3>
+            </div>
             <div class="card-body">
                 <table class="display nowrap" cellspacing="0" width="100%" id="tableTiposMovimientos">
                     <thead class=" text-primary">
-                        <th class="text-left">
-                            Codigo
-                        </th>
-                        <th>
-                            Nombre
-                        </th>
-                        <th>
-                            Cantidad Disponible en Inventario
-                        </th>
-                        <th class="text-center">
-                            Opciones
-                        </th>
+                    <th class="text-left">
+                        #Id
+                    </th>
+                    <th>
+                        Nombre
+                    </th>
+                    <th>
+                        Descripcion
+                    </th>
+                    <th>
+                        Zona
+                    </th>
+                    <th>
+                        Estado
+                    </th>
+                    <th class="text-center">
+                        Opciones
+                    </th>
                     </thead>
                     <tbody>
-                        @foreach( $Productos as $producto )
-                            <tr>
-                                <td>{{ $producto -> codigo }}</td>
-                                <td>{{ $producto -> nombre }}</td>
-                                <td class="text-center">{{ $producto -> cantidad }}</td>
-                                {{-- <td>
-                                    @if ( $marca -> estado == 'A' )
-                                        Activo
-                                    @else
-                                        Inactivo
-                                    @endif
-                                </td> --}}
-                                <td class="td-actions text-center">
-                                    <form method="post" class="delete">
-                                        {{ csrf_field() }}
-                                        {{ method_field('DELETE') }}
+                    @foreach( $rutasHoy as $ruta )
+                        <tr>
+                            <td>{{ $ruta -> id }}</td>
+                            <td>{{ $ruta -> nombre }}</td>
+                            <td>{{ $ruta -> descripcion }}</td>
+                            <td>{{ $ruta -> zona -> nombre }}</td>
+                            <td>
+                                @if ( $ruta -> estado == 'A' )
+                                    Activo
+                                @else
+                                    Inactivo
+                                @endif
+                            </td>
+                            <td class="td-actions text-center">
+                                <form method="post" class="delete">
+                                    {{ csrf_field() }}
+                                    {{ method_field('DELETE') }}
 
-                                        <a href="{{ url('/vendedor/producto/'.$producto->codigo) }}" rel="tooltip" title="Ver Producto {{ $producto -> nombre }}" class="btn btn-info btn-icon btn-xs">
-                                            <i class="fa fa-info"></i>
-                                        </a>
-                                    </form>
-                                </td>
-                            </tr>
-                        @endforeach
+                                    <a href="{{ url('/vendedor/ruta/'.$ruta->id.'/map') }}" rel="tooltip" title="Mapa Ruta {{ $ruta -> nombre }}" class="btn btn-info btn-icon btn-xs">
+                                        <i class="fa fa-location-arrow"></i>
+                                    </a>
+                                </form>
+                            </td>
+                        </tr>
+                    @endforeach
                     </tbody>
                 </table>
             </div>

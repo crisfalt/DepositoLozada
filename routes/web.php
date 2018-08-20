@@ -422,4 +422,6 @@ Route::middleware(['auth', 'vendedor'])->prefix('vendedor')->namespace('Vendedor
     //CRUD PRoductos
     Route::get('/producto' , 'ProductoController@index'); //listar productos
     Route::get('/producto/{id}','ProductoController@show'); //mostrar el producto seleccionado
+    Route::get('/ruta/{id}/rutas_por_vendedor' , 'RutaController@rutasVendedorPorDia');
+    Route::get('/ruta/{id}/map' , 'RutaController@loadMap');//cargar mapa de la ruta seleccionada
 });

@@ -11,6 +11,7 @@ use App\DiasRutas;
 class RutaController extends Controller
 {
 
+
     public function details( $id )  {
         $ruta = Ruta::where('id',$id)->where('estado','A')->first();
 //        dd($ruta);
