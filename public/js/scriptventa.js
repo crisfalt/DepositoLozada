@@ -1,7 +1,8 @@
   function hacerAbono(contador,factura,saldo)
     {
- 
+    
     var abono = document.getElementById("fk_abono"+contador).value;
+     
 
     if(abono > 0 && abono != "")
     {
@@ -51,136 +52,139 @@
 
 function validacion()
     {
-        var contenido="";
-       var valicidacionCliente = document.getElementById("combobox2").value;
+      var contenido="";
+      var valicidacionCliente = document.getElementById("combobox2").value;
+      var obtenerID=valicidacionCliente.split(",");
+      let bandera;
 
-        if(valicidacionCliente=="I")
-        {
-          alert("campo cliente es obligatorio");
-          document.getElementById("combobox2").focus();
-          return false;
-        }
-       else
-       {
-
-              var ruta2 = '/venta/BuscarCliente';
-              $.ajax({
-                headers: {
-                  'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                  },
-                type: "post",
-                url: ruta2,
-                  data : {'id_cliente' : valicidacionCliente},
-                dataType: "json",
-                success: function (items) {
-               
-                  
-                contenido = '<div class="card-body">'+'<div class="table-responsive">'+'<table class="table" cellspacing="0" id="tableCompras">';
-                  if(items.items.length !=0 )
-                {
-                 
-                contenido += '<thead class=" text-primary">';
-                contenido +='<th class="text-center"># factura</th>';
-                contenido +='<th class="text-center">saldo</th>';
-                contenido +='<th class="text-center">abonar</th>';
-                contenido +='</thead><tbody>';
-                  
-                var contador=0;
-            items.items.forEach( function( valor , index ) { 
+            if(valicidacionCliente=="I")
+            {
               
-              if(valor.saldo !=null && valor.saldo !=0 )
-                {
-           
-            contenido+='<tr>';
-            contenido+='<th class="text-center">'+ valor.id+'</td>';
-            contenido+='<th class="text-center">'+ valor.saldo+'</td>';
-            contenido+='<form style="margin: 0; padding: 0;"  action="(url{{"/venta/abonar"}})" method="post">'
-           
-            contenido+='<th class="text-center"><input id="fk_abono'+contador+'" name="'+valor.id+'" type="number" value="" class="number"  MIN="1" STEP="1" SIZE="6"  MAX="'+valor.saldo+'"></th>';
-            contenido+='<input type="text" id="id_factura_abono" name="id_factura_abono"  value="'+valor.id+'" hidden="true" >'
-            contenido+=' <th class="text-center"><button  onclick="hacerAbono('+contador+','+valor.id+','+valor.saldo+');" rel="tooltip" title="abonar" class="btn btn-danger btn-simple btn-xs"> <i class="now-ui-icons arrows-1_share-66"></i></button>';
-            contenido+='</th>'+'</form>';
-            contenido+='</tr>';
-            contador=contador+1;
-               }
-               else
-               {
-                // contenido+='<th class="text-center">el cliente no tiene facturas por cobrar</td>';
-               }
-                });
-             }
-             else
-             {
-               contenido+='<th class="text-center">el cliente no tiene facturas por cobrar</td>';
+              alert("campo cliente es obligatorio");
+              document.getElementById("combobox2").focus();
+              return false;
 
-             }
+            }
+            else
+            {
+              
 
-             contenido +='</tbody></table>';
-                 
-            $.confirm({
-                       title: 'Facturas Que estan Por pagar',
-                       columnClass : 'col-md-10',
-                      content: contenido,
-                       buttons: {
-                      formSubmit: {
-                      text: 'Continuar',
-                      btnClass: 'btn-blue',
-                      action: function () 
+                        var ruta2 = '/venta/BuscarCliente';
+                      $.ajax({
+                      headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                      type: "post",
+                      url: ruta2,
+                        data : {'id_cliente' : valicidacionCliente},
+                      dataType: "json",
+                    success: function (items)
+                  {
+                     bandera=items.valor;
+
+                     bandera=3;
+                     alert(bandera);
+                    if(items.valor !=0 && items.valor !=null)
                       {
-                        document.getElementById("AgregarCabezeraVenta").submit();
-                      //  document.AgregarCabezeraVenta.submit();
+                              contenido = '<div class="card-body">'+'<div class="table-responsive">'+'<table class="table" cellspacing="0" id="tableCompras">';
+                                if(items.items.length !=0 )
+                              {
+                              
+                                  contenido += '<thead class=" text-primary">';
+                                  contenido +='<th class="text-center"># factura</th>';
+                                  contenido +='<th class="text-center">saldo</th>';
+                                  contenido +='<th class="text-center">abonar</th>';
+                                  contenido +='</thead><tbody>';
+                                    
+                                    var contador=0;
+                                    items.items.forEach( function( valor , index ) { 
+                                
+                                    if(valor.saldo !=null && valor.saldo !=0 )
+                                      {
+                                
+                                          contenido+='<tr>';
+                                          contenido+='<th class="text-center">'+ valor.id+'</td>';
+                                          contenido+='<th class="text-center">'+ valor.saldo+'</td>';
+                                          contenido+='<form style="margin: 0; padding: 0;"  action="(url{{"/venta/abonar"}})" method="post">'
+                                        
+                                          contenido+='<th class="text-center"><input id="fk_abono'+contador+'" name="'+valor.id+'" type="number" value="" class="number"  MIN="1" STEP="1" SIZE="6"  MAX="'+valor.saldo+'"></th>';
+                                          contenido+='<input type="text" id="id_factura_abono" name="id_factura_abono"  value="'+valor.id+'" hidden="true" >'
+                                          contenido+=' <th class="text-center"><button  onclick="hacerAbono('+contador+','+valor.id+','+valor.saldo+');" rel="tooltip" title="abonar" class="btn btn-danger btn-simple btn-xs"> <i class="now-ui-icons arrows-1_share-66"></i></button>';
+                                          contenido+='</th>'+'</form>';
+                                          contenido+='</tr>';
+                                          contador=contador+1;
+                                      }
+                                    //  else
+                                    //  {
+                                    //   // contenido+='<th class="text-center">el cliente no tiene facturas por cobrar</td>';
+                                    //  }
+                                      });
+                              }
+                              else
+                              {
+                                contenido+='<th class="text-center">el cliente no tiene facturas por cobrar</td>';
 
-                        // var ruta2 = '/venta/ActualizarFechaEntrega/';
-                        //   $.ajax({
-                        //     headers: {
-                        //       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        //       },
-                        //     type: "post",
-                        //     url: ruta2,
-                        //       data : {'id_factura' : id_factura,'actualizar_fecha' :fechaActualizar },
-                        //     dataType: "json",
-                        //     success: function (items) {
-                            
+                              }
 
-                        //     alert(items.items);
-                        //       location.reload();
-                        //     }
-                        //   }); 
+                          contenido +='</tbody></table>';
+                              
+                          $.confirm({
+                                          title: 'Facturas Que estan Por pagar',
+                                          columnClass : 'col-md-10',
+                                          content: contenido,
+                                          buttons: {
+                                          formSubmit: {
+                                          text: 'Continuar',
+                                          btnClass: 'btn-blue',
+                                          action: function () 
+                                            {
+                                            document.getElementById("AgregarCabezeraVenta").submit();
+                                          
 
-                     }
-      },
-      cancel: function () {
-        location.reload();
-          //close
-      },
-  },
-        onContentReady: function () {
-            // bind to events
-            var jc = this;
-            this.$content.find('form').on('submit', function (e) {
-                // if the user submits the form by pressing enter in the field.
-                e.preventDefault();
-                jc.$$formSubmit.trigger('click'); // reference the button and click it
-            });
-        }
-      });   
+                                            }
+                                            },
+                                              cancel: function () 
+                                            {
+                                              location.reload();
+                                              //close
+                                            },
+                                            },
+                                        onContentReady: function () {
+                                          // bind to events
+                                          var jc = this;
+                                          this.$content.find('form').on('submit', function (e) {
+                                              // if the user submits the form by pressing enter in the field.
+                                              e.preventDefault();
+                                              jc.$$formSubmit.trigger('click'); // reference the button and click it
+                                          });
+                                      }
+                                  }); 
+                                  
+                                 
+                    }       
+                      
+                    else{
+                      return true;
+                    }
+                    
+
+                    }
+
+                    
 
 
 
-              }
+                }); 
+                      return false //termina else
+            }
 
-
-
-          }); 
-        
-
-      
-            
-
-       }
-return false;
-
-    }
+        // if(bandera == null)
+        // {
+        //   alert('+++');
+        //   return false;
+        // }
+       
+      }
 
 
 

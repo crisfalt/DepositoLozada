@@ -176,6 +176,25 @@
                             </div>                                    
                             </div>
 
+                              <!--   <div class="col-md-3 col-sm-12">
+                                 <div class="form-group">
+                                <label>hora entrega</label>
+                              <input type="time" name="hora" id="#input_starttime" value="{{$CargarVenta->hora}}" onchange="validarhora(this.value);" pattern="[_0-9]{2}/[_0-9]{2}/[_0-9]{4}"class="form-control" >
+                                    
+                            </div>                                    
+                            </div> -->
+
+                          <!--  <div class="row"> -->
+                          <!--  <div class='col-sm-6'>
+                         <div class="form-group">
+                           <div class='input-group date' id='datetimepicker3'>
+                           <input type='text' class="form-control" />
+                              <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-time"></span>
+                         </span>
+                            </div>
+                            </div>
+                          </div> -->
                         </br>
                              <div class="col-md-3 col-sm-12">
                                  <div class="form-group">
@@ -332,10 +351,19 @@
                             </th>
                             <th class="text-center">
                                 Cantidad
-                            </th>                                                                       
+                            </th>
+                            {{-- @if($CargarVentas[0]->fk_estado_venta !=1)
+                            <th class="text-center">
+                                Cantidad Devolucion
+                            </th>
+
+                            @endif --}}
+                                                 
+                          
+                          
                            
                             <th class="text-center">
-                                P-venta
+                                Precio venta
                             </th>
                             <th class="text-center">
                                 SubTotal
@@ -349,13 +377,12 @@
                                 <?php                                
                                 $IdCompra =0; 
                                $subtotal=0;
-                               $total=0;
-                               $cantidaddev=0;      
+                               $total=0;      
                             ?>
                            @foreach( $Detalles_ventas as $Detalles_venta )
                            <tr>
                             <?php
-                                 
+                                
                                  $NombreProducto =  $Detalles_venta->producto();
                                  $PrecioProducto = $Detalles_venta->producto();
                                  $envase=$Detalles_venta->empaque();
@@ -369,7 +396,7 @@
                                         $canasta=0;
                                      }                                                                         
                              ?>
-                           
+                             {{-- {{$marca->nombre}} --}}
                              <input type="text" id="idfac" value="{{$IdVenta}}" name="idfac" hidden="true">
 
                              @if($Detalles_venta->Numero_canasta !=null && $Detalles_venta->Numero_canasta != 0 && $Detalles_venta->Numero_canasta != -1 && $Detalles_venta->Numero_canasta != -2)
@@ -391,10 +418,10 @@
                              
                               @if($Detalles_venta->Numero_canasta ==null || $Detalles_venta->Numero_canasta == -2 || $Detalles_venta->Numero_canasta == -1)
                               
-                                 <th class="text-center"><input name='{{$Detalles_venta -> id}}' type="text" value='{{$Detalles_venta -> cantidad}}' class="number"   id="number" disabled></td>
+                                 <th class="text-center"><input name='{{$Detalles_venta -> id}}' type="number" value='{{$Detalles_venta -> cantidad}}' class="number"  MIN="1" STEP="1" SIZE="6" id="number" onchange="agregarCantidad(this.name,this.value);"></td>
                               
                               @else
-                              <th class="text-center"><input name='{{$Detalles_venta -> id}}' type="text" value='{{$Detalles_venta -> cantidad}}' class="number " id="number"  style="background-color:#ff0000" disabled></td>
+                              <th class="text-center"><input name='{{$Detalles_venta -> id}}' type="number" value='{{$Detalles_venta -> cantidad}}' class="number "  MIN="1" STEP="1" SIZE="6" id="number"  style="background-color:#ff0000" disabled></td>
                               @endif
                                    
                                        {{-- <td>{{ $Detalles_venta -> cantidad }}</td> --}}
@@ -415,11 +442,11 @@
                                          @endif
                                          @if($CargarVentas[0]->fk_estado_venta !=1)
                                          
-                                            <form   style="margin: 0; padding: 0"  action="{{url('/venta/agregarCantidadDevolucion')}}" method="post">
+                                            <form  style="margin: 0; padding: 0;"  action="{{url('/venta/agregarCantidadDevolucion')}}" method="post">
                                                 {{ csrf_field() }}
-                                                   
+                                                   {{-- {{ method_field('DELETE') }}    --}}
                                                    @if($CargarVentas[0]->fk_estado_venta !=1)
-                                                   <th class="text-center"><input name="fk_cantidad" type="number" value='{{$cantidaddev}}' class="number "  MIN="1" STEP="1" MAX='{{$Detalles_venta -> cantidad}}' SIZE="6" id="number" ></td>
+                                                   <th class="text-center"><input name="fk_cantidad" type="number" value='{{$cantidad}}' class="number "  MIN="1" STEP="1" MAX='{{$Detalles_venta -> cantidad}}' SIZE="6" id="number" ></td>
                                                   <input type="text" name="id"  value='{{$Detalles_venta->id}}' hidden="true" >
                                                    @endif
                                                    <th class="text-center">

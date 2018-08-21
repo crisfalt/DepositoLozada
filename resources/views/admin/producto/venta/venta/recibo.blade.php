@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>Orden Compra</title>
+    <title>Recibo de Venta</title>
  
   </head>
   <style type="text/css">
@@ -47,22 +47,27 @@
       
     
       <div class="">
+
       <table  border="0" cellspacing="2" cellpadding="2" style="margin: 0 auto; width:100%">
         <thead>
           <tr>
-            <th class=""><center>Logo</center></th>
+            <th class=""><center></center></th>
             <th class=""><center>Deposito Los Losadas</center></th>
-            <th class=""><center>Orden Compra #:</center></th>
+            <th class=""><center>Factura de Compra #:</center></th>
             
           </tr>
         </thead>
         <tbody>
-                @foreach( $Cargarcompras as $CargarCompra )
+                @foreach( $Cargarventas as $Cargarventa )
               
                     <tr>
-                            <td class="text-center"><center>Los Losadas</center></td>                           
+                            <td class="text-center"><center>
+                              <div style=" display: block;margin: -50px auto;">
+                              <img src="{{ $imageLogo  }}" width="850%" height="150%" style=""></img>                                
+                              </div>
+                            </center></td>                           
                             <td class="text-center"><center>Nit: 123456</center></td>                            
-                            <td class="text-center"><center>{{ $CargarCompra -> id }}</center></td>                
+                            <td class="text-center"><center>{{ $Cargarventa -> id }}</center></td>                
                     </tr>
                     <tr>
                             <td class="text-center"><center></center></td>                           
@@ -93,23 +98,23 @@
       <tbody>
               <tr>
                 <th>Condicion Pago:</th>
-                  @foreach( $Cargarcompras as $CargarCompra )
-                <td>{{$CargarCompra ->formapagos()->nombre}}</td>
+                  @foreach( $Cargarventas as $Cargarventa )
+                <td>{{$Cargarventa ->formapagos()->nombre}}</td>
                   @endforeach
                 <td><strong>Fecha:</strong></td>
-                @foreach( $Cargarcompras as $CargarCompra )
-                <td>{{$CargarCompra ->fecha_compra}}</td>
+                @foreach( $Cargarventas as $Cargarventa )
+                <td>{{$Cargarventa ->created_at}}</td>
                   @endforeach
               </tr>
 
               <tr>
-                <th>Proveedor:</th>
-                  @foreach( $Cargarcompras as $CargarCompra )
-                <td>{{$CargarCompra ->proveedors()->name}}</td>
+                <th>Cliente:</th>
+                  @foreach( $Cargarventas as $Cargarventa )
+                <td>{{$Cargarventa ->cliente()->name}}</td>
                   @endforeach
                 <td><strong>Tel:</strong></td>
-                @foreach( $Cargarcompras as $CargarCompra )
-                <td>{{$CargarCompra ->proveedors()->phone}}</td>
+                @foreach( $Cargarventas as $Cargarventa )
+                <td>{{$Cargarventa ->cliente()->phone}}</td>
                 @endforeach
 
               </tr>
@@ -117,17 +122,43 @@
               <tr>
 
                   <th>Empleado</th>
-                  @foreach( $Cargarcompras as $CargarCompra )
-                  <td>{{$CargarCompra ->vendedores()->name}}</td>
+                  @foreach( $Cargarventas as $Cargarventa )
+                  <td>{{$Cargarventa ->vendedores()->name}}</td>
                   @endforeach
                   <td><strong>Direccion:</strong></td>
-                  @foreach( $Cargarcompras as $CargarCompra )
-                  <td>{{$CargarCompra ->proveedors()->address}}</td>
+                  @foreach( $Cargarventas as $Cargarventa )
+                  @if($Cargarventa ->cliente()->address==null)
+                  <td>{{$Cargarventa ->cliente()->address}}</td>
+                  @else
+                  <td>No Hay direccion</td>
+                  @endif
                    @endforeach
 
               </tr>
-        
-          
+              <tr>
+
+                  <th>Departamento</th>
+                  @foreach( $Cargarventas as $Cargarventa )
+                  <td>{{$Cargarventa ->departamentos()->nombre}}</td>
+                  @endforeach
+                  <td><strong>Municipio:</strong></td>
+                  @foreach( $Cargarventas as $Cargarventa )
+                  <td>{{$Cargarventa ->municipios()->nombre}}</td>
+                   @endforeach
+
+              </tr>
+              <tr>
+
+                  <th>Zona:</th>
+                  @foreach( $Cargarventas as $Cargarventa )
+                  <td>{{$Cargarventa ->zonass()->nombre}}</td>
+                  @endforeach
+                  <td><strong>Ruta:</strong></td>
+                  @foreach( $Cargarventas as $Cargarventa )
+                  <td>{{$Cargarventa ->rutass()->nombre}}</td>
+                   @endforeach
+
+              </tr>
         </tbody>
 
 
@@ -138,8 +169,8 @@
 <thead>
   <tr>
 
-    <th>Ref-Canastas</th>
-    
+    <th>IdItem</th>
+    <!-- <th>TipoPaca</th> -->
     <th>Producto</th>
     <th>Cantidad</th>
     <th>Precio Compra</th>
@@ -162,16 +193,16 @@
     $arrayAcumulador4 = array();
       ?>
     @for($i = 0 ; $i < count($arrayCanasta); $i++ )
-        @for($j = 0 ; $j < count($Detallecompras); $j++ )
-            @if( $arrayCanasta[ $i ] == $Detallecompras[ $j ]->Numero_canasta )
+        @for($j = 0 ; $j < count($Detalleventas); $j++ )
+            @if( $arrayCanasta[ $i ] == $Detalleventas[ $j ]->Numero_canasta )
                 <?php 
-                    $acumuladorProducto = ($acumuladorProducto . $Detallecompras[$j]->producto()->nombre);
+                    $acumuladorProducto = ($acumuladorProducto . $Detalleventas[$j]->producto()->nombre);
                     $acumuladorProducto = $acumuladorProducto."-";
-                    $acumuladorCantidad = ($acumuladorCantidad.$Detallecompras[$j]->cantidad);
+                    $acumuladorCantidad = ($acumuladorCantidad.$Detalleventas[$j]->cantidad);
                     $acumuladorCantidad = $acumuladorCantidad."-";
-                    $acumuladorPrecio = $acumuladorPrecio.number_format($Detallecompras[$j]->precio)."-";
-                    $acumuladorSubTotal .= number_format(($Detallecompras[$j]->cantidad * $Detallecompras[$j]->precio))."-";
-                      $subtotal += ($Detallecompras[$j]->cantidad * $Detallecompras[$j]->precio);
+                    $acumuladorPrecio = $acumuladorPrecio.number_format($Detalleventas[$j]->precio)."-";
+                    $acumuladorSubTotal .= number_format(($Detalleventas[$j]->cantidad * $Detalleventas[$j]->precio))."-";
+                      $subtotal += ($Detalleventas[$j]->cantidad * $Detalleventas[$j]->precio);
                     
                 ?>
             @endif
@@ -202,15 +233,15 @@
             <td>{{ $arrayAcumulador4[$index] }}</td>
         </tr>
     @endforeach
-    @for($j = 0 ; $j < count($Detallecompras); $j++ )
-      @if($Detallecompras[ $j ]->Numero_canasta == null ) 
+    @for($j = 0 ; $j < count($Detalleventas); $j++ )
+      @if($Detalleventas[ $j ]->Numero_canasta == null ) 
           <tr>
               <td></td>
-              <td>{{ $Detallecompras[$j]->producto()->nombre }}</td>
-              <td>{{ $Detallecompras[$j]->cantidad }}</td>
-              <td>{{ number_format($Detallecompras[$j]->precio) }}</td>
+              <td>{{ $Detalleventas[$j]->producto()->nombre }}</td>
+              <td>{{ $Detalleventas[$j]->cantidad }}</td>
+              <td>{{ number_format($Detalleventas[$j]->precio) }}</td>
                <?php
-               $totalindi=($Detallecompras[$j]->precio)*($Detallecompras[$j]->cantidad);
+               $totalindi=($Detalleventas[$j]->precio)*($Detalleventas[$j]->cantidad);
 
                 ?>  
               <td>{{number_format($totalindi)}}</td>

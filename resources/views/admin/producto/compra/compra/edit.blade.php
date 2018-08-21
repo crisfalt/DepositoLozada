@@ -291,23 +291,35 @@
                     <div class="table-responsive">
                         <table class="table" cellspacing="0" id="tableCompras">
                             <thead class=" text-primary">
-                                <th class="text-center">
-                                  Ref-Canasta
-                                </th>
+                                    <th class="text-center">
+                                            Canasta
+                                        </th>
                                 
                                 <th class="text-center">
                                     Producto
                                 </th>
                                 <th class="text-center">
                                     Cantidad
-                                </th>                  
+                                </th>
+                                {{-- @if($Cargarcompras[0]->fk_estado_compra !=1)
+                                <th class="text-center">
+                                    Cantidad Devolucion
+                                </th>
+    
+                                @endif --}}
+                                                     
+                              
+                              
+                               
                                 <th class="text-center">
                                     Precio Compra
                                 </th>
                                 <th class="text-center">
                                     SubTotal
                                 </th>                            
-                              
+                                <th class="text-center">
+                                    devolver
+                                </th>
                             </thead>                       
     
                             <tbody>
@@ -358,7 +370,7 @@
                                      <th class="text-center"><input name='{{$Detalle_compra -> id}}' type="number" value='{{$Detalle_compra -> cantidad}}' class="number"  MIN="1" STEP="1" SIZE="6" id="number" onchange="agregarCantidad(this.name,this.value);"></td>
                                   
                                   @else
-                                  <th class="text-center"><input name='{{$Detalle_compra -> id}}' type="number" value='{{$Detalle_compra -> cantidad}}' class="number "  MIN="1" STEP="1" SIZE="6" id="number"  style="background-color:#ff0000" onchange="agregarCantidad(this.name,this.value);"></td>
+                                  <th class="text-center"><input name='{{$Detalle_compra -> id}}' type="number" value='{{$Detalle_compra -> cantidad}}' class="number "  MIN="1" STEP="1" SIZE="6" id="number"  style="background-color:#ff0000" disabled></td>
                                   @endif
                                        
                                            {{-- <td>{{ $Detalle_compra -> cantidad }}</td> --}}
@@ -368,12 +380,32 @@
                                            <th class="text-center">
                                                 @if($Cargarcompras[0]->fk_estado_compra ==1)
                                             <form  style="margin: 0; padding: 0;"  action="{{url('/detallecompraEdit/'.$Detalle_compra->id.'/'.$canasta)}}" method="post">
+                                                {{ csrf_field() }}
+                                                   {{-- {{ method_field('DELETE') }}    --}}
+                                                   
                                                    <button type="submit" rel="tooltip" title="Eliminar" class="btn btn-danger btn-simple btn-xs">
                                                        <i class="fa fa-times"></i>
                                                    </button> 
                                                </form>
                                              </th>
-                                             @endif                                            
+                                             @endif
+                                             {{-- @if($Cargarcompras[0]->fk_estado_compra !=1)
+                                             
+                                                <form  style="margin: 0; padding: 0;"  action="{{url('/compra/agregarCantidadDevolucion')}}" method="post">
+                                                    {{ csrf_field() }}
+                                                     
+                                                       @if($Cargarcompras[0]->fk_estado_compra !=1)
+                                                       <th class="text-center"><input name="fk_cantidad" type="number" value='{{$cantidad}}' class="number "  MIN="1" STEP="1" MAX='{{$Detalle_compra -> cantidad}}' SIZE="6" id="number" ></td>
+                                                      <input type="text" name="id"  value='{{$Detalle_compra->id}}' hidden="true" >
+                                                       @endif
+                                                       <th class="text-center">
+                                                       <button type="submit" rel="tooltip" title="devolver" class="btn btn-danger btn-simple btn-xs">
+                                                           <i class="now-ui-icons arrows-1_share-66"></i>
+                                                       </button> 
+                                                    </th>
+                                                   </form>
+                                                
+                                                 @endif --}}
                                            </td>
                                        </tr>
                                        @endforeach
@@ -403,6 +435,7 @@
                                 <div class="form-group">
                                     
                                 <a href="{{ action('compraController@update',['id' => $IdCompra,'estado'=>0]) }}"  class="btn btn-info btn-round" >registar</a>
+                                {{-- target="_blank()" codigo para nueva pestaña --}}
                                 </div>
                             </div>
                         </div>
