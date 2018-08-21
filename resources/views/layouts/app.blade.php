@@ -476,7 +476,7 @@
                                     <li>
                                         <a href="{{ url('/vendedor/ruta/'.Auth::user()->id.'/rutas_por_vendedor') }}">
                                             <i class="fa fa-motorcycle fa-spin"></i>
-                                            <p>{{Auth::user()->id }}</p>
+                                            <p>Mis Rutas</p>
                                         </a>
                                     </li>
                                     <li>

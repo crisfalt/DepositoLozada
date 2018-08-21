@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
@@ -39,9 +40,15 @@ class LoginController extends Controller
 
     public function redirectTo()
     {
-        // if( Auth::user() -> perfil_id == 1 ) {
-        //     $this->redirectTo = '/welcome';
-        // }
+        if( Auth::user() -> perfil_id == 1 ) {
+         $this->redirectTo = '/home';
+        }
+        if( Auth::user() -> perfil_id == 2 ) {
+            $this->redirectTo = '/vendedor/ruta/'.Auth::user()->id.'/rutas_por_vendedor';
+        }
+        if( Auth::user() -> perfil_id == 4 ) {
+            $this->redirectTo = '/caja';
+        }
         if (session()->has('redirect_to'))
             return session()->pull('redirect_to');
 
