@@ -116,7 +116,7 @@
         calculateAndDisplayRoute(directionsService, directionsDisplay);
     }
 
-        function calculateAndDisplayRoute(directionsService, directionsDisplay) {
+    function calculateAndDisplayRoute(directionsService, directionsDisplay) {
         var waypts = [];
         var unidas = <?php echo json_encode($ruta->union());?>; //capturar arreglo de php a javascript
         console.log( unidas );
