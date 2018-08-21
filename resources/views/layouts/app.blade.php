@@ -474,9 +474,9 @@
                             @else
                                 @if( Auth::user() -> perfil_id == 2 || Auth::user()->perfil->nombre === 'Vendedor' )
                                     <li>
-                                        <a href="#">
+                                        <a href="{{ url('/vendedor/ruta/'.Auth::user()->id.'/rutas_por_vendedor') }}">
                                             <i class="fa fa-motorcycle fa-spin"></i>
-                                            <p>Mis Rutas</p>
+                                            <p>{{Auth::user()->id }}</p>
                                         </a>
                                     </li>
                                     <li>
