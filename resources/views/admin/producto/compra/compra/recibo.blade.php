@@ -138,8 +138,8 @@
 <thead>
   <tr>
 
-    <th>Ref-Canastas</th>
-    
+    <th>Canastas</th>
+    <!-- <th>TipoPaca</th> -->
     <th>Producto</th>
     <th>Cantidad</th>
     <th>Precio Compra</th>

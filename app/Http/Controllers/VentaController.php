@@ -79,8 +79,9 @@ class VentaController extends Controller
             $id_cliente= $_POST["id_cliente"];
             $CedulaCliente=explode(',',$id_cliente);
             $ConsultarDeuda=Venta::where('fk_cliente',$CedulaCliente[0] )->where('fk_forma_de_pago',2)->get();
-        // dd( $ConsultarDeuda);
-            return response()->json( ['items'=>$ConsultarDeuda ] );  
+            $Valor=Venta::where('fk_cliente',$CedulaCliente[0] )->where('fk_forma_de_pago',2)->sum('saldo');
+
+            return response()->json( ['items'=>$ConsultarDeuda,'valor'=>$Valor] );  
         }
 
 
@@ -133,515 +134,7 @@ class VentaController extends Controller
         ////
 
         public function AgregarCanastaEditar($ids,$cantidad,$cantidadCanasta,$cantidadEnvase,$tipoPaca,$cantidadPlastico,$cantidadcanasta,$datosCanasta) 
-        {
-            //    $productoID= $_POST["ids"];
-            //    $productoCantidad= $_POST["cantidad"];
-            //    $productoCantidadCanasta= $_POST["cantidadCanasta"];
-            //    $productoCantidadEnvase= $_POST["cantidadEnvase"];
-            //    $productoTipoPaca= $_POST["tipoPaca"];
-            //    $productoCantidadPlastico= $_POST["cantidadPlastico"];
-            //    $cantidadCanasta=$_POST["cantidadcanasta"];
-            //    $datos=$_POST["datosCanasta"];
-                //   dd("hola");
-               $productoID= explode(',',$ids);
-               $productoCantidad= explode(',',$cantidad);
-               $productoCantidadCanasta=$cantidadCanasta;
-               $productoCantidadEnvase=$cantidadEnvase;
-               $productoTipoPaca=$tipoPaca;
-               $productoCantidadPlastico=$cantidadPlastico;
-               $cantidadCanasta=$cantidadcanasta;
-               $datos=explode(',',$datosCanasta);
-            
-               $Agrupar=['ID' => $productoID , 'CANTIDAD' => $productoID ];
-            //    $collection = Collection::make($Agrupar);
-            //    $productoIDArray=array($productoID);
-            //    $productoCantidadArray=array($productoCantidad);
         
-            //    $Agrupar=array( 'ID'=> $productoIDArray,'CANTIDAD'=>$productoCantidadArray);
-            //    $Detalles_ventas=detalles_venta::where('fk_producto',$productoID[0])->get();
-            // $Detalles_ventas=$collection->where('ID',"123")->first();
-            //    dd($Detalles_ventas);
-                 
-            //    $Detalles_ventas=detalles_venta::where('fk_factura',$id)->get();
-        
-            //    $cantidad=0;
-            //    $subtotal=0;
-            //    $total=0;
-            //    $CondicionVenta=0;
-            //    $AcomularProducto=0;
-            //    $error = array(); 
-            //    $contadorErrores=0;
-            //    foreach( $Detalles_ventas as  $Detalles_venta)
-            //    {
-              
-        
-            //       $ObtenerCantidadActual=Producto::where('estado','A')->where('codigo',$productoID)->get();
-            //       $BuscarProductos=detalles_venta::where('fk_producto',$Detalles_venta->fk_producto)->where('fk_factura',$id)->get();
-            //       if(count($ObtenerCantidadActual)!=0)
-            //       {
-            //       foreach( $BuscarProductos as  $BuscarProducto)
-            //       {
-            //           $AcomularProducto=$BuscarProducto->cantidad + $AcomularProducto;
-        
-            //       }
-                
-            //       $ComprobarDisponibilidadProducto= $ObtenerCantidadActual[0]->cantidad-$AcomularProducto;
-            //      ////condicion de si existe o falta de productos para le venta
-            //       if( $ObtenerCantidadActual[0]->cantidad==0)
-            //       {
-            //           $CondicionVenta=1;
-            //           ////mensajes de productos faltantes a la venta
-            //           $error[$contadorErrores] ='-el producto '.$ObtenerCantidadActual[0]->nombre.' esta agotado';
-            //       }            
-            //       elseif( $ComprobarDisponibilidadProducto < 0)
-            //       {
-            //           ////mensajes de productos faltantes a la venta
-            //           $CondicionVenta=1;
-            //           $error[$contadorErrores]='-el producto '.$ObtenerCantidadActual[0]->nombre.' solo hay '.$ObtenerCantidadActual[0]->cantidad.' disponible';
-                      
-            //       }
-               
-            //       $contadorErrores=  $contadorErrores+1;
-            //   }
-            //   $AcomularProducto=0;
-            //    }
-        
-        //    dd($productoCantidad,$productoID);
-               $IdVenta= session::get('IdVentaEditar');
-               $ObtenerCombo=TipoPaca::where('estado','A')->where('id', $productoTipoPaca)->value('cantidad');
-                $total=0;
-                $tmp=0;
-                // dd($productoCantidadCanasta);
-                $totalCanasta=$productoCantidadCanasta[0] * $ObtenerCombo;
-             
-            
-        
-                $ObteneIDcanasta=detalles_venta::where('fk_factura','=',$IdVenta)->max('Numero_canasta');
-            //    $ContadorCanasta=0;
-        
-            if($ObteneIDcanasta==null || $ObteneIDcanasta==-1 || $ObteneIDcanasta==-2 )
-            {
-                $ObteneIDcanasta=0; 
-            }
-                //prueba validacion cantidad disponible
-              $disponibilidad=0;
-              $error = array(); 
-              $cantidadDevolucion=array();
-              $contadorErrores=0;
-              $AgruparCantidadId=array();
-              $AcomularProductoTemporales="";
-              $AcomularProductoTemporales2="";
-              $SumaTotalCantidadProductos=0;
-              $collection=0;
-              $collection3=Collection::make();
-              $collection4=0;
-              $contador2=0;
-              $canastaReferencia=1;
-              
-            //  dd(count($cantidadCanasta));
-           
-              for( $j = 0 ; $j < $cantidadCanasta ; $j++ ) {
-                  $ObteneIDcanasta=$ObteneIDcanasta + 1;
-                //   print_r('hola '.$ObteneIDcanasta);
-                //  dd($ObteneIDcanasta);
-                  for( $i = 0 ; $i < count($datos) ; $i++ ) 
-                  {
-                               
-                       /////inicializa en cero para acomular producto
-                   
-                  
-                       if($productoCantidad[$tmp] !=0)
-                       {
-                          
-                        $obtenerCantidadProducto= Producto::where('codigo',$productoID[$tmp])->get(); 
-                        $AgruparCantidadId[$contador2]=['Id'=>$productoID[$tmp],'Cantidad'=>(int)$productoCantidad[$tmp],'posicionCampo'=>$contador2];
-                        $contador2++;
-                        // dd($productoID[1]);
-                        if( $obtenerCantidadProducto[0]->cantidad==0)
-                         {
-                           $cantidadDevolucion[$i]=0;
-        
-                          $error[$contadorErrores]='en la canasta '.$canastaReferencia.' el producto '.$obtenerCantidadProducto[0]->nombre.' esta agotado ';
-                     
-                          $contadorErrores=  $contadorErrores+1;
-                         }
-                        elseif( $productoCantidad[$tmp] > $obtenerCantidadProducto[0]->cantidad)
-                         {
-                            $disponibilidad=$productoCantidad[$tmp]-$obtenerCantidadProducto[0]->cantidad;
-        
-                              $error[$contadorErrores]='en la canasta '.$canastaReferencia.' el producto '.$obtenerCantidadProducto[0]->nombre.' tiene disponible '. $obtenerCantidadProducto[0]->cantidad.' en el inventario';
-                              $contadorErrores=  $contadorErrores+1;
-                              $cantidadDevolucion[$i]=$obtenerCantidadProducto[0]->cantidad;
-                                                 
-                         }
-                        else
-                         {
-                          $cantidadDevolucion[$i]=$productoCantidad[$tmp];
-                         }
-        
-                        
-                       }
-                     
-                      
-                       $tmp++; 
-                       
-                     
-                  }
-                
-                  $canastaReferencia++;        
-                }
-                
-                  $collection = Collection::make($AgruparCantidadId);  
-                  $SinRepetirError=array();
-                  $SinRepeticion=array();
-                  $Contador=0;
-                  $cantidadDevolucion2=array();
-                  $collection4=Collection::make();
-                  $collection5=Collection::make($cantidadDevolucion);
-                  $Division=0;
-                  $j=0;
-            //////////// for agrupar producto
-            for( $j = 0 ; $j <  $tmp ; $j++ ) 
-            {
-        
-                $AcomularProductoTemporales=$collection->where('Id',$productoID[$j])->sum('Cantidad');      
-                $AcomularProductoTemporales2=$collection->where('Id',$productoID[$j]);
-                $obtenerCantidadProducto= Producto::where('codigo',$productoID[$j])->get(); 
-                //condicion para no repetir el mismo error comienza hacer la consulta de repeticon de mensaje
-                if($j !=0)
-                {
-                    $SinRepeticion=$collection3->where('Error',(string)$productoID[$j]);
-                    $collection4=Collection::make($SinRepeticion); 
-                    // print_r('_'.$collection4->count().' suma '.$AcomularProductoTemporales );
-                }
-                
-              ///se hace consulta sum para saber total del prodcuto con la misma referencia
-                if( (int)$AcomularProductoTemporales  > $obtenerCantidadProducto[0]->cantidad)
-                {
-                 
-                    if( $collection4->count()==0 )
-                    {
-                        
-                        $error[$contadorErrores]='el producto '.$obtenerCantidadProducto[0]->nombre.' tiene disponible '. $obtenerCantidadProducto[0]->cantidad.' en el inventario';
-                        
-                        $SinRepetirError[$Contador]=['Error'=>(string)$obtenerCantidadProducto[0]->codigo]; 
-                        // si el producto supera el inventario se divide para remplazar la cantidad de los campos
-                       
-                        $Division=(int)($obtenerCantidadProducto[0]->cantidad/(int)$AcomularProductoTemporales2->count('Cantidad'));
-                        $cantidadDevolucion2[$j]=$Division;
-                        $Contador++;
-                        // print_r($collection4->count().' - ');
-                        
-                       
-                    } 
-                    else
-                    {
-                        // si el producto supera el inventario se divide para remplazar la cantidad de los campos
-                        $Division=(int)($obtenerCantidadProducto[0]->cantidad/(int)$AcomularProductoTemporales2->count('Cantidad'));
-                        $cantidadDevolucion2[$j]=$Division;
-                        // $cantidadDevolucion[$j]=   $obtenerCantidadProducto[0]->cantidad/(int)$AcomularProductoTemporales2->count('Cantidad');
-                        // str_replace( $cantidadDevolucion2[$j], $obtenerCantidadProducto[0]->cantidad/(int)$AcomularProductoTemporales2->count('Cantidad'));
-                      
-                    }          
-                  
-                    $collection3 = Collection::make($SinRepetirError); 
-                              
-                    $contadorErrores++;  
-                }
-                else
-                {
-                 
-                 
-                   $Division=$collection5->get($j); 
-                   
-                //    dd($Division);
-                    $cantidadDevolucion2[(int)$j]=(int)$Division;
-                }
-                // print_r($Division.', ');
-                // print_r($j.', ');
-                // print_r($j.', '.$Division);
-              
-                
-            }
-            
-              ///si hay errores lo muestra
-              
-             //   print_r($cantidadDevolucion2);
-        
-              if($contadorErrores !=0)
-              {
-                //   dd($cantidadDevolucion2);
-                return response()->json( ['items'=>$error,'condicionDisponibilidas'=>$contadorErrores,'cantidad'=>$cantidadDevolucion2,'cantidadCanasta'=>$cantidadCanasta]);    
-              }
-              $ObteneIDcanasta=detalles_venta::where('fk_factura','=',$IdVenta)->max('Numero_canasta');
-                //// crud insercion 
-                $tmp=0;
-                for( $j = 0 ; $j < $cantidadCanasta ; $j++ ) {
-                    $ObteneIDcanasta=$ObteneIDcanasta + 1;
-                   
-                    for( $i = 0 ; $i < count($datos) ; $i++ ) 
-                    {
-        
-                         if($productoCantidad[$tmp] !=0)
-                         {
-                            $DatoPrecio= PreciosProducto::                        
-                             join('productos',
-                                'precios_productos.fk_producto',
-                                '=',
-                                'productos.codigo'
-                               ) 
-                                                 
-                           ->where('productos.codigo','=', $productoID[$tmp])
-                                         
-                            ->min('precios_productos.valor');
-                       
-                 
-                             detalles_venta::insert([
-                                 ['precio' => $DatoPrecio, 'cantidad' =>$productoCantidad[$tmp],'fk_tipo_paca'=>0,'fk_factura'=>$IdVenta,'fk_producto'=>$productoID[$tmp],'Numero_canasta' =>$ObteneIDcanasta]]);
-                             
-                 
-                         }
-                       
-                     
-                         $tmp++; 
-                       
-                    }
-                  
-                   
-                   
-                  }
-                    /// consulta de canasta y envases
-                  $consultaTipoPaca=Producto::where('estado','A')->where('codigo',$productoID)->value('fk_tipo_paca');
-      
-                  $consultaIDPlastico=detalles_venta::where('fk_factura', $IdVenta)->where('fk_tipo_paca',$productoTipoPaca)->where('Numero_canasta',-1)->get();
-                  $consultaIDCanasta=detalles_venta::where('fk_factura', $IdVenta)->where('fk_tipo_paca',$productoTipoPaca)->where('Numero_canasta',null)->get();
-           
-                 
-                 
-                  if($consultaTipoPaca!=null)
-                  {
-                      
-                      if($productoCantidadEnvase!=null && $productoCantidadEnvase!=0)
-                      {
-                        
-                      $consultarEnvases=TipoPaca::where('estado','A')->where('id',$consultaTipoPaca)->get();
-                 
-                      if( $consultarEnvases[0]->precio_envase !=null && $consultarEnvases[0]->precio_envase !=0)
-                      {
-                     if(count($consultaIDCanasta)!=0)
-                     {
-                      // dd($consultaIDCanasta[0]-> cantidad,$productoCantidadEnvase);
-                     
-                          detalles_venta::
-                          where('fk_tipo_paca',$consultaTipoPaca)
-                          ->where('fk_factura',$IdVenta)
-                          ->where('precio',$consultarEnvases[0]->precio_envase)
-                          ->update(['cantidad' => (int)$consultaIDCanasta[0]-> cantidad + (int)$productoCantidadEnvase]);
-                      
-                     }
-                      else
-                      {
-                         
-                      //  $TotaEnvases=$DividirPrecio * $precio;
-                          detalles_venta::insert([
-                          ['precio' => $consultarEnvases[0]->precio_envase, 'cantidad' =>(int)$productoCantidadEnvase,'fk_tipo_paca'=>(int)$consultaTipoPaca,'fk_factura'=>(int)$IdVenta,'fk_producto'=>$productoID[0] ]
-                        
-                      ]);
-                       }
-                    }
-                }
-           
-                      if($productoCantidadPlastico!=null && $productoCantidadPlastico!=0 )
-                      {
-                          $consultarEnvases=TipoPaca::where('estado','A')->where('id',$consultaTipoPaca)->get();
-                          //    foreach($consultarEnvases as $consultarEnvase)
-                          //    {
-                          //      $DividirPrecio=$consultarEnvase->precio / $consultarEnvase->cantidad;
-                              
-                          //    }
-                          if( $consultarEnvases[0]->precio !=null && $consultarEnvases[0]->precio !=0)
-                          {
-                             if(count($consultaIDPlastico)!=0)
-                             {
-                              // dd($consultaIDCanasta[0]-> cantidad,$request->input('cantidadEnvases'));
-                             
-                                  detalles_venta::
-                                  where('fk_tipo_paca',$productoTipoPaca)
-                                  ->where('fk_factura',$IdVenta)
-                                  ->where('precio',$consultarEnvases[0]->precio)
-                                  ->update(['cantidad' => (int) $consultaIDPlastico[0]-> cantidad + (int)$productoCantidadPlastico]);
-                              
-                             }
-                              else
-                              {
-                                 
-                              //  $TotaEnvases=$DividirPrecio * $precio;
-                                  detalles_venta::insert([
-                                  ['precio' => $consultaIDPlastico[0]->precio , 'cantidad' =>(int)$productoCantidadPlastico,'fk_tipo_paca'=>(int)$consultaTipoPaca,'fk_factura'=>(int)$IdVenta,'fk_producto'=>$productoID[0],'Numero_canasta'=>-1 ]
-                                
-                              ]);
-                               }
-                         }
-           
-                      }
-           
-                  } 
-                    $notificacion=("Se agrego exitosamente");
-        
-                    return response()->json( ['items'=>$notificacion,'condicionDisponibilidas'=>$contadorErrores] );            
-                }
-        
-
-
-
-
-
-
-        //listar Canasta
-      
-        public function ConsultarCanastaEditar($tipopaca) 
-
-        {
-            $marca = Session::get('IdMarcaEditar');
-            $contenido = Session::get('IdContenidoEditar');
-   
-
-            if($tipopaca!=0)
-            {
-         
-            $ObtenerProductos=Producto::where('fk_tipo_paca',$tipopaca)->where('fk_marca',$marca)->where('fk_tipo_contenido',$contenido)->where('estado','A')->get();//obtengo los productos con una marca,tipo cotenido,tipo empaque
-            $cantidadCanasta=tipoPaca::where('estado','A')->where('id',$tipopaca)->value('cantidad');
-        
-            }
-            else
-            {
-                $cantidadCanasta=0;
-                $ObtenerProductos=0;
-            }
-
-// dd($cantidadCanasta);
-            return response()->json( [ 'items'=>$ObtenerProductos,'cantidadCanasta'=>$cantidadCanasta ] );
-
-        }
-
-        public function tipoContenidoEditar($id) 
-        {
-
-            $ListarTipoContenido= Producto::where('estado','A')->where('fk_marca',$id)->with('tipoContenido')->distinct()->get();
-
-
-//            $ListarTipoContenido= Producto::
-//            join('marcas','productos.fk_marca','=','marcas.id')
-//            ->join('tipo_contenidos','productos.fk_tipo_contenido','=','tipo_contenidos.id')
-//            ->select('tipo_contenidos.id','tipo_contenidos.nombre')
-//            ->where('productos.fk_marca','=',$id)
-//            ->where('productos.estado','A')
-//            ->groupBy('tipo_contenidos.id')
-//            ->get();
-
-            Session::put('IdMarcaEditar',$id);
-            $ListarMarcas=Producto::where('estado','A')->where('fk_marca',$id)->select('codigo','nombre')->get();
-           
-            $array = Array();
-            $array[ 0 ] = $ListarTipoContenido;
-            $array[ 1 ] = $ListarMarcas;
-            return response()->json( [ 'items'=>$array ] );
-        }
-
-        public function tipoPacaEditar($id) 
-        {
-        $marca = Session::get('IdMarcaEditar');
-            Session::put('IdContenidoEditar',$id);
-//            $ListarTipoPaca= Producto::
-//            join('marcas',
-//                   'productos.fk_marca',
-//                   '=',
-//                   'marcas.id'
-//                  )
-//            ->join('tipo_pacas',
-//                    'productos.fk_tipo_paca',
-//                    '=',
-//                    'tipo_pacas.id'
-//                   )
-//            ->join('tipo_contenidos',
-//                    'productos.fk_tipo_contenido',
-//                    '=',
-//                    'tipo_contenidos.id'
-//                   )
-//            ->select('tipo_pacas.id',
-//                     'tipo_pacas.nombre'
-//                    )
-//
-//            ->where('productos.estado','A')
-//            ->where([
-//                ['fk_marca', '=',$marca],
-//                ['fk_tipo_contenido', '=', $id]
-//                // ['estado','=','A']
-//            ])
-//            ->groupBy('tipo_pacas.id')
-//            ->get();
-
-             $ListarTipoPaca = Producto::where('estado','A')->where('fk_marca',$marca)->where('fk_tipo_contenido',$id)->with('tipoPaca')->disctinct()->get();
-
-
-
-
-            $ObtenerProductoTipoPaca=Producto::where('estado','A')->where('fk_tipo_contenido',$id)->where('fk_marca',$marca)->get();//obtengo los productos con una marca
-
-            return response()->json(['items'=> $ListarTipoPaca,'FiltroProducto'=>$ObtenerProductoTipoPaca]);
-        }
-        public function ProductoEditar($id) 
-        {
-         
-            $marca = Session::get('IdMarcaEditar');
-            $contenido = Session::get('IdContenidoEditar');
-            Session::put('Tipo_pacaEditar',$id);
-         
-            if($id!=0)
-            {
-         
-                $ObtenerProductos=Producto::where('estado','A')->where('fk_tipo_paca',$id)->where('fk_marca',$marca)->where('fk_tipo_contenido',$contenido)->get();//obtengo los productos con una marca,tipo cotenido,tipo empaque
-            }
-            else
-            {
-                $ObtenerProductos=Producto::where('estado','A')->where('fk_marca',$marca)->where('fk_tipo_contenido',$contenido)->get();
-            }
-
-            
-           Session::put('productoEditar', $ObtenerProductos);
-
-            $arrayN = array();
-            $arrayId = array();
-            foreach($ObtenerProductos as $ObtenerProducto)
-            {
-
-            
-                array_push($arrayN,$ObtenerProducto -> nombre);
-                array_push($arrayId,$ObtenerProducto-> codigo);
-
-            }
-
-            $ObtenerIdCanastaRetornable=0;
-            if(0 ==$id)
-            {
-                $ObtenerIdCanastaRetornable=$id;
-            
-            }
-            else
-            {
-                $retornable=TipoPaca::where('estado','A')->where('id',$id)->select('retornable')->get(); 
-                $ObtenerIdCanastaRetornable=$retornable[0]->retornable;
-            }
-
-            $array = array( $arrayN , $arrayId );
-                //   dd($ObtenerIdCanastaRetornable);
-            return response()->json(['items'=>  $array,'id'=>$id,'retornable'=>$ObtenerIdCanastaRetornable]);
-        }
-
-
-        ////// filtro combox y garegar por canastas create
-        public function AgregarCanasta($ids,$cantidad,$cantidadCanasta,$cantidadEnvase,$tipoPaca,$cantidadPlastico,$cantidadcanasta,$datosCanasta) 
-
         {
     //    $productoID= $_POST["ids"];
     //    $productoCantidad= $_POST["cantidad"];
@@ -716,7 +209,8 @@ class VentaController extends Controller
     //    }
 
 //    dd($productoCantidad,$productoID);
-       $IdVenta= session::get('IdVenta');
+       $IdVenta= session::get('IdVentaEditar');
+
        $ObtenerCombo=TipoPaca::where('estado','A')->where('id', $productoTipoPaca)->value('cantidad');
         $total=0;
         $tmp=0;
@@ -902,16 +396,7 @@ class VentaController extends Controller
 
                  if($productoCantidad[$tmp] !=0)
                  {
-                    $DatoPrecio= PreciosProducto::                        
-                     join('productos',
-                        'precios_productos.fk_producto',
-                        '=',
-                        'productos.codigo'
-                       ) 
-                                         
-                   ->where('productos.codigo','=', $productoID[$tmp])
-                                 
-                    ->min('precios_productos.valor');
+                    $DatoPrecio= PreciosProducto::where('fk_producto','=', $productoID[$tmp])->min('valor');
                
                     // sprint_r('precio '.$DatoPrecio. 'cantidad '.$productoCantidad[$tmp].'factura '.$IdVenta.'producto '.$productoID[$tmp].' referencia canasta '.$ObteneIDcanasta);
                      detalles_venta::insert([
@@ -973,13 +458,13 @@ class VentaController extends Controller
 
            if($productoCantidadPlastico!=null && $productoCantidadPlastico!=0 )
            {
-               $consultarEnvases=TipoPaca::where('estado','A')->where('id',$consultaTipoPaca)->get();
+               $consultarPlastico=TipoPaca::where('estado','A')->where('id',$consultaTipoPaca)->get();
                //    foreach($consultarEnvases as $consultarEnvase)
                //    {
                //      $DividirPrecio=$consultarEnvase->precio / $consultarEnvase->cantidad;
                    
                //    }
-               if( $consultarEnvases[0]->precio !=null && $consultarEnvases[0]->precio !=0)
+               if( $consultarPlastico[0]->precio !=null && $consultarPlastico[0]->precio !=0)
                {
                  
                   if(count($consultaIDPlastico)!=0)
@@ -989,7 +474,7 @@ class VentaController extends Controller
                        detalles_venta::
                        where('fk_tipo_paca',$productoTipoPaca)
                        ->where('fk_factura',$IdVenta)
-                       ->where('precio',$consultarEnvases[0]->precio)
+                       ->where('precio',$consultarPlastico[0]->precio)
                        ->update(['cantidad' => (int) $consultaIDPlastico[0]-> cantidad + (int)$productoCantidadPlastico]);
                    
                   }
@@ -998,7 +483,468 @@ class VentaController extends Controller
                       
                    //  $TotaEnvases=$DividirPrecio * $precio;
                        detalles_venta::insert([
-                       ['precio' => $consultaIDPlastico[0]->precio , 'cantidad' =>(int)$productoCantidadPlastico,'fk_tipo_paca'=>(int)$consultaTipoPaca,'fk_factura'=>(int)$IdVenta,'fk_producto'=>$productoID[0],'Numero_canasta'=>-1 ]
+                       ['precio' => $consultarPlastico[0]->precio , 
+                       'cantidad' =>(int)$productoCantidadPlastico,
+                       'fk_tipo_paca'=>(int)$consultaTipoPaca,
+                       'fk_factura'=>(int)$IdVenta,
+                       'fk_producto'=>$productoID[0],
+                       'Numero_canasta'=>-1 ]
+                     
+                   ]);
+                    }
+
+                }
+           }
+
+       } 
+
+            $notificacion=("Se agrego exitosamente");
+
+            return response()->json( ['items'=>$notificacion,'condicionDisponibilidas'=>$contadorErrores] );            
+        }
+
+
+
+
+
+
+
+        //listar Canasta
+      
+        public function ConsultarCanastaEditar($tipopaca) 
+
+        {
+            $marca = Session::get('IdMarcaEditar');
+            $contenido = Session::get('IdContenidoEditar');
+   
+
+            if($tipopaca!=0)
+            {
+         
+            $ObtenerProductos=Producto::where('fk_tipo_paca',$tipopaca)->where('fk_marca',$marca)->where('fk_tipo_contenido',$contenido)->where('estado','A')->get();//obtengo los productos con una marca,tipo cotenido,tipo empaque
+            $cantidadCanasta=tipoPaca::where('estado','A')->where('id',$tipopaca)->value('cantidad');
+        
+            }
+            else
+            {
+                $cantidadCanasta=0;
+                $ObtenerProductos=0;
+            }
+
+// dd($cantidadCanasta);
+            return response()->json( [ 'items'=>$ObtenerProductos,'cantidadCanasta'=>$cantidadCanasta ] );
+
+        }
+
+        public function tipoContenidoEditar($id) 
+        {
+
+            $ListarTipoContenido= Producto::where('estado','A')->where('fk_marca',$id)->with('tipoContenido')->distinct()->get(['fk_tipo_contenido']);
+
+
+
+//            $ListarTipoContenido= Producto::
+//            join('marcas','productos.fk_marca','=','marcas.id')
+//            ->join('tipo_contenidos','productos.fk_tipo_contenido','=','tipo_contenidos.id')
+//            ->select('tipo_contenidos.id','tipo_contenidos.nombre')
+//            ->where('productos.fk_marca','=',$id)
+//            ->where('productos.estado','A')
+//            ->groupBy('tipo_contenidos.id')
+//            ->get();
+
+            Session::put('IdMarcaEditar',$id);
+            $ListarMarcas=Producto::where('estado','A')->where('fk_marca',$id)->select('codigo','nombre')->get();
+           
+            $array = Array();
+            $array[ 0 ] = $ListarTipoContenido;
+            $array[ 1 ] = $ListarMarcas;
+            return response()->json( [ 'items'=>$array ] );
+        }
+
+        public function tipoPacaEditar($id) 
+        {
+        $marca = Session::get('IdMarcaEditar');
+            Session::put('IdContenidoEditar',$id);
+//            $ListarTipoPaca= Producto::
+//            join('marcas',
+//                   'productos.fk_marca',
+//                   '=',
+//                   'marcas.id'
+//                  )
+//            ->join('tipo_pacas',
+//                    'productos.fk_tipo_paca',
+//                    '=',
+//                    'tipo_pacas.id'
+//                   )
+//            ->join('tipo_contenidos',
+//                    'productos.fk_tipo_contenido',
+//                    '=',
+//                    'tipo_contenidos.id'
+//                   )
+//            ->select('tipo_pacas.id',
+//                     'tipo_pacas.nombre'
+//                    )
+//
+//            ->where('productos.estado','A')
+//            ->where([
+//                ['fk_marca', '=',$marca],
+//                ['fk_tipo_contenido', '=', $id]
+//                // ['estado','=','A']
+//            ])
+//            ->groupBy('tipo_pacas.id')
+//            ->get();
+
+             $ListarTipoPaca = Producto::where('estado','A')->where('fk_marca',$marca)->where('fk_tipo_contenido',$id)->with('tipoPaca')->distinct()->get(['fk_tipo_paca']);
+
+
+
+
+            $ObtenerProductoTipoPaca=Producto::where('estado','A')->where('fk_tipo_contenido',$id)->where('fk_marca',$marca)->get();//obtengo los productos con una marca
+
+            return response()->json(['items'=> $ListarTipoPaca,'FiltroProducto'=>$ObtenerProductoTipoPaca]);
+        }
+        public function ProductoEditar($id) 
+        {
+         
+            $marca = Session::get('IdMarcaEditar');
+            $contenido = Session::get('IdContenidoEditar');
+            Session::put('Tipo_pacaEditar',$id);
+         
+            if($id!=0)
+            {
+         
+                $ObtenerProductos=Producto::where('estado','A')->where('fk_tipo_paca',$id)->where('fk_marca',$marca)->where('fk_tipo_contenido',$contenido)->get();//obtengo los productos con una marca,tipo cotenido,tipo empaque
+            }
+            else
+            {
+                $ObtenerProductos=Producto::where('estado','A')->where('fk_marca',$marca)->where('fk_tipo_contenido',$contenido)->get();
+            }
+
+            
+           Session::put('productoEditar', $ObtenerProductos);
+
+            $arrayN = array();
+            $arrayId = array();
+            foreach($ObtenerProductos as $ObtenerProducto)
+            {
+
+            
+                array_push($arrayN,$ObtenerProducto -> nombre);
+                array_push($arrayId,$ObtenerProducto-> codigo);
+
+            }
+
+            $ObtenerIdCanastaRetornable=0;
+            if(0 ==$id)
+            {
+                $ObtenerIdCanastaRetornable=$id;
+            
+            }
+            else
+            {
+                $retornable=TipoPaca::where('estado','A')->where('id',$id)->select('retornable')->get(); 
+                $ObtenerIdCanastaRetornable=$retornable[0]->retornable;
+            }
+
+            $array = array( $arrayN , $arrayId );
+                //   dd($ObtenerIdCanastaRetornable);
+            return response()->json(['items'=>  $array,'id'=>$id,'retornable'=>$ObtenerIdCanastaRetornable]);
+        }
+
+
+        ////// filtro combox y garegar por canastas create
+        public function AgregarCanasta($ids,$cantidad,$cantidadCanasta,$cantidadEnvase,$tipoPaca,$cantidadPlastico,$cantidadcanasta,$datosCanasta) 
+
+        {
+
+           
+       $productoID= explode(',',$ids);
+       $productoCantidad= explode(',',$cantidad);
+       $productoCantidadCanasta=$cantidadCanasta;
+       $productoCantidadEnvase=$cantidadEnvase;
+       $productoTipoPaca=$tipoPaca;
+       $productoCantidadPlastico=$cantidadPlastico;
+       $cantidadCanasta=$cantidadcanasta;
+       $datos=explode(',',$datosCanasta);
+    //    dd($productoTipoPaca);
+       $Agrupar=['ID' => $productoID , 'CANTIDAD' => $productoID ];
+//    dd($productoCantidad,$productoID);
+       $IdVenta= session::get('IdVenta');
+       $ObtenerCombo=TipoPaca::where('estado','A')->where('id', $productoTipoPaca)->value('cantidad');
+        $total=0;
+        $tmp=0;
+        // dd($productoCantidadCanasta);
+        $totalCanasta=$productoCantidadCanasta[0] * $ObtenerCombo;
+     
+    
+
+      $ObteneIDcanasta=detalles_venta::where('fk_factura','=',$IdVenta)->max('Numero_canasta');
+    //    $ContadorCanasta=0;
+
+        if($ObteneIDcanasta==null)
+        {
+            $ObteneIDcanasta =0; 
+        }
+        //prueba validacion cantidad disponible
+      $disponibilidad=0;
+      $error = array(); 
+      $cantidadDevolucion=array();
+      $contadorErrores=0;
+      $AgruparCantidadId=array();
+      $AcomularProductoTemporales="";
+      $AcomularProductoTemporales2="";
+      $SumaTotalCantidadProductos=0;
+      $collection=0;
+      $collection3=Collection::make();
+      $collection4=0;
+      $contador2=0;
+      $canastaReferencia=1;
+      
+    //  dd(count($cantidadCanasta));
+   
+      for( $j = 0 ; $j < $cantidadCanasta ; $j++ ) {
+          $ObteneIDcanasta=$ObteneIDcanasta + 1;
+        //   print_r('hola '.$ObteneIDcanasta);
+        //  dd($ObteneIDcanasta);
+          for( $i = 0 ; $i < count($datos) ; $i++ ) 
+          {
+                       
+               /////inicializa en cero para acomular producto
+           
+          
+               if($productoCantidad[$tmp] !=0)
+               {
+                  
+                $obtenerCantidadProducto= Producto::where('codigo',$productoID[$tmp])->get(); 
+                $AgruparCantidadId[$contador2]=['Id'=>$productoID[$tmp],'Cantidad'=>(int)$productoCantidad[$tmp],'posicionCampo'=>$contador2];
+                $contador2++;
+                // dd($productoID[1]);
+                if( $obtenerCantidadProducto[0]->cantidad==0)
+                 {
+                   $cantidadDevolucion[$i]=0;
+
+                  $error[$contadorErrores]='en la canasta '.$canastaReferencia.' el producto '.$obtenerCantidadProducto[0]->nombre.' esta agotado ';
+             
+                  $contadorErrores=  $contadorErrores+1;
+                 }
+                elseif( $productoCantidad[$tmp] > $obtenerCantidadProducto[0]->cantidad)
+                 {
+                    $disponibilidad=$productoCantidad[$tmp]-$obtenerCantidadProducto[0]->cantidad;
+
+                      $error[$contadorErrores]='en la canasta '.$canastaReferencia.' el producto '.$obtenerCantidadProducto[0]->nombre.' tiene disponible '. $obtenerCantidadProducto[0]->cantidad.' en el inventario';
+                      $contadorErrores=  $contadorErrores+1;
+                      $cantidadDevolucion[$i]=$obtenerCantidadProducto[0]->cantidad;
+                                         
+                 }
+                else
+                 {
+                  $cantidadDevolucion[$i]=$productoCantidad[$tmp];
+                 }
+
+                
+               }
+             
+              
+               $tmp++; 
+               
+             
+          }
+        
+          $canastaReferencia++;        
+        }
+        
+          $collection = Collection::make($AgruparCantidadId);  
+          $SinRepetirError=array();
+          $SinRepeticion=array();
+          $Contador=0;
+          $cantidadDevolucion2=array();
+          $collection4=Collection::make();
+          $collection5=Collection::make($cantidadDevolucion);
+          $Division=0;
+          $j=0;
+    //////////// for agrupar producto
+    for( $j = 0 ; $j <  $tmp ; $j++ ) 
+    {
+
+        $AcomularProductoTemporales=$collection->where('Id',$productoID[$j])->sum('Cantidad');      
+        $AcomularProductoTemporales2=$collection->where('Id',$productoID[$j]);
+        $obtenerCantidadProducto= Producto::where('codigo',$productoID[$j])->get(); 
+        //condicion para no repetir el mismo error comienza hacer la consulta de repeticon de mensaje
+        if($j !=0)
+        {
+            $SinRepeticion=$collection3->where('Error',(string)$productoID[$j]);
+            $collection4=Collection::make($SinRepeticion); 
+            // print_r('_'.$collection4->count().' suma '.$AcomularProductoTemporales );
+        }
+        
+      ///se hace consulta sum para saber total del prodcuto con la misma referencia
+        if( (int)$AcomularProductoTemporales  > $obtenerCantidadProducto[0]->cantidad)
+        {
+         
+            if( $collection4->count()==0 )
+            {
+                
+                $error[$contadorErrores]='el producto '.$obtenerCantidadProducto[0]->nombre.' tiene disponible '. $obtenerCantidadProducto[0]->cantidad.' en el inventario';
+                
+                $SinRepetirError[$Contador]=['Error'=>(string)$obtenerCantidadProducto[0]->codigo]; 
+                // si el producto supera el inventario se divide para remplazar la cantidad de los campos
+               
+                $Division=(int)($obtenerCantidadProducto[0]->cantidad/(int)$AcomularProductoTemporales2->count('Cantidad'));
+                $cantidadDevolucion2[$j]=$Division;
+                $Contador++;
+                // print_r($collection4->count().' - ');
+                
+               
+            } 
+            else
+            {
+                // si el producto supera el inventario se divide para remplazar la cantidad de los campos
+                $Division=(int)($obtenerCantidadProducto[0]->cantidad/(int)$AcomularProductoTemporales2->count('Cantidad'));
+                $cantidadDevolucion2[$j]=$Division;
+                // $cantidadDevolucion[$j]=   $obtenerCantidadProducto[0]->cantidad/(int)$AcomularProductoTemporales2->count('Cantidad');
+                // str_replace( $cantidadDevolucion2[$j], $obtenerCantidadProducto[0]->cantidad/(int)$AcomularProductoTemporales2->count('Cantidad'));
+              
+            }          
+          
+            $collection3 = Collection::make($SinRepetirError); 
+                      
+            $contadorErrores++;  
+        }
+        else
+        {
+         
+         
+           $Division=$collection5->get($j); 
+           
+        //    dd($Division);
+            $cantidadDevolucion2[(int)$j]=(int)$Division;
+        }
+        
+        
+    }
+    
+      
+
+      if($contadorErrores !=0)
+      {
+        //   dd($cantidadDevolucion2);
+        return response()->json( ['items'=>$error,'condicionDisponibilidas'=>$contadorErrores,'cantidad'=>$cantidadDevolucion2,'cantidadCanasta'=>$cantidadCanasta]);    
+      }
+       
+        //// crud insercion 
+        $tmp=0;
+        // dd($cantidadCanasta);
+
+        // detalles_venta::where('fk_factura',$IdVenta)->where(Numero_canasta)
+        $ObteneIDcanasta=detalles_venta::where('fk_factura','=',$IdVenta)->max('Numero_canasta');
+        if($ObteneIDcanasta==null || $ObteneIDcanasta==-1 || $ObteneIDcanasta==-2 )
+        {
+            $ObteneIDcanasta=0; 
+        }
+        
+        for( $j = 0 ; $j < $cantidadCanasta ; $j++ ) {
+            $ObteneIDcanasta=$ObteneIDcanasta + 1;
+           
+            for( $i = 0 ; $i < count($datos) ; $i++ ) 
+            {
+
+                 if($productoCantidad[$tmp] !=0)
+                 {
+                    $DatoPrecio= PreciosProducto::where('fk_producto',$productoID[$tmp])->min('valor');
+               
+                    // sprint_r('precio '.$DatoPrecio. 'cantidad '.$productoCantidad[$tmp].'factura '.$IdVenta.'producto '.$productoID[$tmp].' referencia canasta '.$ObteneIDcanasta);
+                     detalles_venta::insert([
+                         ['precio' => $DatoPrecio, 'cantidad' =>$productoCantidad[$tmp],'fk_tipo_paca'=>$productoTipoPaca,'fk_factura'=>$IdVenta,'fk_producto'=>(string)$productoID[$tmp],'Numero_canasta' =>$ObteneIDcanasta]]);
+                     
+         
+                 }
+               
+             
+                 $tmp++; 
+               
+            }
+          
+           
+           
+          }
+     
+      ////canasta y envases
+
+       $consultaTipoPaca=Producto::where('estado','A')->where('codigo',$productoID)->value('fk_tipo_paca');
+      
+       $consultaIDPlastico=detalles_venta::where('fk_factura', $IdVenta)->where('fk_tipo_paca',$productoTipoPaca)->where('Numero_canasta',-1)->get();
+       $consultaIDCanasta=detalles_venta::where('fk_factura', $IdVenta)->where('fk_tipo_paca',$productoTipoPaca)->where('Numero_canasta',null)->get();
+
+      
+      
+       if($consultaTipoPaca!=null)
+       {
+           
+           if($productoCantidadEnvase!=null && $productoCantidadEnvase!=0)
+           {
+             
+           $consultarEnvases=TipoPaca::where('estado','A')->where('id',$consultaTipoPaca)->get();
+      
+           if( $consultarEnvases[0]->precio_envase !=null && $consultarEnvases[0]->precio_envase !=0)
+           {
+          if(count($consultaIDCanasta)!=0)
+          {
+           // dd($consultaIDCanasta[0]-> cantidad,$productoCantidadEnvase);
+          
+               detalles_venta::
+               where('fk_tipo_paca',$consultaTipoPaca)
+               ->where('fk_factura',$IdVenta)
+               ->where('precio',$consultarEnvases[0]->precio_envase)
+               ->update(['cantidad' => (int)$consultaIDCanasta[0]-> cantidad + (int)$productoCantidadEnvase]);
+           
+          }
+           else
+           {
+              
+           //  $TotaEnvases=$DividirPrecio * $precio;
+               detalles_venta::insert([
+               ['precio' => $consultarEnvases[0]->precio_envase,
+                'cantidad' =>(int)$productoCantidadEnvase,
+                'fk_tipo_paca'=>(int)$consultaTipoPaca,
+                'fk_factura'=>(int)$IdVenta,
+                'fk_producto'=>$productoID[0] ]
+            
+           ]);
+            }
+        }
+           }
+
+           if($productoCantidadPlastico!=null && $productoCantidadPlastico!=0 )
+           {
+               $consultarPlastico=TipoPaca::where('estado','A')->where('id',$consultaTipoPaca)->get();
+               //    foreach($consultarEnvases as $consultarEnvase)
+               //    {
+               //      $DividirPrecio=$consultarEnvase->precio / $consultarEnvase->cantidad;
+                   
+               //    }
+               if( $consultarPlastico[0]->precio !=null && $consultarPlastico[0]->precio !=0)
+               {
+                 
+                  if(count($consultaIDPlastico)!=0)
+                  {
+                   // dd($consultaIDCanasta[0]-> cantidad,$request->input('cantidadEnvases'));
+                  
+                       detalles_venta::
+                       where('fk_tipo_paca',$productoTipoPaca)
+                       ->where('fk_factura',$IdVenta)
+                       ->where('precio',$consultarPlastico[0]->precio)
+                       ->update(['cantidad' => (int) $consultaIDPlastico[0]-> cantidad + (int)$productoCantidadPlastico]);
+                   
+                  }
+                   else
+                   {                  
+                       detalles_venta::insert([
+                       ['precio' => $consultarPlastico[0]->precio ,
+                        'cantidad' =>(int)$productoCantidadPlastico,
+                        'fk_tipo_paca'=>(int)$consultaTipoPaca,
+                        'fk_factura'=>(int)$IdVenta,
+                        'fk_producto'=>$productoID[0],
+                        'Numero_canasta'=>-1 ]
                      
                    ]);
                     }
@@ -1304,23 +1250,8 @@ $consultarProducto= Producto::where('estado','A')->where('codigo',$consultarDeta
                 // dd($request->input('fk_tipo_paca'));
          
                                  
-                $DatoPrecio=PreciosProducto::                        
-                            join('productos',
-                                   'precios_productos.fk_producto',
-                                   '=',
-                                   'productos.codigo'
-                                  ) 
-                                                    
-                            // ->select('productos.nombre',
-                            //          'productos.codigo'
-                            //         ) 
-                            ->where('productos.codigo','=', $ObtenerIdProdcuto[0])
-                                            
-                           ->max('precios_productos.valor');
-    
-                        //    dd($ObtenerPrecio);
-    
-    
+                $DatoPrecio=PreciosProducto::where('fk_producto', $ObtenerIdProdcuto[0])->max('valor');
+       
             $productos=Producto::where('estado','A')->where('codigo',$ObtenerIdProdcuto[0])->value('fk_tipo_paca');
         
             $ObtenerPaca=TipoPaca::where('estado','A')->where('id',$productos)->value('retornable');
@@ -1483,23 +1414,21 @@ $consultarProducto= Producto::where('estado','A')->where('codigo',$consultarDeta
                
                 $request['fk_producto']=$ObtenerIdProdcuto[0];
                 // dd($request->input('fk_tipo_paca'));
-         
-                                 
-                $DatoPrecio=PreciosProducto::                        
-                            join('productos',
-                                   'precios_productos.fk_producto',
-                                   '=',
-                                   'productos.codigo'
-                                  ) 
-                                                    
-                            // ->select('productos.nombre',
-                            //          'productos.codigo'
-                            //         ) 
-                            ->where('productos.codigo','=', $ObtenerIdProdcuto[0])
+                
+
+         $DatoPrecio = PreciosProducto::where('fk_producto',$ObtenerIdProdcuto[0])->max('valor');
+                              
+                // $DatoPrecio=PreciosProducto::                        
+                //             join('productos',
+                //                    'precios_productos.fk_producto',
+                //                    '=',
+                //                    'productos.codigo'
+                //                   )                          
+                //             ->where('productos.codigo','=', $ObtenerIdProdcuto[0])
                                             
-                           ->max('precios_productos.valor');
+                //            ->max('precios_productos.valor');
     
-                        //    dd($ObtenerPrecio);
+                //         //    dd($ObtenerPrecio);
     
     
             $productos=Producto::where('estado','A')->where('codigo',$ObtenerIdProdcuto[0])->value('fk_tipo_paca');

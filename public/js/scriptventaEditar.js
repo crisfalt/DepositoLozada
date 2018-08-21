@@ -412,7 +412,8 @@ function AbrirModalCanasta(cantidadDevolucion=null,cantidadcanasta=null)
                 
          
               
-              var ruta2 = '/venta/AgregarCanasta/'+arrayId+'/'+arrayCantidad+'/'+cantidadcanasta+'/'+cantidadEnvase+'/'+tipopaca+'/'+cantidadPlastico+'/'+cantidadcanasta+'/'+datos;
+              var ruta2 = '/venta/AgregarCanastaEditar/'+arrayId+'/'+arrayCantidad+'/'+cantidadcanasta+'/'+cantidadEnvase+'/'+tipopaca+'/'+cantidadPlastico+'/'+cantidadcanasta+'/'+datos;
+              
 
               $.ajax({
                 headers: {
@@ -706,8 +707,8 @@ $("#tipopaca").change(function () {
               var compracion =0;
               datos.forEach( function( valor , index ) { 
                 // console.log(valor);
-                $("#tipocontenido").append($("<option />").val(valor.id).text(valor.nombre).addClass("form-control"));
-  
+               $("#tipocontenido").append($("<option />").val(valor.tipo_contenido.id).text(valor.tipo_contenido.nombre).addClass("form-control"));
+
               });
   
 
@@ -763,9 +764,11 @@ $("#tipopaca").change(function () {
               //   $("#tipopaca").append($("<option />").val(ids[i]).text(nombres[i]));
               // }
             
-              datosListarTipoContenido.forEach( function( valor , index ) { 
+          
+
+               datosListarTipoContenido.forEach( function( valor , index ) { 
                 // console.log(valor);
-                $("#tipopaca").append($("<option />").val(valor.id).text(valor.nombre).addClass("form-control"));
+                $("#tipopaca").append($("<option />").val(valor.tipo_paca.id).text(valor.tipo_paca.nombre).addClass("form-control"));
   
               });
 

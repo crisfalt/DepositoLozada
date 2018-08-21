@@ -245,7 +245,7 @@
                                                 {{ method_field('DELETE') }}
         
                                                 
-                                                <a href="{{ url('/compracabezacrear/'.$Cargarcompra->id.'/edit') }}" rel="tooltip" title="Editar Compra{{ $Cargarcompra -> id }}" class="btn btn-success btn-simple btn-xs">
+                                                <a href="{{ url('/compracabezacrear/'.$Cargarcompra->id.'/edit') }}" rel="tooltip" title="Editar Venta{{ $Cargarcompra -> id }}" class="btn btn-success btn-simple btn-xs">
                                                     <i class="fa fa-edit"></i>
                                                 </a>
                                                
@@ -294,7 +294,7 @@
                              <div class="col-md-3 pr-1">
                                         <div class="form-group">
                                             <select class="form-control"  id="tipopaca" name="fk_tipo_paca" style=" display : none"   disabled="TRUE" size="4"  >
-                                                    <option class="form-control" value="0" selected>Compra individual</option>
+                                                    <option class="form-control" value="0" selected>venta individual</option>
                                                 @foreach ( $tipopacas as $tipopaca )
                                                          <option class="form-control" value="{{ $tipopaca->id}}" @if( $tipopaca -> fk_producto == old( 'fk_tipo_paca') ) @endif>{{ $tipopaca->nombre }}</option>
                                                   @endforeach
@@ -389,8 +389,8 @@
                         <table class="table" cellspacing="0" id="tableCompras">
                             <thead class=" text-primary">
                                     <th class="text-center">
-                                      Ref-canasta
-                                    </th>
+                                            canasta
+                                        </th>
                                 <th class="text-center">
                                     Producto
                                 </th>
@@ -400,7 +400,7 @@
                                 </th>
                                
                                 <th class="text-center">
-                                    Precio Compra
+                                    Precio venta
                                 </th>
                                 <th class="text-center">
                                     SubTotal

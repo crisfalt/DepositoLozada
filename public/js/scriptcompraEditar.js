@@ -286,7 +286,7 @@ function AbrirModalCanasta()
             var cantidad = Cantidad;
             var idOut=valorId;
             var ruta='http://'+window.location.host;
-            var ruta2 = ruta+ '/compra/agregarCantidadEditar/'+cantidad+'/'+idOut;
+            var ruta2 = ruta+ '/compra/agregrarCantidadEditar/'+cantidad+'/'+idOut;
             var data = idOut;
            
             $.ajax({
@@ -301,7 +301,9 @@ function AbrirModalCanasta()
                 processData: false,
                 success:function(response) {
                      console.log(response);
+                    
                 }
+                 
            });
            location.reload(true);
         }
@@ -326,7 +328,9 @@ function AbrirModalCanasta()
                 processData: false,
                 success:function(response) {
                      console.log(response);
+
                 }
+
            });
            location.reload(true);
         }

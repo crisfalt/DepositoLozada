@@ -367,10 +367,12 @@ return false;
                         contentType: false,
                         processData: false,
                         success:function(response) {
+
+                           location.reload(true);
                              console.log(response);
                         }
                    });
-                   location.reload(true);
+                    location.reload(true);
                   
                 }
                   function agregarCantidadEditar(valorId,Cantidad) 
@@ -393,10 +395,11 @@ return false;
                         processData: false,
                         success:function(response) {
                              console.log(response);
+                             location.reload(true);
                         }
                    });
-                   location.reload(true);
                    
+                    location.reload(true);
                 }
         ////evento change para listar producto
         

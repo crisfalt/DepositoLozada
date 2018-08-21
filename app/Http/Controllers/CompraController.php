@@ -644,7 +644,7 @@ class compraController extends Controller
         }
 
 
-        public function agregrarCantidad($cantidad,$id) 
+        public function agregarCantidad($cantidad,$id) 
         {
             // dd("aqui responde laravel " . $cantidad . " la id : " . $id );
             // 
@@ -657,23 +657,19 @@ class compraController extends Controller
             ->where('fk_compra',$ObtenerIdProducto)
             ->update(['cantidad' => $cantidad]);
     
-           return redirect('admin.compra.create') -> with( compact('ObtenerIdProducto') );
+           return redirect('compra/'.'create') -> with( compact('ObtenerIdProducto') );
             // return response()->json(['reponse'=> $cantidad]);
     
         }
-        public function agregrarCantidadEditar($cantidad,$id) 
+        public function agregarCantidadEditar($cantidad,$id) 
         {
               $ObtenerIdProducto= Session::get('IdCompraEditar');
-    
-     // dd("aqui responde laravel " . $cantidad . " la id : " . $id ."Id compra ".$ObtenerIdProducto);
-          
-            // dd($ObtenerIdProducto);
+           
            detalle_compra::where('id',$id)
             ->where('fk_compra',$ObtenerIdProducto)
             ->update(['cantidad' => $cantidad]);
     
-           return redirect('admin.compra.edit') -> with( compact( 'ObtenerIdProducto' ) );
-            // return response()->json(['reponse'=> $cantidad]);
+           return redirect('/compra/'.$ObtenerIdProducto.'/edit') -> with( compact( 'ObtenerIdProducto' ) );
     
         }
         public function agregrarCantidadDevolucion(Request $request ) 
@@ -1782,7 +1778,7 @@ public function imprimir($id,$estado)
                                 'saldo' => $resta,'fecha_compra'=>$fechaAbono]);
                         Session::forget('IdCompra');
                         $notification = 'la factura fue agregada exitosamente sin abono'. $ObtenerEstadoCompra[0]->id;
-                        return redirect('venta') -> with( compact( 'notification' ));
+                        return redirect('compra') -> with( compact( 'notification' ));
 
 
 

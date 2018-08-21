@@ -266,8 +266,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/compra/{id}','compraController@show'); //mostrar el tipo de 
     Route::get('/compra/{id}/edit' , 'compraController@edit');
     Route::get('/compra/edit/{id}/{estado}' , 'compraController@update');	
-    Route::post('/compra/agregarCantidad/{cantidad}/{id}' , 'compraController@agregrarCantidad');
-    Route::post('/compra/agregrarCantidadEditar/{cantidad}/{id}' , 'compraController@agregrarCantidadEditar');
+    Route::post('/compra/agregarCantidad/{cantidad}/{id}','compraController@agregarCantidad');
+Route::post('/compra/agregrarCantidadEditar/{cantidad}/{id}' , 'compraController@agregarCantidadEditar');
     Route::post('/compra/MostrarCanastaIndividual/{id}' , 'compraController@MostrarCanastaIndividual',function($id)
     {
         $PrecioProducto_id = $id;
