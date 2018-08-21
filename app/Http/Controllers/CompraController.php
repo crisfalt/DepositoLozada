@@ -42,7 +42,7 @@ class compraController extends Controller
             $datos=$_POST["datosCanasta"];
 
             //    dd($productoCantidad,$productoID);
-            $IdCompra= session::get('IdCompra');
+            $IdCompra= session::get('IdCompraEditar');
             // $ObtenerCombo=DB::table('tipo_pacas')->where('id', $productoTipoPaca)->value('cantidad');
             $ObtenerCombo=TipoPaca::where('estado','A')->where('id', $productoTipoPaca)->value('cantidad');
             $total=0;
@@ -75,7 +75,7 @@ class compraController extends Controller
                         //
                         $DatoPrecio= Producto::where('productos.codigo','=', $productoID[$tmp])
                             ->value('precio_compra');
-                        dd("soy dd1");
+                        
 
                         detalle_compra::insert([
                             ['precio' => $DatoPrecio, 'cantidad' =>$productoCantidad[$tmp],'fk_tipo_paca'=>$productoTipoPaca,'fk_compra'=>$IdCompra,'fk_producto'=>$productoID[$tmp],'Numero_canasta' =>$ObteneIDcanasta]]);
@@ -546,37 +546,39 @@ class compraController extends Controller
             Session::put('IdContenido',$id);
             
 
-            $ListarTipoPaca= Producto::                        
-            join('marcas',
-                   'productos.fk_marca',
-                   '=',
-                   'marcas.id'
-                  )   
-            ->join('tipo_pacas',
-                    'productos.fk_tipo_paca',
-                    '=',
-                    'tipo_pacas.id'
-                   )
-            ->join('tipo_contenidos',
-                    'productos.fk_tipo_contenido',
-                    '=',
-                    'tipo_contenidos.id'
-                   )
-            ->select('tipo_pacas.id',
-                     'tipo_pacas.nombre'
-                    ) 
+            // $ListarTipoPaca= Producto::                        
+            // join('marcas',
+            //        'productos.fk_marca',
+            //        '=',
+            //        'marcas.id'
+            //       )   
+            // ->join('tipo_pacas',
+            //         'productos.fk_tipo_paca',
+            //         '=',
+            //         'tipo_pacas.id'
+            //        )
+            // ->join('tipo_contenidos',
+            //         'productos.fk_tipo_contenido',
+            //         '=',
+            //         'tipo_contenidos.id'
+            //        )
+            // ->select('tipo_pacas.id',
+            //          'tipo_pacas.nombre'
+            //         ) 
            
-            ->where('productos.estado','A')
-            ->where([
-                ['fk_marca', '=',$marca],
-                ['fk_tipo_contenido', '=', $id]
-                // ['estado','=','A']
-            ])
-            ->groupBy('tipo_pacas.id')                       
-            ->get();
+            // ->where('productos.estado','A')
+            // ->where([
+            //     ['fk_marca', '=',$marca],
+            //     ['fk_tipo_contenido', '=', $id]
+            //     // ['estado','=','A']
+            // ])
+            // ->groupBy('tipo_pacas.id')                       
+            // ->get();
             // 
             // $ListarTipoPaca = Producto::where('estado','A')->where('fk_marca',$marca)->where('fk_tipo_contenido',$id)->with('tipoPaca')->groupBy('tipoPaca')->get();
              $ListarTipoPaca = Producto::where('estado','A')->where('fk_marca',$marca)->where('fk_tipo_contenido',$id)->with('tipoPaca')->distinct()->get(['fk_tipo_paca']);
+
+
 
 
             $ObtenerProductoTipoPaca=Producto::where('fk_tipo_contenido',$id)->where('fk_marca',$marca)->get();//obtengo los productos con una marca
@@ -1678,8 +1680,8 @@ public function imprimir($id,$estado)
                             ->update(['fk_estado_compra' => 3,'fk_forma_pago' => 2,'total' => $total,
                                 'saldo' => $resta,'fecha_compra'=>$fechaAbono]);
                         Session::forget('IdCompra');
-                        $notification = 'la factura fue agregada exitosamente sin abono'. $ObtenerEstadoCompra[0]->id;
-                        return redirect('venta') -> with( compact( 'notification' ));
+                        $notification = 'la Compra fue agregada exitosamente sin abono'. $ObtenerEstadoCompra[0]->id;
+                        return redirect('compra') -> with( compact( 'notification' ));
 
 
 
@@ -1819,10 +1821,6 @@ public function imprimir($id,$estado)
         }
 
 
-    }
-
-
-
-    
+    }   
 
 }

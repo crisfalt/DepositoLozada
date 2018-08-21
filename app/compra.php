@@ -2,7 +2,7 @@
 
 namespace App;
 use App\EstadoCompra;
-use App\proveedor;
+use App\Proveedor;
 use App\formapago;
 use App\User;
 
@@ -45,7 +45,7 @@ class compra extends Model
 
     //proveedor con nit no puede ser siempre , hay casios que un proveedor puede ser persona natural
     public function proveedors() {
-        return  proveedor::where( 'number_id' , $this -> fk_proveeedors) -> first();
+        return  Proveedor::where( 'number_id' , $this -> fk_proveeedors) -> first();
     }
     public function formapagos() 
     {
