@@ -204,49 +204,6 @@ return false;
                       $.alert(notificacion);
                       return(0);
                     }
-                   
-                        // for( var i = 0 ; i < contador; i++ ) 
-                        // {
-                        //     var ProductoRecorrer= document.getElementById('idProducto'+i+'').value;
-                        //     var cantidadRecorrer= $('#cantidadCompra'+i).val();
-                        //     arrayId[i] = ProductoRecorrer;
-                        //     arrayCantidad[i] = cantidadRecorrer;
-                        //     // var cantidadRecorrer= document.getElementById('cantidad'+contador2).value;
-                        //     if(cantidadRecorrer=="")
-                        //     {
-                        //         document.getElementById('cantidadCompra'+i+'').value=0;
-                        //         $("#cantidadCompra"+i).focus();
-                        //         alert("campo cantidad no tiene que estar vacio");
-                        //         return(0);
-                        //     }
-        
-                        //     TotalCantidad=parseInt(cantidadRecorrer) + parseInt(TotalCantidad);
-                           
-                        //     // contador2=contador2+1;
-                        // }
-                 
-                      //   if(parseInt(TotalCantidad) < parseInt(CantidadCanastaActual))
-                      //   {
-          
-                         
-                      //     TotalCantidadFaltante=parseInt(CantidadCanastaActual)-parseInt(TotalCantidad);
-                          
-                      //     $.alert('te hacen falta '+TotalCantidadFaltante +' producto');
-                      //     // document.getElementById('boldStuff').innerHTML = notificacion;
-                      //     return(0);
-                      //   }
-          
-                      //   if(parseInt(TotalCantidad) > parseInt(CantidadCanastaActual))
-                      //  {
-                      //   TotalCantidadFaltante=parseInt(TotalCantidad)-parseInt(CantidadCanastaActual);
-                       
-                      //   // document.getElementById('boldStuff').innerHTML = notificacion;
-                      //  $.alert('sobrepaso por '+TotalCantidadFaltante+' producto');
-                      //   return(0);
-                      //  }
-                        
-                 
-                      
                       var ruta2 = '/compra/AgregarCanasta/';
         
                       $.ajax({
@@ -297,16 +254,11 @@ return false;
             function enviarDatos() {
         
               // var formulario = $('#AgregarCompra');
-              var marca = document.getElementById('marca').value;  
-             
-              var tipocontenido = document.getElementById('tipocontenido').value;
-              
-              var tipopaca = document.getElementById('tipopaca').value;
-             
-              var combobox=document.getElementById('combobox').value;
-         
-              var cantidaenvase=document.getElementById('cantidaenvase').value;
-              
+              var marca = document.getElementById('marca').value;               
+              var tipocontenido = document.getElementById('tipocontenido').value              
+              var tipopaca = document.getElementById('tipopaca').value;             
+              var combobox=document.getElementById('combobox').value;         
+              var cantidaenvase=document.getElementById('cantidaenvase').value;              
               var cantidad=document.getElementById('cantidad4').value;
              
               // var fk_precio=document.formulario.getElementById('fk_precio').value;

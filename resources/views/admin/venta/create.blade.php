@@ -203,7 +203,7 @@
              
             <!--     fin errores -->
             @if(!Session::get('IdVenta'))
-          <form  id="AgregarCabezeraVenta" action="{{url('/venta')}}" method="post"  onsubmit="return validacion()">
+          <form  id="AgregarCabezeraVenta" action="{{url('/venta')}}" method="post">
                   {{ csrf_field() }}
                  <div class="row">
                         <div class="col-md-3 col-sm-12 pr-1">
@@ -288,7 +288,7 @@
                   <div class="row text-center">                            
                             <div class="col-md-6 col-sm-12">
                                 <div class="form-group ">                                          
-                                    <button  type="submit" class="btn btn-info btn-round" >Agregar</button>
+                                    <button class="btn btn-info btn-round" onclick="validacion(event);">Agregar</button>
                                </div>                                      
                             </div>
 

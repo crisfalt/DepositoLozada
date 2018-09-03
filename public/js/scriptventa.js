@@ -50,141 +50,170 @@
 
     }
 
-function validacion()
+    var siTiene = false;
+
+function validacion( evt ) {
+  var mainForm = $('AgregarCabezeraVenta');
+   
+   alert('abrace');
+    var valicidacionCliente = document.getElementById("combobox2").value;
+    alert( valicidacionCliente );
+    if(valicidacionCliente=="I")
     {
-      var contenido="";
-      var valicidacionCliente = document.getElementById("combobox2").value;
-      var obtenerID=valicidacionCliente.split(",");
-      let bandera;
 
-            if(valicidacionCliente=="I")
-            {
-              
-              alert("campo cliente es obligatorio");
-              document.getElementById("combobox2").focus();
-              return false;
-
-            }
-            else
-            {
-              
-
-                        var ruta2 = '/venta/BuscarCliente';
-                      $.ajax({
-                      headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                      type: "post",
-                      url: ruta2,
-                        data : {'id_cliente' : valicidacionCliente},
-                      dataType: "json",
-                    success: function (items)
+        alert("campo cliente es obligatorio");
+        document.getElementById("combobox2").focus();
+        return false;
+    }
+    else {
+      var ruta2 = '/venta/BuscarCliente';
+      $.ajax({
+          type: "post",
+          url: ruta2,
+          data : {'id_cliente' : valicidacionCliente},
+          dataType: "json",
+          success: function (items)
+          { 
+              console.log( items );
+              if( items.valor > 0 ) {
+                evt.preventDefault();
+                  var contenido="";
+                  contenido = '<div class="card-body">'+'<div class="table-responsive">'+'<table class="table" cellspacing="0" id="tableCompras">';
+                  if(items.items.length > 0 )
                   {
-                     bandera=items.valor;
+                      contenido += '<thead class=" text-primary">';
+                      contenido +='<th class="text-center"># factura</th>';
+                      contenido +='<th class="text-center">saldo</th>';
+                      contenido +='<th class="text-center">abonar</th>';
+                      contenido +='</thead><tbody>';
 
-                     bandera=3;
-                     alert(bandera);
-                    if(items.valor !=0 && items.valor !=null)
-                      {
-                              contenido = '<div class="card-body">'+'<div class="table-responsive">'+'<table class="table" cellspacing="0" id="tableCompras">';
-                                if(items.items.length !=0 )
+                      var contador=0;
+                      items.items.forEach( function( valor , index ) { 
+                          if( valor.saldo > 0 )
+                          {
+                              contenido+='<tr>';
+                              contenido+='<th class="text-center">'+ valor.id+'</td>';
+                              contenido+='<th class="text-center">'+ valor.saldo+'</td>';
+                              contenido+='<form style="margin: 0; padding: 0;"  action="(url{{"/venta/abonar"}})" method="post">'
+
+                              contenido+='<th class="text-center"><input id="fk_abono'+contador+'" name="'+valor.id+'" type="number" value="" class="number"  MIN="1" STEP="1" SIZE="6"  MAX="'+valor.saldo+'"></th>';
+                              contenido+='<input type="text" id="id_factura_abono" name="id_factura_abono"  value="'+valor.id+'" hidden="true" >'
+                              contenido+=' <th class="text-center"><button  onclick="hacerAbono('+contador+','+valor.id+','+valor.saldo+');" rel="tooltip" title="abonar" class="btn btn-danger btn-simple btn-xs"> <i class="now-ui-icons arrows-1_share-66"></i></button>';
+                              contenido+='</th>'+'</form>';
+                              contenido+='</tr>';
+                              contador=contador+1;
+                          }
+                      });
+                      alert('salio del foreach');
+                      contenido +='</tbody></table></div></div>';
+                      $.confirm({
+                          title: 'Facturas Que estan Por pagar',
+                          columnClass : 'col-md-10',
+                          content: contenido,
+                          buttons: {
+                              formSubmit: {
+                                  text: 'Continuar',
+                                  btnClass: 'btn-blue',
+                                  action: function () 
+                                  {
+                                      document.getElementById("AgregarCabezeraVenta").submit();
+                                  }
+                              },
+                              cancel: function () 
                               {
-                              
-                                  contenido += '<thead class=" text-primary">';
-                                  contenido +='<th class="text-center"># factura</th>';
-                                  contenido +='<th class="text-center">saldo</th>';
-                                  contenido +='<th class="text-center">abonar</th>';
-                                  contenido +='</thead><tbody>';
-                                    
-                                    var contador=0;
-                                    items.items.forEach( function( valor , index ) { 
-                                
-                                    if(valor.saldo !=null && valor.saldo !=0 )
-                                      {
-                                
-                                          contenido+='<tr>';
-                                          contenido+='<th class="text-center">'+ valor.id+'</td>';
-                                          contenido+='<th class="text-center">'+ valor.saldo+'</td>';
-                                          contenido+='<form style="margin: 0; padding: 0;"  action="(url{{"/venta/abonar"}})" method="post">'
-                                        
-                                          contenido+='<th class="text-center"><input id="fk_abono'+contador+'" name="'+valor.id+'" type="number" value="" class="number"  MIN="1" STEP="1" SIZE="6"  MAX="'+valor.saldo+'"></th>';
-                                          contenido+='<input type="text" id="id_factura_abono" name="id_factura_abono"  value="'+valor.id+'" hidden="true" >'
-                                          contenido+=' <th class="text-center"><button  onclick="hacerAbono('+contador+','+valor.id+','+valor.saldo+');" rel="tooltip" title="abonar" class="btn btn-danger btn-simple btn-xs"> <i class="now-ui-icons arrows-1_share-66"></i></button>';
-                                          contenido+='</th>'+'</form>';
-                                          contenido+='</tr>';
-                                          contador=contador+1;
-                                      }
-                                    //  else
-                                    //  {
-                                    //   // contenido+='<th class="text-center">el cliente no tiene facturas por cobrar</td>';
-                                    //  }
-                                      });
-                              }
-                              else
-                              {
-                                contenido+='<th class="text-center">el cliente no tiene facturas por cobrar</td>';
-
-                              }
-
-                          contenido +='</tbody></table>';
-                              
-                          $.confirm({
-                                          title: 'Facturas Que estan Por pagar',
-                                          columnClass : 'col-md-10',
-                                          content: contenido,
-                                          buttons: {
-                                          formSubmit: {
-                                          text: 'Continuar',
-                                          btnClass: 'btn-blue',
-                                          action: function () 
-                                            {
-                                            document.getElementById("AgregarCabezeraVenta").submit();
-                                          
-
-                                            }
-                                            },
-                                              cancel: function () 
-                                            {
-                                              location.reload();
-                                              //close
-                                            },
-                                            },
-                                        onContentReady: function () {
-                                          // bind to events
-                                          var jc = this;
-                                          this.$content.find('form').on('submit', function (e) {
-                                              // if the user submits the form by pressing enter in the field.
-                                              e.preventDefault();
-                                              jc.$$formSubmit.trigger('click'); // reference the button and click it
-                                          });
-                                      }
-                                  }); 
                                   
-                                 
-                    }       
-                      
-                    else{
-                      return true;
-                    }
-                    
+                                  //close
+                              },
+                          },
+                          onContentReady: function () {
+                              // bind to events
+                              var jc = this;
+                              this.$content.find('form').on('submit', function (e) {
+                                  // if the user submits the form by pressing enter in the field.
+                                  e.preventDefault();
+                                  jc.$$formSubmit.trigger('click'); // reference the button and click it
+                              });
+                          }
+                      });
+                  }
+              }
+              else {
+               
+              }
+          }
+      }); 
+      alert("antes");
+    }
+}
 
-                    }
+function modalSaldo(items) {
+  alert( items );
+  var contenido="";
+  contenido = '<div class="card-body">'+'<div class="table-responsive">'+'<table class="table" cellspacing="0" id="tableCompras">';
+  if(items.items.length !=0 )
+  {
 
-                    
+      contenido += '<thead class=" text-primary">';
+      contenido +='<th class="text-center"># factura</th>';
+      contenido +='<th class="text-center">saldo</th>';
+      contenido +='<th class="text-center">abonar</th>';
+      contenido +='</thead><tbody>';
 
+      var contador=0;
+      items.items.forEach( function( valor , index ) { 
 
+          if(valor.saldo !=null && valor.saldo !=0 )
+          {
 
-                }); 
-                      return false //termina else
-            }
+              contenido+='<tr>';
+              contenido+='<th class="text-center">'+ valor.id+'</td>';
+              contenido+='<th class="text-center">'+ valor.saldo+'</td>';
+              contenido+='<form style="margin: 0; padding: 0;"  action="(url{{"/venta/abonar"}})" method="post">'
 
-        // if(bandera == null)
-        // {
-        //   alert('+++');
-        //   return false;
-        // }
-       
-      }
+              contenido+='<th class="text-center"><input id="fk_abono'+contador+'" name="'+valor.id+'" type="number" value="" class="number"  MIN="1" STEP="1" SIZE="6"  MAX="'+valor.saldo+'"></th>';
+              contenido+='<input type="text" id="id_factura_abono" name="id_factura_abono"  value="'+valor.id+'" hidden="true" >'
+              contenido+=' <th class="text-center"><button  onclick="hacerAbono('+contador+','+valor.id+','+valor.saldo+');" rel="tooltip" title="abonar" class="btn btn-danger btn-simple btn-xs"> <i class="now-ui-icons arrows-1_share-66"></i></button>';
+              contenido+='</th>'+'</form>';
+              contenido+='</tr>';
+              contador=contador+1;
+          }
+          else {
+              break;
+              return false;
+          }
+      });
+      contenido +='</tbody></table>';
+      $.confirm({
+          title: 'Facturas Que estan Por pagar',
+          columnClass : 'col-md-10',
+          content: contenido,
+          buttons: {
+              formSubmit: {
+                  text: 'Continuar',
+                  btnClass: 'btn-blue',
+                  action: function () 
+                  {
+                      document.getElementById("AgregarCabezeraVenta").submit();
+                  }
+              },
+              cancel: function () 
+              {
+                  location.reload();
+                  //close
+              },
+          },
+          onContentReady: function () {
+              // bind to events
+              var jc = this;
+              this.$content.find('form').on('submit', function (e) {
+                  // if the user submits the form by pressing enter in the field.
+                  e.preventDefault();
+                  jc.$formSubmit.trigger('click'); // reference the button and click it
+              });
+          }
+      });
+  }
+}
 
 
 
@@ -539,50 +568,8 @@ function AbrirModalCanasta(cantidadDevolucion=null,cantidadcanasta=null)
             {
               $.alert(notificacion);
               return(0);
-            }
-           
-                // for( var i = 0 ; i < contador; i++ ) 
-                // {
-                //     var ProductoRecorrer= document.getElementById('idProducto'+i+'').value;
-                //     var cantidadRecorrer= $('#cantidadVenta'+i).val();
-                //     arrayId[i] = ProductoRecorrer;
-                //     arrayCantidad[i] = cantidadRecorrer;
-                //     // var cantidadRecorrer= document.getElementById('cantidad'+contador2).value;
-                //     if(cantidadRecorrer=="")
-                //     {
-                //         document.getElementById('cantidadVenta'+i+'').value=0;
-                //         $("#cantidadVenta"+i).focus();
-                //         alert("campo cantidad no tiene que estar vacio");
-                //         return(0);
-                //     }
-
-                //     TotalCantidad=parseInt(cantidadRecorrer) + parseInt(TotalCantidad);
-                   
-                //     // contador2=contador2+1;
-                // }
-         
-              //   if(parseInt(TotalCantidad) < parseInt(CantidadCanastaActual))
-              //   {
-  
-                 
-              //     TotalCantidadFaltante=parseInt(CantidadCanastaActual)-parseInt(TotalCantidad);
-                  
-              //     $.alert('te hacen falta '+TotalCantidadFaltante +' producto');
-              //     // document.getElementById('boldStuff').innerHTML = notificacion;
-              //     return(0);
-              //   }
-  
-              //   if(parseInt(TotalCantidad) > parseInt(CantidadCanastaActual))
-              //  {
-              //   TotalCantidadFaltante=parseInt(TotalCantidad)-parseInt(CantidadCanastaActual);
-               
-              //   // document.getElementById('boldStuff').innerHTML = notificacion;
-              //  $.alert('sobrepaso por '+TotalCantidadFaltante+' producto');
-              //   return(0);
-              //  }
+            }          
                 
-         
-              // var ruta2 = ruta+ '/venta/agregarCantidad/'+cantidad+'/'+idOut;
               var ruta2 = '/venta/AgregarCanasta/'+arrayId+'/'+arrayCantidad+'/'+cantidadcanasta+'/'+cantidadEnvase+'/'+tipopaca+'/'+cantidadPlastico+'/'+cantidadcanasta+'/'+datos;
               
               $.ajax({
@@ -808,11 +795,10 @@ $("#tipopaca").change(function () {
      }
     
     
-     document.getElementById('cantidaenvase').value="0";
-     document.getElementById('cantidaenvase').value="0";
-     
-     document.getElementById('cantidad4').value="0";
-     document.getElementById('cantidad4').value="0";
+         document.getElementById('cantidaenvase').value="0";
+         document.getElementById('cantidaenvase').value="0";     
+         document.getElementById('cantidad4').value="0";
+         document.getElementById('cantidad4').value="0";
      
    
      
@@ -981,100 +967,13 @@ $("#tipopaca").change(function () {
               document.getElementById('cantidaenvaseOcultar').style.display = 'none';
               document.getElementById('cantidadPlasticoOcultar').style.display ='none';
             }
-                // $("#fk_precio").empty(); $("#fk_precio").append($("<option />").val("0").text("SELECCIONE El PRECIO DE VENTA"));
-                // $.each( items, function( key, value ) {
-                //   $.each( value , function(index,precio){
-                //     $("#fk_precio").append($("<option />").val(precio.id).text(precio.valor));
-                //   }); 
-                // });
               
                   }
               });
       }
 
 
-
-///////////
-
-        // $(function(){
-        //     //
-        //     var proveedors = new Bloodhound({
-        //         datumTokenizer: Bloodhound.tokenizers.whitespace,
-        //         queryTokenizer: Bloodhound.tokenizers.whitespace,
-        //         prefetch: '{{url("/proveedors/json")}}'
-        //         //local:['andres','andrea','anderson','andaniel']
-           
-        //     });
-        //     //inicilizar typeahead
-        //         $('#buscarProveedor').typeahead({
-        //         hint: true,
-        //         highligth: true,
-        //         minLength:1
-
-
-        //     },{
-        //         name: 'proveedors',
-        //         source: proveedors
-        //     });
-
-
-        // });
-
-        // $(function()
-        // {
-        //     //
-        //     var productos = new Bloodhound({
-        //         datumTokenizer: Bloodhound.tokenizers.whitespace,
-        //         queryTokenizer: Bloodhound.tokenizers.whitespace,
-        //         prefetch: '{{url("/productos/json")}}',
-        //         //local:['andres','andrea','anderson','andaniel']
-               
-            
-        //         //
-                
-                
-               
-        //     });
-        //     // var BuscarPrecio=('{{url("/MostrarPrecio/json")}}');
-        //     // var enlace_actual =window.location.hash +""+"MostrarPrecio/json";
-
-        //     // // ruta=location.href=MostrarPrecio/json;
-        //     // if(BuscarPrecio != "MostrarPrecio/json" && BuscarPrecio != null )
-        //     // {
-        //     // document.getElementsByTagName('precio_compra')[BuscarPrecio];
-        //     //  alert(enlace_actual);
-        //     // }
-        //     //inicilizar typeahead
-        //         $('#buscarProducto').typeahead({
-        //         hint: true,
-        //         highligth: true,
-        //         minLength:1
-
-
-        //     },{
-        //         name: 'productos',
-        //         source: productos
-              
-               
-        //     });
-            
-   
-        // });
-        
-      
-           
-       
-
-   
-
-
-   
-
       $("#combobox2").focus();
-
-            
-
-
         $( function() {
             $.widget( "custom.combobox", {
               _create: function() {

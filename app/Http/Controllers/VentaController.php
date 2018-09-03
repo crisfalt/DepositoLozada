@@ -77,6 +77,7 @@ class VentaController extends Controller
         {
            
             $id_cliente= $_POST["id_cliente"];
+            // dd( $id_cliente );
             $CedulaCliente=explode(',',$id_cliente);
             $ConsultarDeuda=Venta::where('fk_cliente',$CedulaCliente[0] )->where('fk_forma_de_pago',2)->get();
             $Valor=Venta::where('fk_cliente',$CedulaCliente[0] )->where('fk_forma_de_pago',2)->sum('saldo');
@@ -136,14 +137,7 @@ class VentaController extends Controller
         public function AgregarCanastaEditar($ids,$cantidad,$cantidadCanasta,$cantidadEnvase,$tipoPaca,$cantidadPlastico,$cantidadcanasta,$datosCanasta) 
         
         {
-    //    $productoID= $_POST["ids"];
-    //    $productoCantidad= $_POST["cantidad"];
-    //    $productoCantidadCanasta= $_POST["cantidadCanasta"];
-    //    $productoCantidadEnvase= $_POST["cantidadEnvase"];
-    //    $productoTipoPaca= $_POST["tipoPaca"];
-    //    $productoCantidadPlastico= $_POST["cantidadPlastico"];
-    //    $cantidadCanasta=$_POST["cantidadcanasta"];
-    //    $datos=$_POST["datosCanasta"];
+   
            
        $productoID= explode(',',$ids);
        $productoCantidad= explode(',',$cantidad);
@@ -155,58 +149,7 @@ class VentaController extends Controller
        $datos=explode(',',$datosCanasta);
     //    dd($productoTipoPaca);
        $Agrupar=['ID' => $productoID , 'CANTIDAD' => $productoID ];
-    //    $collection = Collection::make($Agrupar);
-    //    $productoIDArray=array($productoID);
-    //    $productoCantidadArray=array($productoCantidad);
-
-    //    $Agrupar=array( 'ID'=> $productoIDArray,'CANTIDAD'=>$productoCantidadArray);
-    //    $Detalles_ventas=detalles_venta::where('fk_producto',$productoID[0])->get();
-    // $Detalles_ventas=$collection->where('ID',"123")->first();
-    //    dd($Detalles_ventas);
-         
-    //    $Detalles_ventas=detalles_venta::where('fk_factura',$id)->get();
-
-    //    $cantidad=0;
-    //    $subtotal=0;
-    //    $total=0;
-    //    $CondicionVenta=0;
-    //    $AcomularProducto=0;
-    //    $error = array(); 
-    //    $contadorErrores=0;
-    //    foreach( $Detalles_ventas as  $Detalles_venta)
-    //    {
-      
-
-    //       $ObtenerCantidadActual=Producto::where('estado','A')->where('codigo',$productoID)->get();
-    //       $BuscarProductos=detalles_venta::where('fk_producto',$Detalles_venta->fk_producto)->where('fk_factura',$id)->get();
-    //       if(count($ObtenerCantidadActual)!=0)
-    //       {
-    //       foreach( $BuscarProductos as  $BuscarProducto)
-    //       {
-    //           $AcomularProducto=$BuscarProducto->cantidad + $AcomularProducto;
-
-    //       }
-        
-    //       $ComprobarDisponibilidadProducto= $ObtenerCantidadActual[0]->cantidad-$AcomularProducto;
-    //      ////condicion de si existe o falta de productos para le venta
-    //       if( $ObtenerCantidadActual[0]->cantidad==0)
-    //       {
-    //           $CondicionVenta=1;
-    //           ////mensajes de productos faltantes a la venta
-    //           $error[$contadorErrores] ='-el producto '.$ObtenerCantidadActual[0]->nombre.' esta agotado';
-    //       }            
-    //       elseif( $ComprobarDisponibilidadProducto < 0)
-    //       {
-    //           ////mensajes de productos faltantes a la venta
-    //           $CondicionVenta=1;
-    //           $error[$contadorErrores]='-el producto '.$ObtenerCantidadActual[0]->nombre.' solo hay '.$ObtenerCantidadActual[0]->cantidad.' disponible';
-              
-    //       }
-       
-    //       $contadorErrores=  $contadorErrores+1;
-    //   }
-    //   $AcomularProducto=0;
-    //    }
+   
 
 //    dd($productoCantidad,$productoID);
        $IdVenta= session::get('IdVentaEditar');
@@ -959,10 +902,6 @@ class VentaController extends Controller
             return response()->json( ['items'=>$notificacion,'condicionDisponibilidas'=>$contadorErrores] );            
         }
 
-
-
-        //listar Canasta
-      
         public function ConsultarCanasta($tipopaca) 
 
         {
