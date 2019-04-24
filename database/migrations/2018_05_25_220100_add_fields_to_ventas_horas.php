@@ -1,8 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 
 class AddFieldsToVentasHoras extends Migration
 {
@@ -13,8 +12,8 @@ class AddFieldsToVentasHoras extends Migration
      */
     public function up()
     {
-        Schema::table('ventas', function($table) {
-            $table -> time('hora') -> nullable(); //se deja nullable para el administsrador pero en la vista se debe pedir como requerido
+        Schema::table('ventas', function ($table) {
+            $table->time('hora')->nullable(); //se deja nullable para el administsrador pero en la vista se debe pedir como requerido
         });
         //
     }
@@ -26,10 +25,9 @@ class AddFieldsToVentasHoras extends Migration
      */
     public function down()
     {
-        
-        Schema::table('ventas', function($table) {
-            $table ->dropColumn([
-                'hora'
+        Schema::table('ventas', function ($table) {
+            $table->dropColumn([
+                'hora',
             ]);
         });
     }

@@ -1,8 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 
 class AddFieldTipoNegocioIdToTableCliets extends Migration
 {
@@ -13,7 +12,7 @@ class AddFieldTipoNegocioIdToTableCliets extends Migration
      */
     public function up()
     {
-        Schema::table('clientes', function($table) {
+        Schema::table('clientes', function ($table) {
             $table->unsignedInteger('tipo_negocio_id')->after('number_id');
             $table->foreign('tipo_negocio_id')->references('id')->on('tipo_negocios');
         });
@@ -26,11 +25,11 @@ class AddFieldTipoNegocioIdToTableCliets extends Migration
      */
     public function down()
     {
-        Schema::table('clientes', function($table) {
-            $table ->dropForeign([
+        Schema::table('clientes', function ($table) {
+            $table->dropForeign([
                 'tipo_negocio_id',
             ]);
-            $table ->dropColumn([
+            $table->dropColumn([
                 'tipo_negocio_id',
             ]);
         });

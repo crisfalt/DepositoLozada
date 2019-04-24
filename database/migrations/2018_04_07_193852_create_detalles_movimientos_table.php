@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateDetallesMovimientosTable extends Migration
 {
@@ -16,7 +16,7 @@ class CreateDetallesMovimientosTable extends Migration
         Schema::create('detalles_movimientos', function (Blueprint $table) {
             $table->increments('id');
             //foranea al producto a mover
-            $table->string('fk_producto',100);
+            $table->string('fk_producto', 100);
             $table->foreign('fk_producto')->references('codigo')->on('productos');
             $table->integer('cantidad');
             //fin foranea

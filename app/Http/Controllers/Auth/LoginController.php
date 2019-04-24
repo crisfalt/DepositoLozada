@@ -40,21 +40,19 @@ class LoginController extends Controller
 
     public function redirectTo()
     {
-        if( Auth::user() -> perfil_id == 1 ) {
-         $this->redirectTo = '/home';
+        if (Auth::user()->perfil_id == 1) {
+            $this->redirectTo = '/home';
         }
-        if( Auth::user() -> perfil_id == 2 ) {
+        if (Auth::user()->perfil_id == 2) {
             $this->redirectTo = '/vendedor/ruta/'.Auth::user()->id.'/rutas_por_vendedor';
         }
-        if( Auth::user() -> perfil_id == 4 ) {
+        if (Auth::user()->perfil_id == 4) {
             $this->redirectTo = '/caja';
         }
-        if (session()->has('redirect_to'))
+        if (session()->has('redirect_to')) {
             return session()->pull('redirect_to');
+        }
 
         return $this->redirectTo;
     }
-    
-    
-
 }

@@ -1,8 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 
 class AddFieldsToDetallesVentas extends Migration
 {
@@ -13,8 +12,8 @@ class AddFieldsToDetallesVentas extends Migration
      */
     public function up()
     {
-        Schema::table('detalles_ventas', function($table) {
-            $table -> integer('Numero_canasta') -> nullable(); //se deja nullable para el administsrador pero en la vista se debe pedir como requerido
+        Schema::table('detalles_ventas', function ($table) {
+            $table->integer('Numero_canasta')->nullable(); //se deja nullable para el administsrador pero en la vista se debe pedir como requerido
         });
     }
 
@@ -25,10 +24,9 @@ class AddFieldsToDetallesVentas extends Migration
      */
     public function down()
     {
-       
-         Schema::table('detalles_ventas', function($table) {
-            $table ->dropColumn([
-                'Numero_canasta'
+        Schema::table('detalles_ventas', function ($table) {
+            $table->dropColumn([
+                'Numero_canasta',
             ]);
         });
     }

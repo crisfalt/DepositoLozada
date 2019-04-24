@@ -1,8 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 
 class AddFieldsToCompra extends Migration
 {
@@ -13,10 +12,10 @@ class AddFieldsToCompra extends Migration
      */
     public function up()
     {
-        Schema::table('compras', function($table) {
+        Schema::table('compras', function ($table) {
             //se deja nullable para el administsrador pero en la vista se debe pedir como requerido
-            $table->integer('fk_vendedor')->unsigned();//foranea a autoincremental
-            $table->foreign('fk_vendedor')->references('id')->on('users'); 
+            $table->integer('fk_vendedor')->unsigned(); //foranea a autoincremental
+            $table->foreign('fk_vendedor')->references('id')->on('users');
         });
     }
 
@@ -27,11 +26,10 @@ class AddFieldsToCompra extends Migration
      */
     public function down()
     {
-        Schema::table('compras', function($table) {
-            $table ->dropColumn([
-                'fk_vendedor'
+        Schema::table('compras', function ($table) {
+            $table->dropColumn([
+                'fk_vendedor',
             ]);
         });
-       
     }
 }

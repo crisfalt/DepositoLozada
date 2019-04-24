@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateDescripcionIvasTable extends Migration
 {
@@ -15,9 +15,9 @@ class CreateDescripcionIvasTable extends Migration
     {
         Schema::create('descripcion_ivas', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('nombre',100);
-            $table->string('descripcion',300)->nullable();
-            $table->string('estado',1)->default('A');
+            $table->string('nombre', 100);
+            $table->string('descripcion', 300)->nullable();
+            $table->string('estado', 1)->default('A');
             $table->timestamps();
         });
     }

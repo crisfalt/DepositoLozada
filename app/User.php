@@ -2,9 +2,8 @@
 
 namespace App;
 
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use App\TipoDocumento;
+use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
@@ -16,7 +15,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password','tipo_documento_id','number_id','address','phone','celular','perfil_id','bodega_id'
+        'name', 'email', 'password', 'tipo_documento_id', 'number_id', 'address', 'phone', 'celular', 'perfil_id', 'bodega_id',
     ];
 
     /**
@@ -28,16 +27,18 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    public function tipoDocumento() {
-        return $this -> belongsTo( TipoDocumento::class );
+    public function tipoDocumento()
+    {
+        return $this->belongsTo(TipoDocumento::class);
     }
 
-    public function perfil() {
+    public function perfil()
+    {
         return $this->belongsTo(Perfil::class);
     }
 
-    public function bodega() {
+    public function bodega()
+    {
         return $this->belongsTo(Bodega::class);
     }
-
 }

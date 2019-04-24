@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AlterOrdenRutasTable extends Migration
 {
@@ -17,7 +17,7 @@ class AlterOrdenRutasTable extends Migration
             //
             $table->dropForeign('orden_rutas_user_id_foreign');
             $table->dropColumn('user_id');
-            $table->string('cliente_id',30)->after('orden');
+            $table->string('cliente_id', 30)->after('orden');
             $table->foreign('cliente_id')->references('number_id')->on('clientes');
         });
     }
