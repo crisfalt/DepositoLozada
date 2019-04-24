@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateDiasRutasTable extends Migration
 {
@@ -15,7 +15,7 @@ class CreateDiasRutasTable extends Migration
     {
         Schema::create('dias_rutas', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('dia',20);
+            $table->string('dia', 20);
             //inicio llave foranea a la ruta
             $table->integer('ruta_id')->unsigned();
             $table->foreign('ruta_id')->references('id')->on('rutas');

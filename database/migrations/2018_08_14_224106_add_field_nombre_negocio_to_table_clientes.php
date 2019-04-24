@@ -1,8 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 
 class AddFieldNombreNegocioToTableClientes extends Migration
 {
@@ -13,8 +12,8 @@ class AddFieldNombreNegocioToTableClientes extends Migration
      */
     public function up()
     {
-         Schema::table('clientes', function($table) {
-            $table->string('nombre_negocio',250)->after('ruta_id');            
+        Schema::table('clientes', function ($table) {
+            $table->string('nombre_negocio', 250)->after('ruta_id');
         });
     }
 
@@ -25,11 +24,11 @@ class AddFieldNombreNegocioToTableClientes extends Migration
      */
     public function down()
     {
-        Schema::table('clientes', function($table) {
-            $table ->dropForeign([
+        Schema::table('clientes', function ($table) {
+            $table->dropForeign([
                 'nombre_negocio',
             ]);
-            $table ->dropColumn([
+            $table->dropColumn([
                 'nombre_negocio',
             ]);
         });

@@ -1,8 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 
 class AddForeignsKeysToTableUsers extends Migration
 {
@@ -13,7 +12,7 @@ class AddForeignsKeysToTableUsers extends Migration
      */
     public function up()
     {
-        Schema::table('users', function($table) {
+        Schema::table('users', function ($table) {
             //inicio llave foranea a el tipo de documento
             $table->foreign('tipo_documento_id')->references('id')->on('tipo_documentos');
             //fin
@@ -33,11 +32,11 @@ class AddForeignsKeysToTableUsers extends Migration
      */
     public function down()
     {
-        Schema::table('users', function($table) {
-            $table ->dropForeign([
+        Schema::table('users', function ($table) {
+            $table->dropForeign([
                 'com_institucion_id',
                 'perfil_id',
-                'bodega_id'
+                'bodega_id',
             ]);
         });
     }

@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateProductosTable extends Migration
 {
@@ -14,12 +14,12 @@ class CreateProductosTable extends Migration
     public function up()
     {
         Schema::create('productos', function (Blueprint $table) {
-            $table->string('codigo',100)->primary();
-            $table->string('nombre',100);
-            $table->string('descripcion',300)->nullable();
+            $table->string('codigo', 100)->primary();
+            $table->string('nombre', 100);
+            $table->string('descripcion', 300)->nullable();
             $table->integer('cantidad')->unsigned()->nullable();
             $table->integer('cantidad_reserva');
-            $table->double('precio_compra',12,2);
+            $table->double('precio_compra', 12, 2);
             //inicio atributo foraneo a marca
             $table->integer('fk_marca')->unsigned();
             $table->foreign('fk_marca')->references('id')->on('marcas');
@@ -44,7 +44,7 @@ class CreateProductosTable extends Migration
             $table->integer('fk_bodega')->unsigned();
             $table->foreign('fk_bodega')->references('id')->on('bodegas');
             //fin foranea bodega
-            $table->string('estado',1)->default('A');
+            $table->string('estado', 1)->default('A');
             $table->timestamps();
         });
     }

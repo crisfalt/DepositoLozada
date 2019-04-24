@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -25,8 +25,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-	//dd( $this->app->environment() );
-        if ($this->app->environment() === 'local') {           
+        //dd( $this->app->environment() );
+        if ($this->app->environment() === 'local') {
             $this->app->register('\Barryvdh\Debugbar\ServiceProvider');
         }
     }

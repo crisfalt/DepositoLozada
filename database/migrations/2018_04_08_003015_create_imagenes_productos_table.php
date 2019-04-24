@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateImagenesProductosTable extends Migration
 {
@@ -17,10 +17,10 @@ class CreateImagenesProductosTable extends Migration
             $table->increments('id');
             $table->string('url_imagen');
             //inicio foreign key
-            $table->string('fk_producto',100);//foranea a autoincremental
-            $table->foreign('fk_producto')->references('codigo')->on('productos');//id campo primario de tabla padre categories nombre tabla padre
+            $table->string('fk_producto', 100); //foranea a autoincremental
+            $table->foreign('fk_producto')->references('codigo')->on('productos'); //id campo primario de tabla padre categories nombre tabla padre
             //fin foreignkey
-            $table->boolean('featured')->default(false);//default de una columna
+            $table->boolean('featured')->default(false); //default de una columna
             $table->timestamps();
         });
     }

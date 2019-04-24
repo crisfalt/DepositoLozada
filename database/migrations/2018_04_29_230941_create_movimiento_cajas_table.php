@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateMovimientoCajasTable extends Migration
 {
@@ -17,8 +17,8 @@ class CreateMovimientoCajasTable extends Migration
             $table->increments('id');
             $table->date('fecha');
             $table->time('hora');
-            $table->double('valor',15,2);
-            $table->string('descripcion',600);
+            $table->double('valor', 15, 2);
+            $table->string('descripcion', 600);
             $table->enum('tipo_movimiento', ['entrada', 'salida']);
             //inicio foranea a caja que realiza el movimiento
             $table->integer('caja_id')->unsigned();

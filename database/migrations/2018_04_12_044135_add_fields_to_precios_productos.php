@@ -1,8 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 
 class AddFieldsToPreciosProductos extends Migration
 {
@@ -14,9 +13,9 @@ class AddFieldsToPreciosProductos extends Migration
     public function up()
     {
         //
-        Schema::table('precios_productos', function($table) {
-            $table -> integer('fk_descripcion_precio')->unsigned(); //se deja nullable para el administsrador pero en la vista se debe pedir como requerido
-            $table -> foreign('fk_descripcion_precio')->references('id')->on('descripcion_precios');
+        Schema::table('precios_productos', function ($table) {
+            $table->integer('fk_descripcion_precio')->unsigned(); //se deja nullable para el administsrador pero en la vista se debe pedir como requerido
+            $table->foreign('fk_descripcion_precio')->references('id')->on('descripcion_precios');
         });
     }
 
@@ -28,9 +27,9 @@ class AddFieldsToPreciosProductos extends Migration
     public function down()
     {
         //
-        Schema::table('precios_productos', function($table) {
-            $table ->dropColumn([
-                'fk_descripcion_precio'
+        Schema::table('precios_productos', function ($table) {
+            $table->dropColumn([
+                'fk_descripcion_precio',
             ]);
         });
     }

@@ -1,8 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 
 class AddFieldsToCajas extends Migration
 {
@@ -14,8 +13,8 @@ class AddFieldsToCajas extends Migration
     public function up()
     {
         //
-        Schema::table('cajas', function($table) {
-            $table->boolean('ocupada')->default(false);//para mirar si esta ocupada la caja por alguien
+        Schema::table('cajas', function ($table) {
+            $table->boolean('ocupada')->default(false); //para mirar si esta ocupada la caja por alguien
         });
     }
 
@@ -27,9 +26,9 @@ class AddFieldsToCajas extends Migration
     public function down()
     {
         //
-        Schema::table('cajas', function($table) {
-            $table ->dropColumn([
-                'ocupada'
+        Schema::table('cajas', function ($table) {
+            $table->dropColumn([
+                'ocupada',
             ]);
         });
     }

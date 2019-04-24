@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateSizeBotellasTable extends Migration
 {
@@ -15,9 +15,9 @@ class CreateSizeBotellasTable extends Migration
     {
         Schema::create('size_botellas', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('nombre',100);
-            $table->string('descripcion',300)->nullable();
-            $table->char('estado',1)->default('A');
+            $table->string('nombre', 100);
+            $table->string('descripcion', 300)->nullable();
+            $table->char('estado', 1)->default('A');
 
             $table->timestamps();
         });
